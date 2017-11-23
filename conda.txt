@@ -1,0 +1,14 @@
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: win-64
+@EXPLICIT
+certifi-2017.11.5-py35h456c6ae_0.tar.bz2
+cudatoolkit-8.0-3.tar.bz2
+cudnn-6.0-0.tar.bz2
+pip-9.0.1-py35h691316f_4.tar.bz2
+python-3.5.4-h1357f44_23.tar.bz2
+setuptools-36.5.0-py35h21a22e4_0.tar.bz2
+vc-14-h2379b0c_2.tar.bz2
+vs2015_runtime-14.0.25123-hd4c4e62_2.tar.bz2
+wheel-0.30.0-py35h38a90bc_1.tar.bz2
+wincertstore-0.2-py35hfebbdb8_0.tar.bz2
