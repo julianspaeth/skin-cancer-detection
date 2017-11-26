@@ -98,7 +98,7 @@
 \section*{Beschreibung}
 Hautkrebs ist eine der am häufigsten vorkommenden Krebsarten \cite{cancer}. Eine frühe Erkennung und Unterscheidung zwischen einem malignen oder benignem Hautkrebs ist hierbei von großer Wichtigkeit, da eine Behandlung in einem spätem Stadium sehr viel schwieriger ist. Da diese Unterscheidung aber selbst für Ärzte nicht immer einfach ist, wurde 2017 von Esteva et. al ein Maschinelles Lernverfahren zur Erkennung von Hautkrebs vorgestellt \cite{skincancer}. Auf $129.450$ klinischen Bildern trainierten sie ein \textit{Deep convolutional neural networks} (CNNs) \cite{cnn}, das schließlich in etwa gleich gut zwischen maligne und benigne unterscheiden konnte.  
 
-In dieser Arbeit werden wir auf Grundlage des Papers von Esteva et. al ein Verfahren entwickeln, dass schließlich zwischen benignem und malignem Hautkrebs unterscheiden und einfach in einer Android App verpackt werden kann. Die App kann natürlich keine ärztliche Diagnose ersetzen, jedoch durch einen gut eingestellten Klassifikator eine Hilfe sein Hautkrebs früh zu erkennen und zum Arzt zu gehen. 
+In dieser Arbeit werden wir auf Grundlage des Papers von Esteva et. al ein Verfahren entwickeln, das schließlich zwischen benignem und malignem Hautkrebs unterscheiden und einfach in einer Android App verpackt werden kann. Die App kann natürlich keine ärztliche Diagnose ersetzen, jedoch durch einen gut eingestellten Klassifikator eine Hilfe sein Hautkrebs früh zu erkennen und zum Arzt zu gehen. 
 
  \begin{figure}[ht]
 	\centering
@@ -111,6 +111,22 @@ In dieser Arbeit werden wir auf Grundlage des Papers von Esteva et. al ein Verfa
 
 \section*{Daten}
 
+Die Autoren des Papers nutzen in ihrer Arbeit einen Datensatz von insgesamt 129.450 klinischen Bildern, die 2.032 verschiedene Krankheiten abbilden. All diese Krankheiten wurden in drei Unterklassen unterteilt: maligne, benigne und nicht-neoplastische, also nicht-tumoröse Krankheiten bzw. Läsionen. Aus diesem gesamten Datensatz wurden 127.463 Bilder für das Training und die Validierung genutzt und die restlichen 1.942 Bilder wurden zum Testen gebraucht. Die Daten stammten aus 18 verschiedenen Quellen, unter anderem aus dem ISIC Dermoscopic Archive \cite{ISIC}, welches ein freier Datensatz ist, der durch digitale Hautbilder dazu dienen soll die Sterblichkeitsrate bei Melanomen zu reduzieren. In unserer Ausarbeitung des Projekts werden wir unsere Daten ausschließlich aus diesem Datensatz beziehen, da sie frei erhältlich und für unsere Zwecke ausreichend sind. Somit verkleinert sich unsere Datenmenge auf 13.786 Bilder. Weiterhin werden wir zuerst lediglich eine Unterscheidung zwischen malignen und benignen Läsionen vornehmen und keine Einzelunterscheidungen zwischen den verschiedenen Krankheiten.\\
+\noindent Die Bilder in dem ISIC Datensatz bestehen ausschließlich aus Aufnahmen von melanozytischen Hautläsionen, die anhand von Biopsien als maligne oder benigne Läsionen annotiert sind: 
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.2\textwidth]{fig/example1.jpg}
+	\includegraphics[width=0.2\textwidth]{fig/example2.jpg}
+	\caption{Beispiele einer benignen (links) und einer malignen (rechts) Läsion.}
+	\label{fig_example}
+\end{figure}
+
+\noindent Esteva et. al (2017) \cite{skincancer} sortierten bei ihrer Datenverarbeitung alle unscharfen Bilder und solche, die von zu weit weg aufgenommen aus. Zusätzlich beinhaltete ihr Datensatz auch Bilder der gleichen Läsion aus mehreren verschiedenen Blickwinkeln, was dem Training des Klassifizierers positiv beeinflusst hat. In unserem Fall tritt jede Läsion genau einmal auf, weswegen wir bei der Aufteilung des Datensatzes in Trainings- und Validierungsdaten, anders als die Autoren, auch keinen gesonderten Trenn-Algorithmus anwenden müssen, der dafür sorgt, dass zusammengehörige Bilder auch in das gleiche Subset kommen. Allerdings werden wir zur Verbesserung der Performanz unseres Klassifizierers alle Bilder sowohl in originaler Darstellung als auch in einer rotierten Darstellung präsentiern. Wir erhoffen uns dadurch einen stabileren Klassifizierer, der auch für die Anwendung in einer mobilen Android App geeignet wäre.\\
+\noindent Zusammengefasst gestaltet sich unsere Datengewinnung und -verarbeitung etwas anders als die im originalen Paper von Esteva et. al (2017). Wir streben eine Vereinfachung des Klassifizierungsverfahrens an, indem wir nur zwischen zwei verschiedenen Klassen (maligne vs. benigne) unterscheiden und dafür insgesamt weniger Daten nutzen. Dies hat den Vorteil, dass wir anders als im Paper nicht auf die Mithilfe ausgebildeter Dermatologen angewiesen sind, die sich alle Bilder des Datensatzes einzeln ansehen müssten, um die Daten den 2.032 verschiedenen Krankheiten zuzordnen. Unser Ziel ist es einen allgemeingültigeren Klassifizierer zu finden, der dann für die jeweiligen Anwendungsfälle spezialisiert werden kann.   
+
+
+
 \section*{Methode}
 
 \section*{Optional: Android App}
@@ -122,7 +138,7 @@ Damit der Klassifikator auch für jedermann nutzbar ist, soll falls wir noch gen
 \toprule
 Name & Matrikelnummer & E-Mail Adresse \\
 \midrule
-Florence Lopez & XXXXXXX  &  \href{mailto:florence.lopez@student.uni-tuebingen.de}{florence.lopez@student.uni-tuebingen.de} \\
+Florence Lopez & 3878792  &  \href{mailto:florence.lopez@student.uni-tuebingen.de}{florence.lopez@student.uni-tuebingen.de} \\
 Jonas Einig  & XXXXXXX    & \href{mailto:jonas.einig@student.uni-tuebingen.de}{jonas.einig@student.uni-tuebingen.de}    \\
 Julian Späth  & 3938726    & \href{mailto:julian.spaeth@student.uni-tuebingen.de}{julian.spaeth@student.uni-tuebingen.de}    \\
 \bottomrule
