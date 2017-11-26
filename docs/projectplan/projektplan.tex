@@ -9,7 +9,7 @@
 % -------------------------------------------------------------------------
 
 \usepackage[utf8]{inputenc} % Font Encoding, benoetigt fuer Umlaute
-%\usepackage[ngerman]{babel}   % Spracheinstellung
+\usepackage[ngerman]{babel}   % Spracheinstellung
 
 
 \usepackage{ulem}
@@ -96,6 +96,9 @@
 \header{Skin Cancer Detection}{Prof. Schilling}{28. November 2017}{Praktikum Maschinelles Lernen}{Florence Lopez \\ Jonas Einig \\ Julian Späth}{WS 17/18}
 
 \section*{Beschreibung}
+Hautkrebs ist eine der am häufigsten vorkommenden Krebsarten \cite{cancer}. Eine frühe Erkennung und Unterscheidung zwischen einem malignen oder benignem Hautkrebs ist hierbei von großer Wichtigkeit, da eine Behandlung in einem spätem Stadium sehr viel schwieriger ist. Da diese Unterscheidung aber selbst für Ärzte nicht immer einfach ist, wurde 2017 von Esteva et. al ein Maschinelles Lernverfahren zur Erkennung von Hautkrebs vorgestellt \cite{skincancer}. Auf $129.450$ klinischen Bildern trainierten sie ein \textit{Deep convolutional neural networks} (CNNs) \cite{cnn}, das schließlich in etwa gleich gut zwischen maligne und benigne unterscheiden konnte.  
+
+In dieser Arbeit werden wir auf Grundlage des Papers von Esteva et. al ein Verfahren entwickeln, dass schließlich zwischen benignem und malignem Hautkrebs unterscheiden und einfach in einer Android App verpackt werden kann. Die App kann natürlich keine ärztliche Diagnose ersetzen, jedoch durch einen gut eingestellten Klassifikator eine Hilfe sein Hautkrebs früh zu erkennen und zum Arzt zu gehen. 
 
  \begin{figure}[ht]
 	\centering
@@ -111,6 +114,7 @@
 \section*{Methode}
 
 \section*{Optional: Android App}
+Damit der Klassifikator auch für jedermann nutzbar ist, soll falls wir noch genügend Zeit haben eine intuitiv bedienbare Android App entwickelt werden mit der ganz einfach über ein Foto gecheckt werden kann ob man zum Art gehen sollte oder der potentielle Hautkrebs harmlos ist.
 
 \section*{Kontakt}
 \centering
@@ -124,5 +128,7 @@ Julian Späth  & 3938726    & \href{mailto:julian.spaeth@student.uni-tuebingen.d
 \bottomrule
 \end{tabular}
 
+\bibliography{mylit}
+\bibliographystyle{unsrt}
 
 \end{document}
