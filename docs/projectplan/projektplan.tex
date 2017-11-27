@@ -108,6 +108,11 @@ In dieser Arbeit werden wir auf Grundlage des Papers von Esteva et. al ein Verfa
  \end{figure}
 
 \section*{Tools}
+Als Tools zur Umsetzung des Projekts, werden wir das Deep Learining Framework \textit{Tensorflow} \cite{tensorflow2015-whitepaper} in der Version 1.4 verwenden. Tensorflow bietet umfangreiche Möglichkeiten zur Implementierung und zum Training Neuronaler Netze. Zudem wird ein Deployment eines fertigen Netzes für eine Nutzung in einem Android System unterstützt.
+
+Wir werden Python, die Python-API von Tensorflow 1.4 und möglicherweise die Python-Bibliotheken \textit{Pillow} und \textit{Numpy} für eine Vorverarbeitung der Daten nutzen.
+
+Eine optionale Implementierung einer mobilen App, werden wir für Android in Java und den Bibliotheken aus Android Studio implementieren. 
 
 \section*{Daten}
 
@@ -122,12 +127,26 @@ Die Autoren des Papers nutzen in ihrer Arbeit einen Datensatz von insgesamt 129.
 	\label{fig_example}
 \end{figure}
 
-\noindent Esteva et. al (2017) \cite{skincancer} sortierten bei ihrer Datenverarbeitung alle unscharfen Bilder und solche, die von zu weit weg aufgenommen aus. Zusätzlich beinhaltete ihr Datensatz auch Bilder der gleichen Läsion aus mehreren verschiedenen Blickwinkeln, was dem Training des Klassifizierers positiv beeinflusst hat. In unserem Fall tritt jede Läsion genau einmal auf, weswegen wir bei der Aufteilung des Datensatzes in Trainings- und Validierungsdaten, anders als die Autoren, auch keinen gesonderten Trenn-Algorithmus anwenden müssen, der dafür sorgt, dass zusammengehörige Bilder auch in das gleiche Subset kommen. Allerdings werden wir zur Verbesserung der Performanz unseres Klassifizierers alle Bilder sowohl in originaler Darstellung als auch in einer rotierten Darstellung präsentiern. Wir erhoffen uns dadurch einen stabileren Klassifizierer, der auch für die Anwendung in einer mobilen Android App geeignet wäre.\\
-\noindent Zusammengefasst gestaltet sich unsere Datengewinnung und -verarbeitung etwas anders als die im originalen Paper von Esteva et. al (2017). Wir streben eine Vereinfachung des Klassifizierungsverfahrens an, indem wir nur zwischen zwei verschiedenen Klassen (maligne vs. benigne) unterscheiden und dafür insgesamt weniger Daten nutzen. Dies hat den Vorteil, dass wir anders als im Paper nicht auf die Mithilfe ausgebildeter Dermatologen angewiesen sind, die sich alle Bilder des Datensatzes einzeln ansehen müssten, um die Daten den 2.032 verschiedenen Krankheiten zuzordnen. Unser Ziel ist es einen allgemeingültigeren Klassifizierer zu finden, der dann für die jeweiligen Anwendungsfälle spezialisiert werden kann.   
+\noindent Esteva et. al (2017) \cite{skincancer} sortierten bei ihrer Datenverarbeitung alle unscharfen Bilder und solche, die von zu weit weg aufgenommen aus. Zusätzlich beinhaltete ihr Datensatz auch Bilder der gleichen Läsion aus mehreren verschiedenen Blickwinkeln, was dem Training des Klassifizierers positiv beeinflusst hat. In unserem Fall tritt jede Läsion genau einmal auf, weswegen wir bei der Aufteilung des Datensatzes in Trainings- und Validierungsdaten, anders als die Autoren, auch keinen gesonderten Trenn-Algorithmus anwenden müssen, der dafür sorgt, dass zusammengehörige Bilder auch in das gleiche Subset kommen. Allerdings werden wir zur Verbesserung der Performanz unseres Klassifizierers alle Bilder sowohl in originaler Darstellung als auch in einer rotierten Darstellung präsentieren. Wir erhoffen uns dadurch einen stabileren Klassifizierer, der auch für die Anwendung in einer mobilen Android App geeignet wäre.\\
+\noindent Zusammengefasst gestaltet sich unsere Datengewinnung und -verarbeitung etwas anders als die im originalen Paper von Esteva et. al (2017). Wir streben eine Vereinfachung des Klassifizierungsverfahrens an, indem wir nur zwischen zwei verschiedenen Klassen (maligne vs. benigne) unterscheiden und dafür insgesamt weniger Daten nutzen. Dies hat den Vorteil, dass wir anders als im Paper nicht auf die Mithilfe ausgebildeter Dermatologen angewiesen sind, die sich alle Bilder des Datensatzes einzeln ansehen müssten, um die Daten den 2.032 verschiedenen Krankheiten zuzordnen. Unser Ziel ist es einen generischen Klassifizierer zu finden, der dann für die jeweiligen Anwendungsfälle spezialisiert werden kann.   
 
 
 
 \section*{Methode}
+
+Analog zu \cite{skincancer} werden wir ein \textit{GoogleNet} in der \textit{Inception v3} \cite{inception} implementieren. Dazu werden wir ein fertiges Inception V3 Netz aus der \textit{tensorflow.contrib.slim} Bibliothek verwenden, welches für die ImageNet Large Scale Visual Recognition Challenge \cite{ILSVRC15} vor-trainiert wurde. Die vor-trainierten Gewichte werden von Slim zur Verfügung gestellt. 
+
+\noindent Um das Neuronale Netz, welches für die ImageNet Challenge trainiert wurde, an unser Problem anzupassen, werden wir die letzten Layer des Inception V3 Netzes anpassen. Dazu entfernen wir die letzen Layer und ersetzen diese durch eine vollständig verbundene Schicht, mit einem Outputlayer von zwei Neuronen (maligne, benigne). 
+
+\noindent Als Optimierer werden wir, analog zu Esteva et. al (2017) \cite{skincancer} anfangs RMSProp verwenden. Weitere Optimierer, wie beispielsweise Adam und SGD werden wir mit RMSProp vergleichen, um ein optimales Training zu gewährleisten.
+
+\noindent Geplant ist, die Augmentierung der Daten in nativem Tensorflow Code zu implementieren und die Dataset-API von Tensorflow zu verwenden. Dies ermöglicht ein sehr effizientes Training. Jedoch werden wir als ersten Ansatz einen vereinfachte Methode zum Laden und Augmentieren der Daten umsetzen, um frühzeitig Netze trainieren zu können.
+
+\noindent Als Fehlerfunktion während dem Training, werden wir anfangs einen einfachen 0,1-Loss nutzen. Es ist auch angedacht, andere Funktionen (L2-Loss) zu testen. 
+ Zur Vermeidung von Overfitting werden wir, wie Estava et. al \cite{skincancer}, eine Kreuzvalidierung durchführen. 
+
+
+
 
 \section*{Optional: Android App}
 Damit der Klassifikator auch für jedermann nutzbar ist, soll falls wir noch genügend Zeit haben eine intuitiv bedienbare Android App entwickelt werden mit der ganz einfach über ein Foto gecheckt werden kann ob man zum Art gehen sollte oder der potentielle Hautkrebs harmlos ist.
@@ -139,7 +158,7 @@ Damit der Klassifikator auch für jedermann nutzbar ist, soll falls wir noch gen
 Name & Matrikelnummer & E-Mail Adresse \\
 \midrule
 Florence Lopez & 3878792  &  \href{mailto:florence.lopez@student.uni-tuebingen.de}{florence.lopez@student.uni-tuebingen.de} \\
-Jonas Einig  & XXXXXXX    & \href{mailto:jonas.einig@student.uni-tuebingen.de}{jonas.einig@student.uni-tuebingen.de}    \\
+Jonas Einig  & 3766150    & \href{mailto:jonas.einig@student.uni-tuebingen.de}{jonas.einig@student.uni-tuebingen.de}    \\
 Julian Späth  & 3938726    & \href{mailto:julian.spaeth@student.uni-tuebingen.de}{julian.spaeth@student.uni-tuebingen.de}    \\
 \bottomrule
 \end{tabular}
