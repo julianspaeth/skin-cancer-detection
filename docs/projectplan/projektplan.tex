@@ -8,6 +8,8 @@
 ]{scrartcl}%     Klassen: scrartcl, scrreprt, scrbook, article
 % -------------------------------------------------------------------------
 
+\usepackage[T2A]{fontenc}
+
 \usepackage[utf8]{inputenc} % Font Encoding, benoetigt fuer Umlaute
 \usepackage[ngerman]{babel}   % Spracheinstellung
 
@@ -109,12 +111,26 @@ In dieser Arbeit werden wir auf Grundlage des Papers von Esteva et. al auch Verf
 	\label{fig_gantt}
  \end{figure}
 
+\newpage
 \section*{Tools}
 Als Tools zur Umsetzung des Projekts, werden wir das Deep Learining Framework \textit{Tensorflow} \cite{tensorflow2015-whitepaper} in der Version 1.4 verwenden. Tensorflow bietet umfangreiche Möglichkeiten zur Implementierung und zum Training Neuronaler Netze. Zudem wird ein Deployment eines fertigen Netzes für eine Nutzung in einem Android System unterstützt.
 
-Wir werden Python, die Python-API von Tensorflow 1.4 und möglicherweise die Python-Bibliotheken \textit{Pillow} und \textit{Numpy} für eine Vorverarbeitung der Daten nutzen.
+Wir werden Python, die Python-API von Tensorflow 1.4 und möglicherweise die Python-Bibliotheken \textit{Pillow} und \textit{Numpy} \cite{numpy} für eine Vorverarbeitung der Daten nutzen.
 
-Eine optionale Implementierung einer mobilen App, werden wir für Android in Java und den Bibliotheken aus Android Studio implementieren. 
+Eine optionale Implementierung einer mobilen App, werden wir für Android in Java und den Bibliotheken aus Android Studio \cite{androidstudio} implementieren. 
+
+\centering
+\begin{tabular}{ll}
+	\toprule
+	Tool & Version \\
+	\midrule
+	Python & $3.6$  \\
+	Tensorflow  & $1.4$   \\
+	Pillow  & $4.4.0$    \\
+	NumPy  & $1.13.3$    \\
+	Android Studio  & $3.0$    \\
+	\bottomrule
+\end{tabular}
 
 \section*{Daten}
 
