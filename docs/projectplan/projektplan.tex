@@ -100,9 +100,9 @@
 \section*{Beschreibung}
 Hautkrebs ist eine der am häufigsten vorkommenden Krebsarten unserer Gesellschaft\cite{cancer}. Behandlungen reichen von operativen Eingriffen bis hin zur Strahlen- oder Chemotherapie. Wie bei vielen anderen Krebsarten ist eine frühe Erkennung und Unterscheidung zwischen einem malignen oder benignem Hautkrebs von großer Wichtigkeit um die Chancen einer vollständigen Heilung zu erhöhen. Behandlung in einem spätem Stadium sind sehr viel schwieriger, da nach der Metastasierung der Krebs nicht mehr nur lokal begrenzt ist, sondern auch umliegendes Gewebe infiltrieren oder über die Blut- und Lymphbahnen metastasieren kann. Eine klare Trennung zwischen benigne und maligne ist allerdings selbst für Ärzte nicht immer einfach. Dabei liegt es auf der Hand, dass Betroffene selbst erst viel zu spät zum Arzt gehen, da sie den Krebs nicht rechtzeitig als solchen erkennen.
 
-Im Zeitalter von "Big Data" erkennt auch der Medizinsektor langsam, welche Möglichkeiten    eine genaue Analyse der vielen medizinischen Daten aus vergangenen Fällen ermöglichen. Durch unterschiedlichste Maschinelle Lernmethoden können Daten in verschiedene Gruppen eingeteilt und somit klassifiziert werden. Im Jahr 2017 wurde schließlich von Esteva et. al, ein Verfahren zur Erkennung von Hautkrebs vorgestellt \cite{skincancer}. Auf $129.450$ klinischen Bildern trainierten sie ein \textit{Deep convolutional neural networks} (CNNs) \cite{cnn}, das schließlich in etwa gleich gut Hautkrebs klassifizieren konnte wie ein menschlicher Arzt.
+Im Zeitalter von \textit{Big Data} erkennt auch der Medizinsektor langsam, welche Möglichkeiten    eine genaue Analyse der vielen medizinischen Daten aus vergangenen Fällen ermöglichen. Durch unterschiedlichste Maschinelle Lernmethoden können Daten in verschiedene Gruppen eingeteilt und somit klassifiziert werden. Im Jahr 2017 wurde schließlich von Esteva et. al, ein Verfahren zur Erkennung von Hautkrebs vorgestellt \cite{skincancer}. Auf $129.450$ klinischen Bildern trainierten sie ein \textit{Deep convolutional neural networks} (CNNs) \cite{cnn}, das schließlich in etwa gleich gut Hautkrebs klassifizieren konnte wie ein menschlicher Arzt.
 
-In dieser Arbeit werden wir auf Grundlage des Papers von Esteva et. al auch Verfahren entwickeln, das schließlich zwischen benignem und malignem Hautkrebs unterscheiden und einfach in einer Android App verpackt werden kann. Die App kann natürlich keine ärztliche Diagnose ersetzen, jedoch durch einen gut eingestellten Klassifikator eine Hilfe sein Hautkrebs früh zu erkennen und zum Arzt zu gehen. 
+In dieser Arbeit werden wir auf Grundlage des Papers von Esteva et. al ein Verfahren entwickeln, das schließlich zwischen beinigem und malignem Hautkrebs unterscheiden und schließlich in einer Android App verpackt werden kann. Die App kann natürlich keine ärztliche Diagnose ersetzen, jedoch durch einen gut eingestellten Klassifikator eine Hilfe sein Hautkrebs früh zu erkennen und lieber zum Arzt zu gehen. 
 
  \begin{figure}[ht]
 	\centering
@@ -126,10 +126,10 @@ Eine optionale Implementierung einer mobilen App, werden wir für Android in Jav
 	Tool & Version \\
 	\midrule
 	Python & $3.6$  \\
-	Tensorflow  & $1.4$   \\
+	Tensorflow~\cite{tensorflow2015-whitepaper}  & $1.4$   \\
 	Pillow  & $4.4.0$    \\
-	NumPy  & $1.13.3$    \\
-	Android Studio  & $3.0$    \\
+	NumPy~\cite{numpy}  & $1.13.3$    \\
+	Android Studio~\cite{androidstudio}  & $3.0$    \\
 	\bottomrule
 \end{tabular}
 
@@ -167,7 +167,9 @@ Analog zu \cite{skincancer} werden wir ein \textit{GoogleNet} in der \textit{Inc
  Zur Vermeidung von Overfitting werden wir, wie Estava et. al \cite{skincancer}, eine Kreuzvalidierung durchführen. 
 
 \section*{Optional: Android App}
-Damit der Klassifikator auch für jedermann nutzbar ist, soll falls wir noch genügend Zeit haben eine intuitiv bedienbare Android App entwickelt werden mit der ganz einfach über ein Foto gecheckt werden kann ob man zum Art gehen sollte oder der potentielle Hautkrebs harmlos ist.
+Damit der Klassifikator auch für jedermann nutzbar ist, soll optional noch eine Android App entwickelt werden. Die App soll den in dieser Arbeit vorgestellten Klassifikator nutzen und dem Nutzer mitteilen, ob er möglicherweiße an Hautkrebs leidet, oder nicht. Dabei soll der Nutzer die Möglichkeit haben direkt ein Foto zu schießen oder ein schon Vorhandenes zu verwenden. Die App liefert auf Grundlage des Klassifikators schließlich die Antwort ob es sich wahscheinlich um eine unbedenkliche Hautirritation handelt, oder die Person sich zu einer weiteren Untersuchung an einen Arzt wenden sollte. Dabei werden wir darauf achten, dass lieber einmal mehr ein falsch positives Testergebnis ausgegeben wird, anstatt ein falsch negatives.
+
+Die Android App wird in unserer Arbeit allerdings erst einmal hinten angestellt, da wir nicht einschätzen können wie schnell und aufwendig die im letzten Abschnitt vorgestellte Methode sein wird.
 
 \section*{Kontakt}
 \centering
