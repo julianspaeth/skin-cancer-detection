@@ -9,13 +9,10 @@ def image_data(dataset, augmentations=None,
         Args:
             dataset: The data set that contains the structures of paths.
             augmentations: A list of functions that take a structure of images and return a
-                structure of images. These functions are all applied to the tensors representing
-                the loaded images in the order of the list.
-            num_threads: The number of threads to use for loading and augmenting the images. Set
-                to `None` to use a single thread only.
+                structure of images.
+            num_threads: The number of threads to use for loading and augmenting the images. `None` ==  single
             output_buffer_size: The size of the output buffer that is used for mapping the image
-                decoder and augmentations over the dataset. See the `Dataset.map` documentation
-                for more information.
+                decoder and augmentations over the dataset.
             shuffle_buffer_size: The size of the shuffle buffer that is used to shuffle the data
                 files
         Returns:
@@ -36,7 +33,7 @@ def image_data(dataset, augmentations=None,
 
     if shuffle_buffer_size is not None:
         dataset = dataset.shuffle(shuffle_buffer_size)
-    dataset = dataset.repeat(-1)
+    dataset = dataset.repeat(-1)  # infinite repeat
 
     return dataset.map(_read_images,
                        num_threads=num_threads,
@@ -45,23 +42,12 @@ def image_data(dataset, augmentations=None,
 
 def structural_map(f, data):
     """
-        Performs a structural map over the following built-in datatypes of python:
-        This means that the given function is applied to the data structurally, so for a tuple or
-        list, the function `f` is mapped over the iterable. For a dictionary, the function is
-        applied to the values.
+        Performs a map over the following built-in datatypes of python:
+        This means that the given function is applied to the data structurally.
+        the function `f` is mapped over the iterable.
     """
-    if isinstance(data, dict):
-        return {k: structural_map(f, v) for k, v in data.items()}
-    elif isinstance(data, list):
+    if isinstance(data, list):
         return [structural_map(f, x) for x in data]
-    elif isinstance(data, dict):
-        return {k: structural_map(f, v) for k, v in data.items()}
-    elif isinstance(data, tuple):
-        return tuple(structural_map(f, x) for x in data)
-    elif isinstance(data, set):
-        return set(structural_map(f, x) for x in data)
-    elif isinstance(data, frozenset):
-        return frozenset(structural_map(f, x) for x in data)
     else:
         return f(data)
 
