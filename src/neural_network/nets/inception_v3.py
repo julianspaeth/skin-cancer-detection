@@ -527,7 +527,7 @@ def inception_v3(inputs,
   Zbigniew Wojna.
 
   With the default arguments this method constructs the exact model defined in
-  the paper. However, one can experiment with variations of the inception_v3
+  the paper. However, one can experiment with variations of the weights
   network by changing arguments dropout_keep_prob, min_depth and
   depth_multiplier.
 

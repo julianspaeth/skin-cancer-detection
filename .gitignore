@@ -276,3 +276,10 @@ TSWLatexianTemp*
 
 # expex forward references with \gathertags
 *-tags.tex
+
+# own files
+*.dataset
+*.pyc
+*/__pycache__/*
+
+*.ckpt
