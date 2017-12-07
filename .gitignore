@@ -278,7 +278,6 @@ TSWLatexianTemp*
 *-tags.tex
 
 # own files
-*.dataset
 *.pyc
 */__pycache__/*
 
