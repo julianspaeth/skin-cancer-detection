@@ -1,54 +1,112 @@
+import json
+
 import tensorflow as tf
 from PIL import Image
 import os
 import numpy as np
 
 import glob
+
+from tensorflow.contrib import slim
 from tensorflow.contrib.slim.python.slim.nets import inception_v3
+
+
 # from .nets.inception_v3 import inception_v3
 
 
-def dataloader_gen():
-    path = 'D:\Data\Documents\AutomaticSaveToDisc\Datasets\ISIC-Archive-Downloader-master\Data\Images\*jpg'
-    os_path = os.path.expanduser(path)
+def dataloader_gen(batch_size=2):
+    # img_path = '/Users/spaethju/Desktop/*jpg'
+    # json_path = '/Users/spaethju/Desktop/*'
 
-    list_fns = glob.glob(os_path)
-    print(len(list_fns))
+    img_path = 'D:\Data\Documents\AutomaticSaveToDisc\Datasets\ISIC-Archive-Downloader-master\Data\Images\*_resized.jpg'
+    json_path = 'D:\Data\Documents\AutomaticSaveToDisc\Datasets\ISIC-Archive-Downloader-master\Data\Descriptions\*'
+
+    os_path_img = os.path.expanduser(img_path)
+    os_path_json = os.path.expanduser(json_path)
+
+    list_fns_img = glob.glob(os_path_img)
+    list_fns_json = glob.glob(os_path_json)
+
+    print(len(list_fns_img))
+    print(len(list_fns_json))
+
     i = 0
-    while (True):
-        image = Image.open(list_fns[i % len(list_fns)])
+    # lesion_classes = np.zeros([len(list_fns_json), 2])
+    # print(lesion_classes)
+
+    while (i < len(list_fns_img)):
+        image = Image.open(list_fns_img[i % len(list_fns_img)])
         np_image = np.asarray(image)
         res = np.expand_dims(np_image, 0)
+
+        json_file = json.load(open(list_fns_json[i % len(list_fns_json)]))
+
+        # search for the lesion class
+        clinical_class = json_file["meta"]["clinical"]["benign_malignant"]
+
+        # # benign = [1, 0]
+        # if clinical_class == "benign":
+        #     lesion_classes[i] = [1, 0]
+        #
+        # # maligne = [0, 1]
+        # elif clinical_class == "malignant":
+        #     lesion_classes[i] = [0, 1]
+        # benign = [1, 0]
+        lesion_classes = np.zeros([1, 2])
+        if clinical_class == "benign":
+            lesion_classes[0, 0] = 1
+
+        # maligne = [0, 1]
+        elif clinical_class == "malignant":
+            lesion_classes[0, 1] = 1
+
         i = i + 1
-        yield res
-    # img_input.show()
+
+        yield res, lesion_classes
 
 
 def load_net(x=None):
     return tf.image.resize_bilinear(images=x, size=[299, 299], name='resize')
 
 
-x = tf.placeholder(dtype=tf.float32, shape=[1, 767, 1022, 3], name='input')
+# x = tf.placeholder(dtype=tf.float32, shape=[-1, 767, 1022, 3], name='input')
+# y = tf.placeholder(dtype=tf.float32, shape=[-1, 1, 2, 1], name='label')
+
+x = tf.placeholder(dtype=tf.float32, shape=[1, 542, 718, 3], name='input')
+y = tf.placeholder(dtype=tf.float32, shape=[1, 2], name='label')
+
 x_resized = load_net(x)
-net, endpoints = inception_v3.inception_v3(x_resized, 2, is_training=True, dropout_keep_prob=0.8)
+net, endpoints = inception_v3.inception_v3(inputs=x_resized, num_classes=2, is_training=True, dropout_keep_prob=0.8)
 
 gen = dataloader_gen()
+exclude_set = ['.*biases',
+               'InceptionV3/AuxLogits/Conv2d_2b_1x1/weights',
+               'InceptionV3/Logits/Conv2d_1c_1x1/weights']
+variables_to_restore = slim.get_variables_to_restore(exclude=exclude_set)
 
+# Define loss and optimizer
+# Todo: find loss function
+learning_rate = 1e-3
+loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=net, labels=y))
+optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss=loss)
+
+saver = tf.train.Saver(variables_to_restore)
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
 
-    # saver = tf.train.Saver()
-    # saver.restore(sess=sess, save_path='../neural_network/nets/weights/inception_v3.ckpt')
+    saver.restore(sess=sess, save_path='../neural_network/nets/weights/inception_v3.ckpt')
 
+    for i in range(1000):
+        img_input, label_input = gen.__next__()
 
-    for i in range(2):
-        feed_dict = {x: gen.__next__()}
-        result = sess.run(net, feed_dict=feed_dict)
+        print(label_input)
+        feed_dict = {x: img_input, y: label_input}
+        # pred = sess.run(net, feed_dict=feed_dict)
+        pred, current_loss, _ = sess.run([net, loss, optimizer], feed_dict=feed_dict)
 
-        # print(result[1].keys())
-        res_test = result.squeeze()
+        print(pred.shape)
 
-        print(type(res_test))
-        print(res_test)
+        print(pred.squeeze())
+        print(current_loss)
 
         input()
