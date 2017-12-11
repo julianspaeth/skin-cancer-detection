@@ -2,6 +2,7 @@ import tensorflow as tf
 
 
 def image_net_normalization(images):
+    # gets tuple of rgb image and groundtruth
     data = images
     img_data = data[0]
 
