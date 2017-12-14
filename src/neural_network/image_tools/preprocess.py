@@ -66,3 +66,25 @@ def resize(images):
     """
     resized_images = tf.image.resize_bilinear(images=images, size=[299, 299], name='resize')
     return resized_images
+
+
+def preprocess(images, resizing=True, cropping=True, normalizing=True):
+    """
+    Preprocesses images
+    :param images:
+    :param resizing: Resize iamges to 299x299
+    :param cropping: Crop images to maximum central square
+    :param normalizing: Normalize images by ImageNet normalization
+    :return: Preprocessed images
+    """
+    # TODO is the order important?
+    if resizing:
+        images = resize(images)
+
+    if cropping:
+        images = crop(images)
+
+    if normalizing:
+        images = normalize(images)
+
+    return images
