@@ -93,14 +93,14 @@ optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss=lo
 
 restorer = tf.train.Saver(variables_to_restore)
 saver = tf.train.Saver()
-snapshot_folder = "./snapshots/" + datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') + "/model"
+snapshot_folder = "./snapshots/" + datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') + "/"
 
 if not os.path.exists(os.path.expanduser(snapshot_folder)):
     os.makedirs(os.path.expanduser(snapshot_folder))
 
 max_timesteps = 100000
 
-# TODO make tensorpoard history stuff!
+# TODO make tensorboard history stuff!
 
 
 with tf.Session() as sess:
@@ -117,7 +117,7 @@ with tf.Session() as sess:
         if i % 100:
             print(current_loss)
         if i % 1000:
-            saver.save(sess=sess, save_path=snapshot_folder)
+            saver.save(sess=sess, save_path=snapshot_folder + "model")
 
 
         # input()
