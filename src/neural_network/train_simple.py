@@ -113,10 +113,13 @@ with tf.Session() as sess:
 
         feed_dict = {x: img_input, y: label_input}
         # pred = sess.run(net, feed_dict=feed_dict)
-        current_loss, _ = sess.run([loss, optimizer], feed_dict=feed_dict)
-        if i % 100:
+        # current_loss, _ = sess.run([loss, optimizer], feed_dict=feed_dict)
+        if i % 100 == 0:
+            current_loss, _ = sess.run([loss, optimizer], feed_dict=feed_dict)
             print("iteration: " + str(i) + " current loss (on single image): " + str(current_loss))
-        if i % 1000:
+        else:
+            sess.run([optimizer], feed_dict=feed_dict)
+        if i % 1000 == 0:
             saver.save(sess=sess, save_path=snapshot_folder + "model")
 
 
