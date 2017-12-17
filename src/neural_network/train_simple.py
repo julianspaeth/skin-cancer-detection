@@ -93,7 +93,7 @@ optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss=lo
 
 restorer = tf.train.Saver(variables_to_restore)
 saver = tf.train.Saver()
-snapshot_folder = "./snapshots/" + datetime.datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
+snapshot_folder = "./snapshots/" + datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
 if not os.path.exists(os.path.expanduser(snapshot_folder)):
     os.makedirs(os.path.expanduser(snapshot_folder))
