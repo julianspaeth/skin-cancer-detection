@@ -1,3 +1,4 @@
+import datetime
 import json
 
 import tensorflow as tf
@@ -79,10 +80,10 @@ x_resized = load_net(x)
 net, endpoints = inception_v3.inception_v3(inputs=x_resized, num_classes=2, is_training=True, dropout_keep_prob=0.8)
 
 gen = dataloader_gen()
-exclude_set = ['.*biases',
+exclude_set_restore = ['.*biases',
                'InceptionV3/AuxLogits/Conv2d_2b_1x1/weights',
                'InceptionV3/Logits/Conv2d_1c_1x1/weights']
-variables_to_restore = slim.get_variables_to_restore(exclude=exclude_set)
+variables_to_restore = slim.get_variables_to_restore(exclude=exclude_set_restore)
 
 # Define loss and optimizer
 # Todo: find loss function
@@ -90,13 +91,24 @@ learning_rate = 1e-3
 loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=net, labels=y))
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss=loss)
 
-saver = tf.train.Saver(variables_to_restore)
+restorer = tf.train.Saver(variables_to_restore)
+saver = tf.train.Saver()
+snapshot_folder = "./snapshots/" + datetime.datetime.now()
+
+if not os.path.exists(os.path.expanduser(snapshot_folder)):
+    os.makedirs(os.path.expanduser(snapshot_folder))
+
+max_timesteps = 100000
+
+# TODO make tensorpoard history stuff!
+
+
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
 
-    saver.restore(sess=sess, save_path='../neural_network/nets/weights/inception_v3.ckpt')
+    restorer.restore(sess=sess, save_path='../neural_network/nets/weights/inception_v3.ckpt')
 
-    for i in range(1000):
+    for i in range(max_timesteps):
         img_input, label_input = gen.__next__()
 
         print(label_input)
@@ -104,9 +116,9 @@ with tf.Session() as sess:
         # pred = sess.run(net, feed_dict=feed_dict)
         pred, current_loss, _ = sess.run([net, loss, optimizer], feed_dict=feed_dict)
 
-        print(pred.shape)
-
-        print(pred.squeeze())
         print(current_loss)
+        if i % 1000:
+            saver.save(sess=sess, save_path=snapshot_folder)
 
-        input()
+
+        # input()
