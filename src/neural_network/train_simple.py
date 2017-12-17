@@ -115,7 +115,7 @@ with tf.Session() as sess:
         # pred = sess.run(net, feed_dict=feed_dict)
         current_loss, _ = sess.run([loss, optimizer], feed_dict=feed_dict)
         if i % 100:
-            print(current_loss)
+            print("iteration: " + i + " current loss (on single image): " + current_loss)
         if i % 1000:
             saver.save(sess=sess, save_path=snapshot_folder + "model")
 
