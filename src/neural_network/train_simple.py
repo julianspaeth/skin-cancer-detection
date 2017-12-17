@@ -36,23 +36,23 @@ def dataloader_gen(batch_size=2):
     # print(lesion_classes)
 
     while (i < len(list_fns_img)):
+        # IMAGE
         image = Image.open(list_fns_img[i % len(list_fns_img)])
         np_image = np.asarray(image)
+
+        if np_image.shape[0] > np_image.shape[1]:
+            np_image = np.rot90(np_image, axes=(-3, -2))
+
         res = np.expand_dims(np_image, 0)
 
+
+
+        # JSON
         json_file = json.load(open(list_fns_json[i % len(list_fns_json)]))
 
         # search for the lesion class
         clinical_class = json_file["meta"]["clinical"]["benign_malignant"]
 
-        # # benign = [1, 0]
-        # if clinical_class == "benign":
-        #     lesion_classes[i] = [1, 0]
-        #
-        # # maligne = [0, 1]
-        # elif clinical_class == "malignant":
-        #     lesion_classes[i] = [0, 1]
-        # benign = [1, 0]
         lesion_classes = np.zeros([1, 2])
         if clinical_class == "benign":
             lesion_classes[0, 0] = 1
@@ -66,7 +66,8 @@ def dataloader_gen(batch_size=2):
         yield res, lesion_classes
 
 
-def load_net(x=None):
+def make_square(x=None):
+    # TODO use correct preprocessing!!
     return tf.image.resize_bilinear(images=x, size=[299, 299], name='resize')
 
 
@@ -76,7 +77,7 @@ def load_net(x=None):
 x = tf.placeholder(dtype=tf.float32, shape=[1, 542, 718, 3], name='input')
 y = tf.placeholder(dtype=tf.float32, shape=[1, 2], name='label')
 
-x_resized = load_net(x)
+x_resized = make_square(x)
 net, endpoints = inception_v3.inception_v3(inputs=x_resized, num_classes=2, is_training=True, dropout_keep_prob=0.8)
 
 gen = dataloader_gen()
