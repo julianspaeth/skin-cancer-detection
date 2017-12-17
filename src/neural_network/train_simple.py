@@ -93,7 +93,7 @@ optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss=lo
 
 restorer = tf.train.Saver(variables_to_restore)
 saver = tf.train.Saver()
-snapshot_folder = "./snapshots/" + datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+snapshot_folder = "./snapshots/" + datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') + "/model"
 
 if not os.path.exists(os.path.expanduser(snapshot_folder)):
     os.makedirs(os.path.expanduser(snapshot_folder))
@@ -111,12 +111,11 @@ with tf.Session() as sess:
     for i in range(max_timesteps):
         img_input, label_input = gen.__next__()
 
-        print(label_input)
         feed_dict = {x: img_input, y: label_input}
         # pred = sess.run(net, feed_dict=feed_dict)
-        pred, current_loss, _ = sess.run([net, loss, optimizer], feed_dict=feed_dict)
-
-        print(current_loss)
+        current_loss, _ = sess.run([loss, optimizer], feed_dict=feed_dict)
+        if i % 100:
+            print(current_loss)
         if i % 1000:
             saver.save(sess=sess, save_path=snapshot_folder)
 
