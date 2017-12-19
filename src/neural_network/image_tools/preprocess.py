@@ -29,8 +29,6 @@ def normalize(images):
     data = images
     img_data = data[0]
 
-    # switch to BGR necessary?
-    img_data = img_data[:, :, ::-1]
     img_data = tf.cast(img_data, dtype=tf.float32)
     mean = tf.convert_to_tensor([104.00698793, 116.66876762, 122.67891434], dtype=tf.float32)
     img_data = tf.subtract(img_data, mean)
@@ -44,7 +42,8 @@ def crop(images):
     :param images: TODO
     :return: cropped images
     """
-    height = tf.constant(images.shape[1])
+
+    height = images.shape[1]
     width = images.shape[2]
     number_of_images = images.shape[0]
     cropped_images = []
@@ -77,12 +76,12 @@ def preprocess(images, resizing=True, cropping=True, normalizing=True):
     :param normalizing: Normalize images by ImageNet normalization
     :return: Preprocessed images
     """
-    # TODO is the order important?
-    if resizing:
-        images = resize(images)
 
     if cropping:
         images = crop(images)
+
+    if resizing:
+        images = resize(images)
 
     if normalizing:
         images = normalize(images)

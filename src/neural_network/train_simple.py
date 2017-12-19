@@ -8,11 +8,9 @@ import numpy as np
 
 import glob
 
+from image_tools.preprocess import preprocess
 from tensorflow.contrib import slim
 from tensorflow.contrib.slim.python.slim.nets import inception_v3
-
-
-# from .nets.inception_v3 import inception_v3
 
 
 def dataloader_gen(batch_size=2):
@@ -45,8 +43,6 @@ def dataloader_gen(batch_size=2):
 
         res = np.expand_dims(np_image, 0)
 
-
-
         # JSON
         json_file = json.load(open(list_fns_json[i % len(list_fns_json)]))
 
@@ -66,24 +62,21 @@ def dataloader_gen(batch_size=2):
         yield res, lesion_classes
 
 
-def make_square(x=None):
-    # TODO use correct preprocessing!!
-    return tf.image.resize_bilinear(images=x, size=[299, 299], name='resize')
-
-
 # x = tf.placeholder(dtype=tf.float32, shape=[-1, 767, 1022, 3], name='input')
 # y = tf.placeholder(dtype=tf.float32, shape=[-1, 1, 2, 1], name='label')
 
 x = tf.placeholder(dtype=tf.float32, shape=[1, 542, 718, 3], name='input')
 y = tf.placeholder(dtype=tf.float32, shape=[1, 2], name='label')
 
-x_resized = make_square(x)
-net, endpoints = inception_v3.inception_v3(inputs=x_resized, num_classes=2, is_training=True, dropout_keep_prob=0.8)
+x_preprocessed = preprocess(x)
+
+net, endpoints = inception_v3.inception_v3(inputs=x_preprocessed, num_classes=2, is_training=True,
+                                           dropout_keep_prob=0.8)
 
 gen = dataloader_gen()
 exclude_set_restore = ['.*biases',
-               'InceptionV3/AuxLogits/Conv2d_2b_1x1/weights',
-               'InceptionV3/Logits/Conv2d_1c_1x1/weights']
+                       'InceptionV3/AuxLogits/Conv2d_2b_1x1/weights',
+                       'InceptionV3/Logits/Conv2d_1c_1x1/weights']
 variables_to_restore = slim.get_variables_to_restore(exclude=exclude_set_restore)
 
 # Define loss and optimizer
@@ -122,6 +115,5 @@ with tf.Session() as sess:
             sess.run([optimizer], feed_dict=feed_dict)
         if i % 1000 == 0:
             saver.save(sess=sess, save_path=snapshot_folder + "model")
-
 
         # input()
