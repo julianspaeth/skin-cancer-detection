@@ -95,14 +95,19 @@ if not os.path.exists(os.path.expanduser(snapshot_folder)):
 max_timesteps = 1000000
 
 # TODO make tensorboard history stuff!
-tf.summary.scalar("loss", loss)
-tf.summary.histogram("label histogram", net)
-summaries = tf.summary.merge_all()
+
 
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
 
     restorer.restore(sess=sess, save_path='../neural_network/nets/weights/inception_v3.ckpt')
+
+    summary_loss = tf.summary.scalar("loss", loss)
+    summary_label = tf.summary.histogram("label histogram", net)
+    summaries = tf.summary.merge_all()
+
+    summary_writer = tf.summary.FileWriter(snapshot_folder, sess.graph)
+    # summary_writer.add_meta_graph(tf.get_default_graph())
 
     for i in range(max_timesteps):
         img_input, label_input = gen.__next__()
@@ -111,7 +116,9 @@ with tf.Session() as sess:
         # pred = sess.run(net, feed_dict=feed_dict)
         # current_loss, _ = sess.run([loss, optimizer], feed_dict=feed_dict)
         if i % 100 == 0:
-            _, current_loss, _ = sess.run([summaries, loss, optimizer], feed_dict=feed_dict)
+            evaluated_summaries, current_loss, _ = sess.run([summaries, loss, optimizer], feed_dict=feed_dict)
+            summary_writer.add_summary(evaluated_summaries, i)
+            summary_writer.flush()
             print("iteration: " + str(i) + " current loss (on single image): " + str(current_loss))
         else:
             sess.run([optimizer], feed_dict=feed_dict)
