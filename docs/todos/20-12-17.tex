@@ -100,12 +100,13 @@
 
 \textbf{TODOS für die Weihnachtsferien }
 \begin{itemize}
-	\item Fix tensorflow dataset api wrapper ($\rightarrow$ richtig sortieren) {\color{red} JONAS} 
-	\item Evaluationsskript/Testskript: Schwierigkeit ist richtiges Laden des alten (fertig trainierten) Netzes, da Augmentierung nicht im Graphen selbst nicht enthalten sein darf. 
-	\item richtiges Laden der Daten mit Dataset-Files (training, test, validation). Am besten ein Tupel mit Labels und Images, gucken, dass beide dann gleich lang sind (Kombination dann über Python-Befehl zip). 
-	\item simple Android-App {\color{red} JULIAN}
-	\item 
-	
+	\item Fix tensorflow dataset api wrapper ($\rightarrow$ richtig sortieren) 
+	\item Evaluationsskript/Testskript: Schwierigkeit ist richtiges Laden des alten (fertig trainierten) Netzes, da Augmentierung nicht im Graphen selbst enthalten sein darf. 
+	\item richtiges Laden der Daten mit Dataset-Files (training, test, validation). Am besten eine Liste von Tupeln mit Labels und Images, gucken, dass beide dann gleich lang sind (Kombination dann über Python-Befehl zip).
+	\item simple Android-App
+	\item Cluster zum Laufen bringen (evtl. in C214 auf den Rechnern)
+	\item Batch-Size (mindestens 2, besser wären 4) implementieren (wenn alles auf den Clustern läuft) für Simple Data Loader und Dataset api Wrapper 
+	\item Zwischenpräsentation erstellen (GoogleDocs) 
 \end{itemize}
 
 
