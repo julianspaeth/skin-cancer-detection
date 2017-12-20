@@ -122,7 +122,13 @@ def random_saturation(images, max_delta):
     return images
 
 
-def augment(images, rotation=False, vertical_flip=False, horizontal_flip=False, brightness=False, contrast=False, hue=False, saturation=False):
+def augment(images, rotation=None,
+            vertical_flip=None,
+            horizontal_flip=None,
+            brightness=None,
+            contrast=None,
+            hue=None,
+            saturation=None):
     """
     Performs an augmentation to the images
     :param images:
