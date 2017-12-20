@@ -26,7 +26,7 @@ def image_data(dataset, augmentations=None,
         return tf.image.decode_image(file_string)
 
     def _read_images(*args):
-        images = structural_map(_read_image, args)
+        images = map(_read_image, args)
         for a in augmentations:
             images = a(images)
         return images
@@ -40,16 +40,16 @@ def image_data(dataset, augmentations=None,
                        output_buffer_size=output_buffer_size)
 
 
-def structural_map(f, data):
+def map(f1, f2, data):
     """
         Performs a map over the following built-in datatypes of python:
         This means that the given function is applied to the data structurally.
         the function `f` is mapped over the iterable.
     """
     if isinstance(data, list):
-        return [structural_map(f, x) for x in data]
+        return [map(f1, f2, x) for x in data]
     else:
-        return f(data)
+        return f1(data), f2(data)
 
 
 def images_from_list_files(file_paths, **kwargs):
@@ -60,7 +60,7 @@ def images_from_list_files(file_paths, **kwargs):
         All additional key-word arguments are forwarded to `image_data`, see there for more
         information.
     """
-    datasets = structural_map(tfdata.TextLineDataset, file_paths)
+    datasets = map(tfdata.TextLineDataset, file_paths)
     if isinstance(datasets, list):
         datasets = tuple(datasets)
     dataset = tfdata.Dataset.zip(datasets)

@@ -33,7 +33,7 @@ def dataloader_gen(batch_size=2):
     # lesion_classes = np.zeros([len(list_fns_json), 2])
     # print(lesion_classes)
 
-    while (i < len(list_fns_img)):
+    while (True):
         # IMAGE
         image = Image.open(list_fns_img[i % len(list_fns_img)])
         np_image = np.asarray(image)
@@ -92,10 +92,12 @@ snapshot_folder = "./snapshots/" + datetime.datetime.now().strftime('%Y-%m-%d_%H
 if not os.path.exists(os.path.expanduser(snapshot_folder)):
     os.makedirs(os.path.expanduser(snapshot_folder))
 
-max_timesteps = 100000
+max_timesteps = 1000000
 
 # TODO make tensorboard history stuff!
-
+tf.summary.scalar("loss", loss)
+tf.summary.histogram("label histogram", net)
+summaries = tf.summary.merge_all()
 
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
@@ -109,7 +111,7 @@ with tf.Session() as sess:
         # pred = sess.run(net, feed_dict=feed_dict)
         # current_loss, _ = sess.run([loss, optimizer], feed_dict=feed_dict)
         if i % 100 == 0:
-            current_loss, _ = sess.run([loss, optimizer], feed_dict=feed_dict)
+            _, current_loss, _ = sess.run([summaries, loss, optimizer], feed_dict=feed_dict)
             print("iteration: " + str(i) + " current loss (on single image): " + str(current_loss))
         else:
             sess.run([optimizer], feed_dict=feed_dict)
