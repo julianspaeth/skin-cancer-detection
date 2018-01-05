@@ -1,4 +1,4 @@
-from sklearn.metrics import roc_curve, auc
+from sklearn.metrics import roc_curve, auc, roc_auc_score
 import matplotlib.pyplot as plt
 
 def plotROC(pred_labels, test_labels):
@@ -8,9 +8,9 @@ def plotROC(pred_labels, test_labels):
     :param test_labels: List of true labels
     :return: ROC graph
     """
-    false_positive_rate, true_positive_rate, thresholds = roc_curve(test_labels, pred_labels)
-    roc_auc = auc(false_positive_rate, true_positive_rate)
+    roc_auc = roc_auc_score(test_labels, pred_labels)
     plt.title('Receiver Operating Characteristic')
+    false_positive_rate, true_positive_rate, thresholds = roc_curve(test_labels, pred_labels)
     plt.plot(false_positive_rate, true_positive_rate, 'b', label='AUC = %0.2f' % roc_auc)
     plt.legend(loc='lower right')
     plt.plot([0, 1], [0, 1], 'r--')
@@ -18,7 +18,6 @@ def plotROC(pred_labels, test_labels):
     plt.ylim([-0.1, 1.2])
     plt.ylabel('True Positive Rate')
     plt.xlabel('False Positive Rate')
-    print("ROC-Curve plotted")
     plt.show()
 
 
@@ -46,12 +45,12 @@ def getAUC(pred_labels, test_labels):
     :return: roc_auc - AUC of prediction
     """
     false_positive_rate, true_positive_rate, thresholds = roc_curve(test_labels, pred_labels)
-    roc_auc = auc(false_positive_rate, true_positive_rate)
+    roc_auc = roc_auc_score(test_labels, pred_labels)
     return roc_auc
 
 
-test = [1,0,0,1,0,1,0,1]
-pred = [1,1,0,1,0,1,0,1]
+test = [1,0,0,1,0,1,0,1,1,0,1,1,0,0,0,0,1,0]
+pred = [1,1,0,1,0,1,0,1,1,0,1,1,0,0,0,0,0,0]
 
 print("ANN predicted %s maligne and %s benigne. AUC = %s" % (getANNResults(pred)[0], getANNResults(pred)[1], getAUC(pred, test)))
 plotROC(pred, test)
