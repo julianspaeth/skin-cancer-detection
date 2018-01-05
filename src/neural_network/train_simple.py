@@ -61,6 +61,12 @@ def dataloader_gen(batch_size=2):
 
         yield res, lesion_classes
 
+def own_loss(logits=None, labels=None):
+    # softmax_logits = tf.nn.softmax(logits=logits)
+    subs = tf.subtract(labels, logits[0])
+    return tf.reduce_sum(tf.abs(subs))
+
+
 
 # x = tf.placeholder(dtype=tf.float32, shape=[-1, 767, 1022, 3], name='input')
 # y = tf.placeholder(dtype=tf.float32, shape=[-1, 1, 2, 1], name='label')
@@ -82,7 +88,8 @@ variables_to_restore = slim.get_variables_to_restore(exclude=exclude_set_restore
 # Define loss and optimizer
 # Todo: find loss function
 learning_rate = 1e-3
-loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=net, labels=y))
+# loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=net, labels=y))
+loss = tf.reduce_mean(own_loss(logits=net, labels=y))
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss=loss)
 
 restorer = tf.train.Saver(variables_to_restore)
@@ -94,8 +101,6 @@ if not os.path.exists(os.path.expanduser(snapshot_folder)):
 
 max_timesteps = 1000000
 
-# TODO make tensorboard history stuff!
-
 
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
@@ -103,7 +108,11 @@ with tf.Session() as sess:
     restorer.restore(sess=sess, save_path='../neural_network/nets/weights/inception_v3.ckpt')
 
     summary_loss = tf.summary.scalar("loss", loss)
-    summary_label = tf.summary.histogram("label histogram", net)
+    summary_pred_hist = tf.summary.histogram("label histogram", net)
+    summary_pred_fst = tf.summary.scalar("first value", net[0][0])
+    summary_pred_snd = tf.summary.scalar("second value", net[0][1])
+    # summary_label_fst = tf.summary.scalar("first value", y[0])
+    # summary_label_snd = tf.summary.scalar("second value", y[1])
     summaries = tf.summary.merge_all()
 
     summary_writer = tf.summary.FileWriter(snapshot_folder, sess.graph)
@@ -119,7 +128,7 @@ with tf.Session() as sess:
             evaluated_summaries, current_loss, _ = sess.run([summaries, loss, optimizer], feed_dict=feed_dict)
             summary_writer.add_summary(evaluated_summaries, i)
             summary_writer.flush()
-            print("iteration: " + str(i) + " current loss (on single image): " + str(current_loss))
+            print("iteration: " + str(i) + " current loss (on single image): " + str(current_loss) )
         else:
             sess.run([optimizer], feed_dict=feed_dict)
         if i % 1000 == 0:
