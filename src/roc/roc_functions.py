@@ -37,9 +37,7 @@ def getANNResults(pred_labels):
             benigne+=1
     return maligne, benigne
 
-# Ermittelt AUC der Vorhersage
-# In: Vorhergesagte Labels, Testlabels
-# Out: AUC der Vorhersage
+
 def getAUC(pred_labels, test_labels):
     """
     Compute AUC of prediction
