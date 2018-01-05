@@ -1,8 +1,4 @@
-import datetime
 import json
-
-import tensorflow as tf
-from PIL import Image
 import os
 import csv
 import numpy as np
@@ -11,14 +7,14 @@ import glob
 
 
 def dataset_loader():
-    #train_path = '/Users/florencelopez/Desktop/STUDIUM /Master/Fächer/Praktikum Machine Learning/PrakikumML2017/src/datasets/training.dataset'
-    #test_path = '/Users/florencelopez/Desktop/STUDIUM /Master/Fächer/Praktikum Machine Learning/PrakikumML2017/src/datasets/test.dataset'
-    #validation_path = '/Users/florencelopez/Desktop/STUDIUM /Master/Fächer/Praktikum Machine Learning/PrakikumML2017/src/datasets/validation.dataset'
+    train_path = '../datasets/Minimalbeispiel/sets/train.dataset'
+    test_path = '../datasets/Minimalbeispiel/sets/test.dataset'
+    validation_path = '../datasets/Minimalbeispiel/sets/validation.dataset'
 
-    train_path = '/Users/florencelopez/Desktop/Minimalbeispiel/sets/train.dataset'
-    test_path = '/Users/florencelopez/Desktop/Minimalbeispiel/sets/test.dataset'
-    validation_path = '/Users/florencelopez/Desktop/Minimalbeispiel/sets/validation.dataset'
-    overall_description = '/Users/florencelopez/Desktop/Minimalbeispiel/descriptions/'
+    #train_path = '/Users/florencelopez/Desktop/Minimalbeispiel/sets/train.dataset'
+    #test_path = '/Users/florencelopez/Desktop/Minimalbeispiel/sets/test.dataset'
+    #validation_path = '/Users/florencelopez/Desktop/Minimalbeispiel/sets/validation.dataset'
+    overall_description = '../datasets/Minimalbeispiel/descriptions/'
 
     os_path_train = os.path.expanduser(train_path)
     os_path_test = os.path.expanduser(test_path)
@@ -61,6 +57,7 @@ def dataset_loader():
         print(description_path)
         os_path_description = os.path.expanduser(description_path)
         list_fns_description = glob.glob(os_path_description)
+        print(len(list_fns_description))
         json_file = json.load(open(list_fns_description[0]))
         # search for the lesion class
         clinical_class = json_file["meta"]["clinical"]["benign_malignant"]
@@ -121,9 +118,4 @@ def dataset_loader():
     dataset_train = list(zip(data_train, lesion_classes_train))
     dataset_test = list(zip(data_test, lesion_classes_test))
     dataset_validation = list(zip(data_validation, lesion_classes_validation))
-    print(dataset_train)
-    print(dataset_test)
-    print(dataset_validation)
-
-
-dataset_loader()
+    return dataset_train, dataset_test, dataset_validation

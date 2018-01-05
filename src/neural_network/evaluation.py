@@ -9,7 +9,7 @@ import numpy as np
 import glob
 
 from image_tools.preprocess import preprocess
-from tensorflow.contrib import slim
+from load_data import dataset_loader
 from tensorflow.contrib.slim.python.slim.nets import inception_v3
 
 
@@ -76,10 +76,8 @@ net, endpoints = inception_v3.inception_v3(inputs=x_preprocessed, num_classes=2,
                                            dropout_keep_prob=0.8)
 
 gen = dataloader_gen()
-exclude_set_restore = ['.*biases',
-                       'InceptionV3/AuxLogits/Conv2d_2b_1x1/weights',
-                       'InceptionV3/Logits/Conv2d_1c_1x1/weights']
-variables_to_restore = slim.get_variables_to_restore(exclude=exclude_set_restore)
+
+
 
 # Define loss and optimizer
 # Todo: find loss function
@@ -87,45 +85,57 @@ learning_rate = 1e-3
 loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=net, labels=y))
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss=loss)
 
-restorer = tf.train.Saver(variables_to_restore)
+restorer = tf.train.Saver() # load correct weights
 saver = tf.train.Saver()
 snapshot_folder = "./snapshots/" + datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') + "/"
 
 if not os.path.exists(os.path.expanduser(snapshot_folder)):
     os.makedirs(os.path.expanduser(snapshot_folder))
 
-max_timesteps = 1000000
-
-# TODO make tensorboard history stuff!
-
+train_dataset, test_dataset, validation_dataset = dataset_loader()
+max_timesteps = len(test_dataset)
 
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
 
-    restorer.restore(sess=sess, save_path='../neural_network/nets/weights/inception_v3.ckpt')
+    restorer.restore(sess=sess, save_path='./snapshots/2018-01-05_11-43-33/model')
 
-    summary_loss = tf.summary.scalar("loss", loss)
-    summary_label = tf.summary.histogram("label histogram", net)
-    summary_image = tf.summary.image("image", x_preprocessed)
-    summaries = tf.summary.merge_all()
-
-    summary_writer = tf.summary.FileWriter(snapshot_folder, sess.graph)
-    # summary_writer.add_meta_graph(tf.get_default_graph())
+    true_positives = 0
+    false_positives = 0
+    true_negatives = 0
+    false_negatives = 0
 
     for i in range(max_timesteps):
         img_input, label_input = gen.__next__()
-
         feed_dict = {x: img_input, y: label_input}
-        # pred = sess.run(net, feed_dict=feed_dict)
-        # current_loss, _ = sess.run([loss, optimizer], feed_dict=feed_dict)
-        if i % 100 == 0:
-            evaluated_summaries, current_loss, _ = sess.run([summaries, loss, optimizer], feed_dict=feed_dict)
-            summary_writer.add_summary(evaluated_summaries, i)
-            summary_writer.flush()
-            print("iteration: " + str(i) + " current loss (on single image): " + str(current_loss))
+        result, label = sess.run([net,y], feed_dict=feed_dict)
+        if (result[0][0] >= result[0][1]):
+            result[0][0] = 1
+            result[0][1] = 0
         else:
-            sess.run([optimizer], feed_dict=feed_dict)
-        if i % 1000 == 0:
-            saver.save(sess=sess, save_path=snapshot_folder + "model")
+            result[0][0] = 0
+            result[0][1] = 1
 
-        # input()
+        result_set = set(result[0])
+        label_set = set(label[0])
+
+        if ((result_set == label_set) and (result_set == set([1,0]))):
+            true_negatives+=1
+        elif ((result_set == label_set) and (result_set == set([0,1]))):
+            true_positives+=1
+        elif ((result_set != label_set) and (result_set == set([1, 0]))):
+            false_negatives+=1
+        elif ((result_set != label_set) and (result_set == set([0, 1]))):
+            false_positives+=1
+
+    acc = (true_positives + true_negatives) / max_timesteps
+
+    print("TP: " + str(true_positives) + " TN: " + str(true_negatives) + " FP: " + str(false_positives) + " FN: " + str(false_negatives)
+          + " Acc: " + str(acc))
+
+
+
+
+
+
+
