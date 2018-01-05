@@ -19,8 +19,11 @@ def dataloader_gen(batch_size=2):
 
     # img_path = 'D:\Data\Documents\AutomaticSaveToDisc\Datasets\ISIC-Archive-Downloader-master\Data\Images\*_resized.jpg'
     # json_path = 'D:\Data\Documents\AutomaticSaveToDisc\Datasets\ISIC-Archive-Downloader-master\Data\Descriptions\*'
-    img_path = '/Users/spaethju//Desktop/Images/*_resized.jpg'
-    json_path = '/Users/spaethju//Desktop/Labels/*'
+    #img_path = '/Users/spaethju//Desktop/Images/*_resized.jpg'
+    #json_path = '/Users/spaethju//Desktop/Labels/*'
+
+    img_path = '../datasets/Minimalbeispiel/images/*_resized.jpg'
+    json_path = '../datasets/Minimalbeispiel/descriptions/*'
 
     os_path_img = os.path.expanduser(img_path)
     os_path_json = os.path.expanduser(json_path)
@@ -32,36 +35,45 @@ def dataloader_gen(batch_size=2):
     print(len(list_fns_json))
 
     i = 0
-    # lesion_classes = np.zeros([len(list_fns_json), 2])
-    # print(lesion_classes)
 
     while (True):
-        # IMAGE
-        image = Image.open(list_fns_img[i % len(list_fns_img)])
-        np_image = np.asarray(image)
 
-        if np_image.shape[0] > np_image.shape[1]:
-            np_image = np.rot90(np_image, axes=(-3, -2))
+        # batch-size
+        res = []
+        lesion_classes = np.zeros([batch_size, 2])
+        for j in range(batch_size):
 
-        res = np.expand_dims(np_image, 0)
+            # IMAGE
+            image = Image.open(list_fns_img[i % len(list_fns_img)])
+            np_image = np.asarray(image)
 
-        # JSON
-        json_file = json.load(open(list_fns_json[i % len(list_fns_json)]))
 
-        # search for the lesion class
-        clinical_class = json_file["meta"]["clinical"]["benign_malignant"]
+            if np_image.shape[0] > np_image.shape[1]:
+                np_image = np.rot90(np_image, axes=(-3, -2))
 
-        lesion_classes = np.zeros([1, 2])
-        if clinical_class == "benign":
-            lesion_classes[0, 0] = 1
+            # res = np.expand_dims(np_image, 0)
+            res.append(np_image)
 
-        # maligne = [0, 1]
-        elif clinical_class == "malignant":
-            lesion_classes[0, 1] = 1
+            # JSON
+            json_file = json.load(open(list_fns_json[i % len(list_fns_json)]))
 
-        i = i + 1
+            # search for the lesion class
+            clinical_class = json_file["meta"]["clinical"]["benign_malignant"]
 
+            #lesion_classes = np.zeros([1, 2])
+            if clinical_class == "benign":
+                lesion_classes[j, 0] = 1
+
+            # maligne = [0, 1]
+            elif clinical_class == "malignant":
+                lesion_classes[j, 1] = 1
+
+            i = i + 1
+
+        print(len(res), lesion_classes.shape)
         yield res, lesion_classes
+
+
 
 def own_loss(logits=None, labels=None):
     # softmax_logits = tf.nn.softmax(logits=logits)
@@ -70,18 +82,20 @@ def own_loss(logits=None, labels=None):
 
 
 
-# x = tf.placeholder(dtype=tf.float32, shape=[-1, 767, 1022, 3], name='input')
-# y = tf.placeholder(dtype=tf.float32, shape=[-1, 1, 2, 1], name='label')
+batch_size = 2
 
-x = tf.placeholder(dtype=tf.float32, shape=[1, 542, 718, 3], name='input')
-y = tf.placeholder(dtype=tf.float32, shape=[1, 2], name='label')
+#x = tf.placeholder(dtype=tf.float32, shape=[-1, 767, 1022, 3], name='input')
+y = tf.placeholder(dtype=tf.float32, shape=[batch_size, 2], name='label')
+
+x = tf.placeholder(dtype=tf.float32, shape=[batch_size, 542, 718, 3], name='input')
+#y = tf.placeholder(dtype=tf.float32, shape=[1, 2], name='label')
 
 x_preprocessed = preprocess(x)
 
 net, endpoints = inception_v3.inception_v3(inputs=x_preprocessed, num_classes=2, is_training=True,
                                            dropout_keep_prob=0.8)
 
-gen = dataloader_gen()
+gen = dataloader_gen(batch_size)
 exclude_set_restore = ['.*biases',
                        'InceptionV3/AuxLogits/Conv2d_2b_1x1/weights',
                        'InceptionV3/Logits/Conv2d_1c_1x1/weights']
