@@ -17,13 +17,13 @@ def dataloader_gen(batch_size=2):
     # img_path = '/Users/spaethju/Desktop/*jpg'
     # json_path = '/Users/spaethju/Desktop/*'
 
-    # img_path = 'D:\Data\Documents\AutomaticSaveToDisc\Datasets\ISIC-Archive-Downloader-master\Data\Images\*_resized.jpg'
-    # json_path = 'D:\Data\Documents\AutomaticSaveToDisc\Datasets\ISIC-Archive-Downloader-master\Data\Descriptions\*'
+    img_path = 'D:\Data\Documents\AutomaticSaveToDisc\Datasets\ISIC-Archive-Downloader-master\Data\Images\*_resized.jpg'
+    json_path = 'D:\Data\Documents\AutomaticSaveToDisc\Datasets\ISIC-Archive-Downloader-master\Data\Descriptions\*'
     #img_path = '/Users/spaethju//Desktop/Images/*_resized.jpg'
     #json_path = '/Users/spaethju//Desktop/Labels/*'
 
-    img_path = '../datasets/Minimalbeispiel/images/*_resized.jpg'
-    json_path = '../datasets/Minimalbeispiel/descriptions/*'
+    # img_path = '../datasets/Minimalbeispiel/images/*_resized.jpg'
+    # json_path = '../datasets/Minimalbeispiel/descriptions/*'
 
     os_path_img = os.path.expanduser(img_path)
     os_path_json = os.path.expanduser(json_path)
@@ -70,7 +70,7 @@ def dataloader_gen(batch_size=2):
 
             i = i + 1
 
-        print(len(res), lesion_classes.shape)
+        # print(len(res), lesion_classes.shape)
         yield res, lesion_classes
 
 
@@ -150,5 +150,5 @@ with tf.Session() as sess:
             sess.run([optimizer], feed_dict=feed_dict)
         if i % 1000 == 0:
             saver.save(sess=sess, save_path=snapshot_folder + "model")
+            print("Saved snapshot for iteration: " + str(i))
 
-        # input()
