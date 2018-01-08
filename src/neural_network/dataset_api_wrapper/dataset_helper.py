@@ -7,9 +7,9 @@ def image_data(dataset, augmentations=None,
                shuffle_buffer_size=None):
     """
         Args:
-            dataset: The data set that contains the structures of paths.
-            augmentations: A list of functions that take a structure of images and return a
-                structure of images.
+            dataset: The data set that contains the list of paths.
+            augmentations: A list of functions that take a structure of images and label information and return a
+                structure of images and label information.
             num_threads: The number of threads to use for loading and augmenting the images. `None` ==  single
             output_buffer_size: The size of the output buffer that is used for mapping the image
                 decoder and augmentations over the dataset.
@@ -25,8 +25,16 @@ def image_data(dataset, augmentations=None,
         file_string = tf.read_file(img)
         return tf.image.decode_image(file_string)
 
+    def _read_json(img):
+        file_string = tf.read_file(img)
+
+        # TOdo read json in tensorflow correctly
+        return
+
+
+
     def _read_images(*args):
-        images = map(_read_image, args)
+        images = tuple([_read_image( args[0]), _read_json(args[1]) ])
         for a in augmentations:
             images = a(images)
         return images
@@ -40,25 +48,19 @@ def image_data(dataset, augmentations=None,
                        output_buffer_size=output_buffer_size)
 
 
-def map(f1, f2, data):
+def map(f, data):
     """
-        Performs a map over the following built-in datatypes of python:
-        This means that the given function is applied to the data structurally.
-        the function `f` is mapped over the iterable.
+        Performs a map over lists of python and applies f on each element
     """
     if isinstance(data, list):
-        return [map(f1, f2, x) for x in data]
+        return [map(f, x) for x in data]
     else:
-        return f1(data), f2(data)
+        return f(data), f(data)
 
 
 def images_from_list_files(file_paths, **kwargs):
     """
-        Takes a structure of paths to files that contain lists of images and loads these. The
-        structure may be composed of dictionaries, lists, and tuples.
-
-        All additional key-word arguments are forwarded to `image_data`, see there for more
-        information.
+        Takes a structure of paths to files that contain lists of images and loads these.
     """
     datasets = map(tfdata.TextLineDataset, file_paths)
     if isinstance(datasets, list):
