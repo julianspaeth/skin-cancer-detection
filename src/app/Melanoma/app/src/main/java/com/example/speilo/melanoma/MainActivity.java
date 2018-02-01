@@ -8,7 +8,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Context context;
+    private Context context = getApplicationContext();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
