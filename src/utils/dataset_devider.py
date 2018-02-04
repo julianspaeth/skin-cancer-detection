@@ -11,6 +11,12 @@ dataset_path_test = '../datasets/test.dataset'
 if not os.path.exists(dataset_local_path + prefix_test):
     os.makedirs(dataset_local_path + prefix_test)
 
+if not os.path.exists(dataset_local_path + prefix_test + "/Images"):
+    os.makedirs(dataset_local_path + prefix_test + "/Images")
+
+if not os.path.exists(dataset_local_path + prefix_test + "/Descriptions"):
+    os.makedirs(dataset_local_path + prefix_test + "/Descriptions")
+
 with open(os.path.expanduser(dataset_path_test)) as f:
     for line in f:
         src_path = dataset_local_path + "/Images/" + line.strip() + "_resized.jpg"
