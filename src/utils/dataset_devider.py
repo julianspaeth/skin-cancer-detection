@@ -2,7 +2,7 @@ import os
 
 import shutil
 
-dataset_local_path = "D:/Data/Documents/AutomaticSaveToDisc/Datasets/ISIC-Archive-Downloader-master/Data"
+dataset_local_path = "/data/scratch/einig/SkinCancerData"
 
 
 prefix_test = '/test'
