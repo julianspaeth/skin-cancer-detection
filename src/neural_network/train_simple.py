@@ -12,10 +12,15 @@ from image_tools.preprocess import preprocess
 from tensorflow.contrib import slim
 from tensorflow.contrib.slim.python.slim.nets import inception_v3
 
+# os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 def dataloader_gen(batch_size=2):
     # img_path = '/Users/spaethju/Desktop/*jpg'
     # json_path = '/Users/spaethju/Desktop/*'
+
+    ## Cluster paths
+    # img_path = '/data/scratch/einig/SkinCancerData/train/Images/*_resized.jpg'
+    # json_path = '/data/scratch/einig/SkinCancerData/train/Descriptions/*'
 
     img_path = 'D:\Data\Documents\AutomaticSaveToDisc\Datasets\ISIC-Archive-Downloader-master\Data\Images\*_resized.jpg'
     json_path = 'D:\Data\Documents\AutomaticSaveToDisc\Datasets\ISIC-Archive-Downloader-master\Data\Descriptions\*'
