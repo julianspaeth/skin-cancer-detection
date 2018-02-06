@@ -121,8 +121,10 @@ if not os.path.exists(os.path.expanduser(snapshot_folder)):
 
 max_timesteps = 1000000
 
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True
 
-with tf.Session() as sess:
+with tf.Session(config=config) as sess:
     sess.run(tf.global_variables_initializer())
 
     restorer.restore(sess=sess, save_path='../neural_network/nets/weights/inception_v3.ckpt')
