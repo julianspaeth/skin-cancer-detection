@@ -74,12 +74,16 @@ def dataloader_gen(batch_size=2):
         yield res, lesion_classes
 
 
-
-def own_loss(logits=None, labels=None):
-    # softmax_logits = tf.nn.softmax(logits=logits)
-    subs = tf.subtract(labels, logits[0])
+def l1_loss(logits=None, labels=None):
+    subs = tf.subtract(labels, logits)
     return tf.reduce_sum(tf.abs(subs))
 
+def l2_loss(logits=None, labels=None):
+    subs = tf.subtract(labels, logits)
+    return tf.reduce_sum(tf.pow(subs, 2))
+
+def sm_cross_loss(logits=None, labels=None):
+    return tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels)
 
 
 batch_size = 2
@@ -102,10 +106,10 @@ exclude_set_restore = ['.*biases',
 variables_to_restore = slim.get_variables_to_restore(exclude=exclude_set_restore)
 
 # Define loss and optimizer
-# Todo: find loss function
 learning_rate = 1e-3
+# Todo: find loss function
 # loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=net, labels=y))
-loss = tf.reduce_mean(own_loss(logits=net, labels=y))
+loss = tf.reduce_mean(l1_loss(logits=net, labels=y))
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss=loss)
 
 restorer = tf.train.Saver(variables_to_restore)
