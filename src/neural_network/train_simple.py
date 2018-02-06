@@ -22,8 +22,8 @@ def dataloader_gen(batch_size=2):
     # img_path = '/data/scratch/einig/SkinCancerData/train/Images/*_resized.jpg'
     # json_path = '/data/scratch/einig/SkinCancerData/train/Descriptions/*'
 
-    img_path = 'D:\Data\Documents\AutomaticSaveToDisc\Datasets\ISIC-Archive-Downloader-master\Data\Images\*_resized.jpg'
-    json_path = 'D:\Data\Documents\AutomaticSaveToDisc\Datasets\ISIC-Archive-Downloader-master\Data\Descriptions\*'
+    img_path = 'D:/Data/Documents/AutomaticSaveToDisc/Datasets/ISIC-Archive-Downloader-master/Data/Images/*_resized.jpg'
+    json_path = 'D:/Data/Documents/AutomaticSaveToDisc/Datasets/ISIC-Archive-Downloader-master/Data/Descriptions/*'
     #img_path = '/Users/spaethju//Desktop/Images/*_resized.jpg'
     #json_path = '/Users/spaethju//Desktop/Labels/*'
 
@@ -34,24 +34,26 @@ def dataloader_gen(batch_size=2):
     os_path_json = os.path.expanduser(json_path)
 
     list_fns_img = glob.glob(os_path_img)
-    list_fns_json = glob.glob(os_path_json)
+    # list_fns_json = glob.glob(os_path_json)
 
     print(len(list_fns_img))
-    print(len(list_fns_json))
+    # print(len(list_fns_json))
 
     i = 0
 
     while (True):
-
         # batch-size
         res = []
         lesion_classes = np.zeros([batch_size, 2])
         for j in range(batch_size):
+            single_img_path = list_fns_img[i % len(list_fns_img)].replace("\\", "/")
+
+            fn_name = "_".join(single_img_path.split('/')[-1].split("_")[0: 2])
+            json_single_img_path = "/".join(single_img_path.split('/')[0: -2]) + "/Descriptions/" + fn_name
 
             # IMAGE
-            image = Image.open(list_fns_img[i % len(list_fns_img)])
+            image = Image.open(single_img_path)
             np_image = np.asarray(image)
-
 
             if np_image.shape[0] > np_image.shape[1]:
                 np_image = np.rot90(np_image, axes=(-3, -2))
@@ -60,7 +62,8 @@ def dataloader_gen(batch_size=2):
             res.append(np_image)
 
             # JSON
-            json_file = json.load(open(list_fns_json[i % len(list_fns_json)]))
+            # json_file = json.load(open(list_fns_json[i % len(list_fns_json)]))
+            json_file = json.load(open(json_single_img_path))
 
             # search for the lesion class
             clinical_class = json_file["meta"]["clinical"]["benign_malignant"]
@@ -75,7 +78,6 @@ def dataloader_gen(batch_size=2):
 
             i = i + 1
 
-        # print(len(res), lesion_classes.shape)
         yield res, lesion_classes
 
 
