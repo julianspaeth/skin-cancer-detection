@@ -9,6 +9,7 @@ import numpy as np
 import glob
 
 from neural_network.image_tools.preprocess import preprocess
+from neural_network.image_tools.augmentations import augment
 
 from tensorflow.contrib import slim
 from tensorflow.contrib.slim.python.slim.nets import inception_v3
@@ -62,8 +63,8 @@ def train(img_path, loss_func, learning_rate, batch_size, snapshot_folder, save_
     y = tf.placeholder(dtype=tf.float32, shape=[batch_size, 2], name='label')
 
     x_preprocessed = preprocess(x)
-
-    net, endpoints = inception_v3.inception_v3(inputs=x_preprocessed, num_classes=2, is_training=True,
+    x_augmented  = augment(x_preprocessed, random=True, rotation=True, vertical_flip=True)
+    net, endpoints = inception_v3.inception_v3(inputs=x_augmented, num_classes=2, is_training=True,
                                                dropout_keep_prob=0.8)
 
     gen = dataloader_gen(img_path=img_path, batch_size=batch_size)
@@ -92,9 +93,8 @@ def train(img_path, loss_func, learning_rate, batch_size, snapshot_folder, save_
         summary_pred_hist = tf.summary.histogram("label histogram", net)
         summary_pred_fst = tf.summary.scalar("first value", net[0][0])
         summary_pred_snd = tf.summary.scalar("second value", net[0][1])
-        # summary_label_fst = tf.summary.scalar("first value", y[0])
-        # summary_label_snd = tf.summary.scalar("second value", y[1])
-        summary_image = tf.summary.image("image", x_preprocessed)
+        summary_image = tf.summary.image("preprocessed image", x_preprocessed)
+        summary_image = tf.summary.image("augmented image", x_augmented)
         summaries = tf.summary.merge_all()
 
         summary_writer = tf.summary.FileWriter(snapshot_folder, sess.graph)

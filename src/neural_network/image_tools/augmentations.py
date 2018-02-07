@@ -4,31 +4,42 @@ Image augmentations applied that should be only applied to the training data
 
 import tensorflow as tf
 from random import *
+import random as rd
 
 
-def random_rotation(images):
+def random_rotation(images, random):
     """
     Rotates the images randomly 0 to 3 times by 90 degrees
     :param images: TODO
     :return: Rotated images
     """
+
+    if random:
+        if rd.random() < 0.3:
+            return images
+
     number_of_images = images.shape[0]
     rotated_images = []
     for i in range(number_of_images):
         image = images[i, :, :, :]
-        number_of_rotations = randint(0,3)
+        number_of_rotations = randint(0, 3)
         rotated_image = tf.image.rot90(image, number_of_rotations)
         rotated_images.append(rotated_image)
     images = tf.stack(rotated_images)
     return images
 
 
-def random_vertical_flip(images):
+def random_vertical_flip(images, random):
     """
     Flips the images vertically (upside down) with a 50:50 chance
     :param images: TODO
     :return: Flipped images
     """
+
+    if random:
+        if rd.random() < 0.3:
+            return images
+
     number_of_images = images.shape[0]
     flipped_vertically_images = []
     for i in range(number_of_images):
@@ -39,12 +50,17 @@ def random_vertical_flip(images):
     return images
 
 
-def random_horizontal_flip(images):
+def random_horizontal_flip(images, random):
     """
     Flips the images horizontally (right to left) with a 50:50 chance
     :param images: TODO
     :return: Flipped images
     """
+
+    if random:
+        if rd.random() < 0.3:
+            return images
+
     number_of_images = images.shape[0]
     flipped_horizontally_images = []
     for i in range(number_of_images):
@@ -55,13 +71,18 @@ def random_horizontal_flip(images):
     return images
 
 
-def random_brightness(images, max_delta):
+def random_brightness(images, max_delta, random):
     """ 
     Sets a random brightness to the images with a delta of +-max_delta
     :param images: TODO
     :param max_delta: Delta randomly picked in the interval [-max_delta, max_delta]
     :return: Images with new brightness
     """
+
+    if random:
+        if rd.random() < 0.3:
+            return images
+
     number_of_images = images.shape[0]
     brightness_images = []
     for i in range(number_of_images):
@@ -72,13 +93,18 @@ def random_brightness(images, max_delta):
     return images
 
 
-def random_contrast(images, max_delta):
+def random_contrast(images, max_delta, random):
     """
     Sets a random contrast to the images with a delta of +-max_delta
     :param images: TODO
     :param max_delta: Delta randomly picked in the interval [-max_delta, max_delta]
     :return: Images with new contrast
     """
+
+    if random:
+        if rd.random() < 0.3:
+            return images
+
     number_of_images = images.shape[0]
     contrast_images = []
     for i in range(number_of_images):
@@ -89,13 +115,18 @@ def random_contrast(images, max_delta):
     return images
 
 
-def random_hue(images, max_delta):
+def random_hue(images, max_delta, random):
     """
     Sets a random hue to the images with a delta of +-max_delta
     :param images: TODO
     :param max_delta: Delta randomly picked in the interval [-max_delta, max_delta]
     :return: Images with new hue
     """
+
+    if random:
+        if rd.random() < 0.3:
+            return images
+
     number_of_images = images.shape[0]
     hue_images = []
     for i in range(number_of_images):
@@ -105,13 +136,19 @@ def random_hue(images, max_delta):
     images = tf.stack(hue_images)
     return images
 
-def random_saturation(images, max_delta):
+
+def random_saturation(images, max_delta, random):
     """
     Sets a random contrast to the images with a delta of +-max_delta
     :param images: TODO
     :param max_delta: Delta randomly picked in the interval [-max_delta, max_delta]
     :return: Images with new saturation
     """
+
+    if random:
+        if rd.random() < 0.3:
+            return images
+
     number_of_images = images.shape[0]
     saturation_images = []
     for i in range(number_of_images):
@@ -122,7 +159,9 @@ def random_saturation(images, max_delta):
     return images
 
 
-def augment(images, rotation=None,
+def augment(images,
+            random=True,
+            rotation=None,
             vertical_flip=None,
             horizontal_flip=None,
             brightness=None,
@@ -142,25 +181,25 @@ def augment(images, rotation=None,
     :return: Augmented images
     """
     if rotation:
-        images = random_rotation(images)
+        images = random_rotation(images, random)
 
     if vertical_flip:
-        images = random_vertical_flip(images)
+        images = random_vertical_flip(images, random)
 
     if horizontal_flip:
-        images = random_horizontal_flip(images)
+        images = random_horizontal_flip(images, random)
 
     if brightness:
-        images = random_brightness(images, brightness)
+        images = random_brightness(images, brightness, random)
 
     if contrast:
-        images = random_contrast(images, contrast)
+        images = random_contrast(images, contrast, random)
 
     if hue:
-        images = random_hue(images, hue)
+        images = random_hue(images, hue, random)
 
     if saturation:
-        images = random_saturation(images, saturation)
+        images = random_saturation(images, saturation, random)
 
     return images
 
