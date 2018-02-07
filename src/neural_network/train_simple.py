@@ -57,7 +57,7 @@ def dataloader_gen(img_path=None, batch_size=2):
         yield res, lesion_classes
 
 
-def train(img_path, loss_func, learning_rate, batch_size, save_intervals):
+def train(img_path, loss_func, learning_rate, batch_size, snapshot_folder, save_intervals):
     x = tf.placeholder(dtype=tf.float32, shape=[batch_size, 542, 718, 3], name='input')
     y = tf.placeholder(dtype=tf.float32, shape=[batch_size, 2], name='label')
 
@@ -77,10 +77,6 @@ def train(img_path, loss_func, learning_rate, batch_size, save_intervals):
 
     restorer = tf.train.Saver(variables_to_restore)
     saver = tf.train.Saver()
-    snapshot_folder = "./neural_network/snapshots/" + datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') + "/"
-
-    if not os.path.exists(os.path.expanduser(snapshot_folder)):
-        os.makedirs(os.path.expanduser(snapshot_folder))
 
     max_timesteps = 1000000
 
