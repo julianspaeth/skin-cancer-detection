@@ -4,7 +4,6 @@ import datetime
 
 import neural_network.training.losses as losses
 from neural_network.train_network import train
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 
 def main(FLAGS):
@@ -13,6 +12,9 @@ def main(FLAGS):
     dpath = FLAGS.dpath
     str_list_log.append("Machine Identifier: {}".format(dpath))
     if dpath == 'cluster':
+        os.environ["CUDA_VISIBLE_DEVICES"] = FLAGS.cuda_device
+        str_list_log.append("Cuda visible device name: {}".format(FLAGS.cuda_device))
+
         img_path = '/data/scratch/einig/SkinCancerData/train/Images/*_resized.jpg'
     elif dpath == 'florence':
         pass
@@ -54,10 +56,13 @@ def main(FLAGS):
     with open(snapshot_folder + "logfile", "w") as f:
         f.write('\n'.join(str_list_log))
 
-    train(img_path=img_path, loss_func=loss_func, batch_size=batchsize, learning_rate=learning_rate, snapshot_folder=snapshot_folder, save_intervals=save_intervals)
+    train(img_path=img_path, loss_func=loss_func, batch_size=batchsize, learning_rate=learning_rate,
+          snapshot_folder=snapshot_folder, save_intervals=save_intervals)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument("--cuda_device", default="0", help="gpu device name")
     parser.add_argument("--dpath", default="cluster", help="datapath identifier to use")
     parser.add_argument("--lossid", default="l1", help="loss function identifier to use")
     parser.add_argument("--lr", default=1e-3, type=float, help="learning rate")
