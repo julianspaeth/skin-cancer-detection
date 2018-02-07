@@ -3,7 +3,7 @@ import os
 import datetime
 
 import neural_network.training.losses as losses
-from neural_network.train_simple import train
+from neural_network.train_network import train
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 
@@ -11,7 +11,7 @@ def main(FLAGS):
     str_list_log = []
 
     dpath = FLAGS.dpath
-    str_list_log.append(dpath)
+    str_list_log.append("Machine Identifier: {}".format(dpath))
     if dpath == 'cluster':
         img_path = '/data/scratch/einig/SkinCancerData/train/Images/*_resized.jpg'
     elif dpath == 'florence':
@@ -21,7 +21,7 @@ def main(FLAGS):
     elif dpath == 'jonas':
         img_path = 'D:/Data/Documents/AutomaticSaveToDisc/Datasets/ISIC-Archive-Downloader-master/Data/Images/*_resized.jpg'
 
-    str_list_log.append(img_path)
+    str_list_log.append("Datase Image Path: {}".format(img_path))
 
     lossid = FLAGS.lossid
     if lossid == 'l1':
@@ -31,22 +31,22 @@ def main(FLAGS):
     elif lossid == 'cr':
         loss_func = losses.sm_cross_loss
 
-    str_list_log.append(lossid)
-    str_list_log.append(loss_func.__name__)
+    str_list_log.append("Loss ID: {}".format(lossid))
+    str_list_log.append("Loss function name: {}".format(loss_func.__name__))
 
     if dpath == 'cluster':
         save_intervals = [500, 7000]
     else:
         save_intervals = [100, 1000]
 
-    str_list_log.append(str(save_intervals))
+    str_list_log.append("Intervals to log network [console print , snapshot save]: {}".format(save_intervals))
     batchsize = FLAGS.bs
-    str_list_log.append(str(batchsize))
+    str_list_log.append("Batchsize: {}".format(img_path))
     learning_rate = FLAGS.lr
-    str_list_log.append(str(learning_rate))
+    str_list_log.append("Learning Rate: {}".format(learning_rate))
 
     snapshot_folder = "./neural_network/snapshots/" + datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') + "/"
-    str_list_log.append(snapshot_folder)
+    str_list_log.append("Snapshotfolder: {}".format(snapshot_folder))
 
     if not os.path.exists(os.path.expanduser(snapshot_folder)):
         os.makedirs(os.path.expanduser(snapshot_folder))
