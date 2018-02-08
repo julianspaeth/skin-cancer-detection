@@ -53,7 +53,7 @@ def main(FLAGS):
     if not os.path.exists(os.path.expanduser(snapshot_folder)):
         os.makedirs(os.path.expanduser(snapshot_folder))
 
-    with open(snapshot_folder + "logfile", "w") as f:
+    with open(snapshot_folder + "logfile.log", "w") as f:
         f.write('\n'.join(str_list_log))
 
     train(img_path=img_path, loss_func=loss_func, batch_size=batchsize, learning_rate=learning_rate,
