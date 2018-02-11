@@ -74,7 +74,7 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
 
-        restorer.restore(sess=sess, save_path=snapshot_folder + '/model')
+        restorer.restore(sess=sess, save_path=snapshot_folder + '/model.ckpt')
 
         true_positives = 0
         false_positives = 0
