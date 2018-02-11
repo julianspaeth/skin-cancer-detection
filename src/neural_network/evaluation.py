@@ -12,14 +12,10 @@ from neural_network.image_tools.preprocess import preprocess
 from neural_network.load_data import dataset_loader
 from tensorflow.contrib.slim.python.slim.nets import inception_v3
 
-int_image_files = 0
 
 
-def dataloader_gen(img_path, batch_size=1):
-    global int_image_files
-    list_fns_img = glob.glob(os.path.expanduser(img_path))
+def dataloader_gen(list_fns_img, batch_size=1):
 
-    int_image_files = len(list_fns_img)
     print(len(list_fns_img))
 
     i = 0
@@ -68,11 +64,12 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
     net, endpoints = inception_v3.inception_v3(inputs=x_preprocessed, num_classes=2, is_training=True,
                                                dropout_keep_prob=0.8)
 
-    gen = dataloader_gen(img_path)
+    list_fns_img = glob.glob(os.path.expanduser(img_path))
+    int_image_files = len(list_fns_img)
+
+    gen = dataloader_gen(list_fns_img=list_fns_img)
 
     print("Debug: generator loaded")
-
-    global int_image_files
 
     restorer = tf.train.Saver()  # load correct weights
 
