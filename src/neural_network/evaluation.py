@@ -8,134 +8,107 @@ import numpy as np
 
 import glob
 
-from image_tools.preprocess import preprocess
-from load_data import dataset_loader
+from neural_network.image_tools.preprocess import preprocess
+from neural_network.load_data import dataset_loader
 from tensorflow.contrib.slim.python.slim.nets import inception_v3
 
+int_image_files = 0;
 
-def dataloader_gen(batch_size=2):
-    # img_path = '/Users/spaethju/Desktop/*jpg'
-    # json_path = '/Users/spaethju/Desktop/*'
 
-    # img_path = 'D:\Data\Documents\AutomaticSaveToDisc\Datasets\ISIC-Archive-Downloader-master\Data\Images\*_resized.jpg'
-    # json_path = 'D:\Data\Documents\AutomaticSaveToDisc\Datasets\ISIC-Archive-Downloader-master\Data\Descriptions\*'
-    img_path = '/Users/spaethju//Desktop/Images/*_resized.jpg'
-    json_path = '/Users/spaethju//Desktop/Labels/*'
-
+def dataloader_gen(img_path, batch_size=1):
     os_path_img = os.path.expanduser(img_path)
-    os_path_json = os.path.expanduser(json_path)
-
     list_fns_img = glob.glob(os_path_img)
-    list_fns_json = glob.glob(os_path_json)
 
+    int_image_files = len(list_fns_img)
     print(len(list_fns_img))
-    print(len(list_fns_json))
 
     i = 0
-    # lesion_classes = np.zeros([len(list_fns_json), 2])
-    # print(lesion_classes)
-
     while (True):
-        # IMAGE
-        image = Image.open(list_fns_img[i % len(list_fns_img)])
-        np_image = np.asarray(image)
+        res = []
+        lesion_classes = np.zeros([batch_size, 2])
+        for j in range(batch_size):
+            single_img_path = list_fns_img[i % len(list_fns_img)].replace("\\", "/")
 
-        if np_image.shape[0] > np_image.shape[1]:
-            np_image = np.rot90(np_image, axes=(-3, -2))
+            fn_name = "_".join(single_img_path.split('/')[-1].split("_")[0: 2])
+            json_single_img_path = "/".join(single_img_path.split('/')[0: -2]) + "/Descriptions/" + fn_name
 
-        res = np.expand_dims(np_image, 0)
+            # IMAGE
+            image = Image.open(single_img_path)
+            np_image = np.asarray(image)
 
-        # JSON
-        json_file = json.load(open(list_fns_json[i % len(list_fns_json)]))
+            if np_image.shape[0] > np_image.shape[1]:
+                np_image = np.rot90(np_image, axes=(-3, -2))
 
-        # search for the lesion class
-        clinical_class = json_file["meta"]["clinical"]["benign_malignant"]
+            res.append(np_image)
 
-        lesion_classes = np.zeros([1, 2])
-        if clinical_class == "benign":
-            lesion_classes[0, 0] = 1
+            # JSON
+            json_file = json.load(open(json_single_img_path))
 
-        # maligne = [0, 1]
-        elif clinical_class == "malignant":
-            lesion_classes[0, 1] = 1
+            # search for the lesion class
+            clinical_class = json_file["meta"]["clinical"]["benign_malignant"]
 
-        i = i + 1
+            if clinical_class == "benign":
+                lesion_classes[j, 0] = 1
+
+            elif clinical_class == "malignant":
+                lesion_classes[j, 1] = 1
+
+            i = i + 1
 
         yield res, lesion_classes
 
 
-# x = tf.placeholder(dtype=tf.float32, shape=[-1, 767, 1022, 3], name='input')
-# y = tf.placeholder(dtype=tf.float32, shape=[-1, 1, 2, 1], name='label')
+def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
+    x = tf.placeholder(dtype=tf.float32, shape=[1, 542, 718, 3], name='input')
+    y = tf.placeholder(dtype=tf.float32, shape=[1, 2], name='label')
 
-x = tf.placeholder(dtype=tf.float32, shape=[1, 542, 718, 3], name='input')
-y = tf.placeholder(dtype=tf.float32, shape=[1, 2], name='label')
+    x_preprocessed = preprocess(x)
 
-x_preprocessed = preprocess(x)
+    net, endpoints = inception_v3.inception_v3(inputs=x_preprocessed, num_classes=2, is_training=True,
+                                               dropout_keep_prob=0.8)
 
-net, endpoints = inception_v3.inception_v3(inputs=x_preprocessed, num_classes=2, is_training=True,
-                                           dropout_keep_prob=0.8)
+    gen = dataloader_gen(img_path)
 
-gen = dataloader_gen()
+    restorer = tf.train.Saver()  # load correct weights
 
+    with tf.Session() as sess:
+        sess.run(tf.global_variables_initializer())
 
+        restorer.restore(sess=sess, save_path=snapshot_folder + '/model')
 
-# Define loss and optimizer
-# Todo: find loss function
-learning_rate = 1e-3
-loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=net, labels=y))
-optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss=loss)
+        true_positives = 0
+        false_positives = 0
+        true_negatives = 0
+        false_negatives = 0
 
-restorer = tf.train.Saver() # load correct weights
-saver = tf.train.Saver()
-snapshot_folder = "./snapshots/" + datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') + "/"
+        for i in range(len(int_image_files)):
+            img_input, label_input = gen.__next__()
+            feed_dict = {x: img_input, y: label_input}
+            result, label = sess.run([net, y], feed_dict=feed_dict)
+            if (result[0][0] >= result[0][1]):
+                result[0][0] = 1
+                result[0][1] = 0
+            else:
+                result[0][0] = 0
+                result[0][1] = 1
 
-if not os.path.exists(os.path.expanduser(snapshot_folder)):
-    os.makedirs(os.path.expanduser(snapshot_folder))
+            result_set = set(result[0])
+            label_set = set(label[0])
 
-train_dataset, test_dataset, validation_dataset = dataset_loader()
-max_timesteps = len(test_dataset)
+            if ((result_set == label_set) and (result_set == set([1, 0]))):
+                true_negatives += 1
+            elif ((result_set == label_set) and (result_set == set([0, 1]))):
+                true_positives += 1
+            elif ((result_set != label_set) and (result_set == set([1, 0]))):
+                false_negatives += 1
+            elif ((result_set != label_set) and (result_set == set([0, 1]))):
+                false_positives += 1
 
-with tf.Session() as sess:
-    sess.run(tf.global_variables_initializer())
+        acc = (true_positives + true_negatives) / int_image_files
 
-    restorer.restore(sess=sess, save_path='./snapshots/2018-01-05_11-43-33/model')
-
-    true_positives = 0
-    false_positives = 0
-    true_negatives = 0
-    false_negatives = 0
-
-    for i in range(max_timesteps):
-        img_input, label_input = gen.__next__()
-        feed_dict = {x: img_input, y: label_input}
-        result, label = sess.run([net,y], feed_dict=feed_dict)
-        if (result[0][0] >= result[0][1]):
-            result[0][0] = 1
-            result[0][1] = 0
-        else:
-            result[0][0] = 0
-            result[0][1] = 1
-
-        result_set = set(result[0])
-        label_set = set(label[0])
-
-        if ((result_set == label_set) and (result_set == set([1,0]))):
-            true_negatives+=1
-        elif ((result_set == label_set) and (result_set == set([0,1]))):
-            true_positives+=1
-        elif ((result_set != label_set) and (result_set == set([1, 0]))):
-            false_negatives+=1
-        elif ((result_set != label_set) and (result_set == set([0, 1]))):
-            false_positives+=1
-
-    acc = (true_positives + true_negatives) / max_timesteps
-
-    print("TP: " + str(true_positives) + " TN: " + str(true_negatives) + " FP: " + str(false_positives) + " FN: " + str(false_negatives)
-          + " Acc: " + str(acc))
-
-
-
-
-
-
-
+        with open(eval_path + 'eval.log', 'w') as f:
+            eval_string = "TP: " + str(true_positives) + "\n TN: " + str(true_negatives) + "\n FP: " + \
+                          str(false_positives) + "\n FN: " + str(false_negatives) \
+                          + "\n Acc: " + str(acc)
+            f.writelines(eval_string)
+            print(eval_string)
