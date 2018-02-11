@@ -74,14 +74,14 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
 
-        restorer.restore(sess=sess, save_path=snapshot_folder + '/model.ckpt')
+        restorer.restore(sess=sess, save_path=snapshot_folder + '/model')
 
         true_positives = 0
         false_positives = 0
         true_negatives = 0
         false_negatives = 0
 
-        for i in range(len(int_image_files)):
+        for i in range(int_image_files):
             img_input, label_input = gen.__next__()
             feed_dict = {x: img_input, y: label_input}
             result, label = sess.run([net, y], feed_dict=feed_dict)
