@@ -13,7 +13,7 @@ def main(FLAGS):
         os.environ["CUDA_VISIBLE_DEVICES"] = FLAGS.cuda_device
         str_list_log.append("Cuda visible device name: {}".format(FLAGS.cuda_device))
 
-        img_path = '/data/scratch/einig/SkinCancerData/train/Images/*_resized.jpg'
+        img_path = '/data/scratch/einig/SkinCancerData/test/Images/*_resized.jpg'
     elif dpath == 'florence':
         pass
     elif dpath == 'julian':

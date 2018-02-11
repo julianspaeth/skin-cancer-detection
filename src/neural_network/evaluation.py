@@ -12,12 +12,12 @@ from neural_network.image_tools.preprocess import preprocess
 from neural_network.load_data import dataset_loader
 from tensorflow.contrib.slim.python.slim.nets import inception_v3
 
-int_image_files = 0;
+int_image_files = 0
 
 
 def dataloader_gen(img_path, batch_size=1):
-    os_path_img = os.path.expanduser(img_path)
-    list_fns_img = glob.glob(os_path_img)
+    global int_image_files
+    list_fns_img = glob.glob(os.path.expanduser(img_path))
 
     int_image_files = len(list_fns_img)
     print(len(list_fns_img))
@@ -59,6 +59,8 @@ def dataloader_gen(img_path, batch_size=1):
 
 
 def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
+    global int_image_files
+
     x = tf.placeholder(dtype=tf.float32, shape=[1, 542, 718, 3], name='input')
     y = tf.placeholder(dtype=tf.float32, shape=[1, 2], name='label')
 
