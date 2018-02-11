@@ -35,10 +35,10 @@ def main(FLAGS):
         evaluate(img_path=img_path, snapshot_folder=snap,
                  eval_path=os.path.exists(os.path.join(snap, 'evaluation')))
 
-        if __name__ == "__main__":
-            parser = argparse.ArgumentParser()
-        parser.add_argument("--cuda_device", default="0", help="gpu device name, only used in dpath=cluster mode")
-        parser.add_argument("--dpath", default="cluster", help="datapath identifier to use")
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+parser.add_argument("--cuda_device", default="0", help="gpu device name, only used in dpath=cluster mode")
+parser.add_argument("--dpath", default="cluster", help="datapath identifier to use")
 
-        FLAGS = parser.parse_args()
-        main(FLAGS)
+FLAGS = parser.parse_args()
+main(FLAGS)
