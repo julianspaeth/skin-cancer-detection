@@ -1,23 +1,22 @@
-import datetime
+import glob
 import json
+import os
+from random import shuffle
 
+import numpy as np
 import tensorflow as tf
 from PIL import Image
-import os
-import numpy as np
-
-import glob
-
-from neural_network.image_tools.preprocess import preprocess
-from neural_network.image_tools.augmentations import augment
-
 from tensorflow.contrib import slim
 from tensorflow.contrib.slim.python.slim.nets import inception_v3
+
+from neural_network.image_tools.augmentations import augment
+from neural_network.image_tools.preprocess import preprocess
 
 
 def dataloader_gen(img_path=None, batch_size=2):
     os_path_img = os.path.expanduser(img_path)
     list_fns_img = glob.glob(os_path_img)
+    shuffle(list_fns_img)
 
     print(len(list_fns_img))
 
