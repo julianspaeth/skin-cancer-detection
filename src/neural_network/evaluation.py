@@ -59,7 +59,6 @@ def dataloader_gen(img_path, batch_size=1):
 
 
 def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
-    global int_image_files
 
     x = tf.placeholder(dtype=tf.float32, shape=[1, 542, 718, 3], name='input')
     y = tf.placeholder(dtype=tf.float32, shape=[1, 2], name='label')
@@ -70,6 +69,10 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
                                                dropout_keep_prob=0.8)
 
     gen = dataloader_gen(img_path)
+
+    print("Debug: generator loaded")
+
+    global int_image_files
 
     restorer = tf.train.Saver()  # load correct weights
 
