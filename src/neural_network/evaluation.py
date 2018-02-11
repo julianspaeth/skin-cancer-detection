@@ -102,7 +102,7 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
                 false_positives += 1
 
             if i % 100 == 0:
-                print("Progress: \t{}%\t{}/{}".format((i / int_image_files), i, int_image_files))
+                print("Progress: \t{}%\t{}/{}".format(round(i / int_image_files, 2), i, int_image_files))
 
         acc = (true_positives + true_negatives) / int_image_files
 
