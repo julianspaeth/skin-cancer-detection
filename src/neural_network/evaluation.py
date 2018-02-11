@@ -13,9 +13,7 @@ from neural_network.load_data import dataset_loader
 from tensorflow.contrib.slim.python.slim.nets import inception_v3
 
 
-
 def dataloader_gen(list_fns_img, batch_size=1):
-
     print(len(list_fns_img))
 
     i = 0
@@ -55,7 +53,6 @@ def dataloader_gen(list_fns_img, batch_size=1):
 
 
 def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
-
     x = tf.placeholder(dtype=tf.float32, shape=[1, 542, 718, 3], name='input')
     y = tf.placeholder(dtype=tf.float32, shape=[1, 2], name='label')
 
@@ -68,8 +65,6 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
     int_image_files = len(list_fns_img)
 
     gen = dataloader_gen(list_fns_img=list_fns_img)
-
-    print("Debug: generator loaded")
 
     restorer = tf.train.Saver()  # load correct weights
 
@@ -105,6 +100,9 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
                 false_negatives += 1
             elif ((result_set != label_set) and (result_set == set([0, 1]))):
                 false_positives += 1
+
+            if i % 100 == 0:
+                print("Progress: \t{}%\t{}/{}".format((i / int_image_files), i, int_image_files))
 
         acc = (true_positives + true_negatives) / int_image_files
 
