@@ -33,7 +33,7 @@ def main(FLAGS):
         # evaluate
 
         evaluate(img_path=img_path, snapshot_folder=snap,
-                 eval_path=os.path.exists(os.path.join(snap, 'evaluation')))
+                 eval_path=os.path.join(snap, 'evaluation'))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
