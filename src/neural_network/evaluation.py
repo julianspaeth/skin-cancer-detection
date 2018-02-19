@@ -1,16 +1,13 @@
-import datetime
+import glob
 import json
+import os
 
+import numpy as np
 import tensorflow as tf
 from PIL import Image
-import os
-import numpy as np
-
-import glob
+from tensorflow.contrib.slim.python.slim.nets import inception_v3
 
 from neural_network.image_tools.preprocess import preprocess
-from neural_network.load_data import dataset_loader
-from tensorflow.contrib.slim.python.slim.nets import inception_v3
 
 
 def dataloader_gen(list_fns_img, batch_size=1):
@@ -75,7 +72,6 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
 
         print("Evaluating: " + snapshot_folder + '/model')
 
-
         restorer.restore(sess=sess, save_path=snapshot_folder + '/model')
 
         true_positives = 0
@@ -97,6 +93,8 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
             result_set = set(result[0])
             label_set = set(label[0])
 
+            other = 0
+
             if ((result_set == label_set) and (result_set == set([1, 0]))):
                 true_negatives += 1
             elif ((result_set == label_set) and (result_set == set([0, 1]))):
@@ -105,12 +103,12 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
                 false_negatives += 1
             elif ((result_set != label_set) and (result_set == set([0, 1]))):
                 false_positives += 1
-
+            else:
+                other = other + 1
             if i % 100 == 0:
                 print("Progress: \t{}%\t{}/{}".format(round(i / int_image_files, 2) * 100, i, int_image_files))
 
         acc = (true_positives + true_negatives) / int_image_files
-
 
         if not os.path.exists(eval_path):
             os.makedirs(eval_path)

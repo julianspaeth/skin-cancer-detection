@@ -3,6 +3,7 @@ import os
 import shutil
 
 dataset_local_path = "/data/scratch/einig/SkinCancerData"
+# dataset_local_path = "D:\Data\Documents\AutomaticSaveToDisc\Datasets\ISIC-Archive-Downloader-master\Data"
 
 
 prefix = '/train'
