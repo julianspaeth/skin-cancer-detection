@@ -49,7 +49,7 @@ def dataloader_gen(list_fns_img, batch_size=1):
         yield res, lesion_classes
 
 
-def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
+def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False):
     tf.reset_default_graph()
 
     x = tf.placeholder(dtype=tf.float32, shape=[1, 542, 718, 3], name='input')
@@ -87,25 +87,28 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
             result_set = np.zeros([2])
 
             if result[0][0] > result[0][1]:
-                print("first larger")
+                if verbose:
+                    print("first larger")
                 result_set[0] = 1
                 result_set[1] = 0
 
             elif result[0][0] < result[0][1]:
-
-                print("second larger")
+                if verbose:
+                    print("second larger")
 
                 result_set[0] = 0
                 result_set[1] = 1
 
             else:
-                print("equal")
+                if verbose:
+                    print("equal")
                 result_set[0] = 0
                 result_set[1] = 0
 
             label_set = label[0]
-            print(label_set)
-            print(result_set)
+            if verbose:
+                print(label_set)
+                print(result_set)
             other = 0
 
             str_debug = ""
@@ -131,7 +134,8 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
             else:
                 str_debug = "other"
                 other = other + 1
-            print(str_debug)
+            if verbose:
+                print(str_debug)
 
             # if ((result_set == label_set) and (result_set == set([1, 0]))):
             #     true_negatives += 1
@@ -144,7 +148,7 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
             # else:
             #     other = other + 1
             if i % 100 == 0:
-                print("Progress: \t{}%\t{}/{}".format(round(i / int_image_files * 100 , 2) , i, int_image_files))
+                print("Progress: \t{}%\t{}/{}".format(round(i / int_image_files * 100, 2), i, int_image_files))
 
         acc = (true_positives + true_negatives) / int_image_files
 
