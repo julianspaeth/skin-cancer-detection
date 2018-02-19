@@ -105,10 +105,11 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
 
             label_set = label[0]
             print(label_set)
+            print(result_set)
             other = 0
 
             str_debug = ""
-            if result_set[0] == 1 and result_set[0] == 0:
+            if result_set[0] == 1 and result_set[1] == 0:
                 str_debug += "benign_"
                 if result_set[0] == label_set[0] and result_set[1] == label_set[1]:
                     str_debug += "true"
@@ -117,7 +118,7 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
                     str_debug += "false"
 
                     false_negatives += 1
-            elif result_set[0] == 0 and result_set[0] == 1:
+            elif result_set[0] == 0 and result_set[1] == 1:
                 str_debug += "malignant_"
 
                 if result_set[0] == label_set[0] and result_set[1] == label_set[1]:
