@@ -126,7 +126,7 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
             # else:
             #     other = other + 1
             if i % 100 == 0:
-                print("Progress: \t{}%\t{}/{}".format(round(i / int_image_files, 2) * 100, i, int_image_files))
+                print("Progress: \t{}%\t{}/{}".format(round(i / int_image_files * 100 , 2) , i, int_image_files))
 
         acc = (true_positives + true_negatives) / int_image_files
 
@@ -134,7 +134,7 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
             os.makedirs(eval_path)
 
         print(eval_path)
-        with open(eval_path + 'eval.log', 'w') as f:
+        with open(eval_path + '/eval.log', 'w') as f:
             eval_string = "TP: " + str(true_positives) + "\n TN: " + str(true_negatives) + "\n FP: " + \
                           str(false_positives) + "\n FN: " + str(false_negatives) \
                           + "\n Acc: " + str(acc) + "\n other: " + str(other)
