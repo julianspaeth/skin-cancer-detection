@@ -83,28 +83,48 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
             img_input, label_input = gen.__next__()
             feed_dict = {x: img_input, y: label_input}
             result, label = sess.run([net, y], feed_dict=feed_dict)
-            if (result[0][0] >= result[0][1]):
-                result[0][0] = 1
-                result[0][1] = 0
-            else:
-                result[0][0] = 0
-                result[0][1] = 1
 
-            result_set = set(result[0])
+            result_set = np.zeros([2])
+
+            if result[0][0] > result[0][1]:
+                result_set[0] = 1
+                result_set[1] = 0
+
+            elif result[0][0] < result[0][1]:
+                result_set[0] = 0
+                result_set[1] = 1
+
+            else:
+                result_set[0] = 0
+                result_set[1] = 0
+
             label_set = set(label[0])
 
             other = 0
 
-            if ((result_set == label_set) and (result_set == set([1, 0]))):
-                true_negatives += 1
-            elif ((result_set == label_set) and (result_set == set([0, 1]))):
-                true_positives += 1
-            elif ((result_set != label_set) and (result_set == set([1, 0]))):
-                false_negatives += 1
-            elif ((result_set != label_set) and (result_set == set([0, 1]))):
-                false_positives += 1
+            if result_set == [1, 0]:
+                if result_set == label_set:
+                    true_negatives += 1
+                elif result_set != label_set:
+                    false_negatives += 1
+            elif result_set == [0, 1]:
+                if result_set == label_set:
+                    true_positives += 1
+                elif result_set != label_set:
+                    false_positives += 1
             else:
                 other = other + 1
+
+            # if ((result_set == label_set) and (result_set == set([1, 0]))):
+            #     true_negatives += 1
+            # elif ((result_set == label_set) and (result_set == set([0, 1]))):
+            #     true_positives += 1
+            # elif ((result_set != label_set) and (result_set == set([1, 0]))):
+            #     false_negatives += 1
+            # elif ((result_set != label_set) and (result_set == set([0, 1]))):
+            #     false_positives += 1
+            # else:
+            #     other = other + 1
             if i % 100 == 0:
                 print("Progress: \t{}%\t{}/{}".format(round(i / int_image_files, 2) * 100, i, int_image_files))
 
@@ -117,6 +137,6 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
         with open(eval_path + 'eval.log', 'w') as f:
             eval_string = "TP: " + str(true_positives) + "\n TN: " + str(true_negatives) + "\n FP: " + \
                           str(false_positives) + "\n FN: " + str(false_negatives) \
-                          + "\n Acc: " + str(acc)
+                          + "\n Acc: " + str(acc) + "\n other: " + str(other)
             f.writelines(eval_string)
             print(eval_string)
