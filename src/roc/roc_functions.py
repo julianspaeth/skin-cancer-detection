@@ -22,7 +22,7 @@ def plotROC(pred_labels, test_labels, save_path = None):
     if not save_path:
         plt.show()
     else:
-        plt.savefig(save_path + "/roc_curve.png")
+        plt.savefig(save_path )
 
 
 def getANNResults(pred_labels):
