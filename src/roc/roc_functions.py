@@ -53,8 +53,10 @@ def getAUC(pred_labels, test_labels):
     return roc_auc
 
 
-test = [1,0,0,1,0,1,0,1,1,0,1,1,0,0,0,0,1,0]
-pred = [1,1,0,1,0,1,0,1,1,0,1,1,0,0,0,0,0,0]
+if __name__ == '__main__':
+    test = [1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0]
+    pred = [1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0]
 
-print("ANN predicted %s maligne and %s benigne. AUC = %s" % (getANNResults(pred)[0], getANNResults(pred)[1], getAUC(pred, test)))
-plotROC(pred, test)
+    print("ANN predicted %s maligne and %s benigne. AUC = %s" % (
+    getANNResults(pred)[0], getANNResults(pred)[1], getAUC(pred, test)))
+    plotROC(pred, test)
