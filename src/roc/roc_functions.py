@@ -1,7 +1,7 @@
 from sklearn.metrics import roc_curve, auc, roc_auc_score
 import matplotlib.pyplot as plt
 
-def plotROC(pred_labels, test_labels):
+def plotROC(pred_labels, test_labels, save_path = None):
     """
     Plots roc curve
     :param pred_labels: List of predicted labels
@@ -18,7 +18,11 @@ def plotROC(pred_labels, test_labels):
     plt.ylim([-0.1, 1.2])
     plt.ylabel('True Positive Rate')
     plt.xlabel('False Positive Rate')
-    plt.show()
+
+    if not save_path:
+        plt.show()
+    else:
+        plt.savefig(save_path + "/roc_curve.png")
 
 
 def getANNResults(pred_labels):

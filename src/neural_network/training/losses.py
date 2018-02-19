@@ -10,3 +10,7 @@ def l2_loss(logits=None, labels=None):
 
 def sm_cross_loss(logits=None, labels=None):
     return tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels)
+
+# def _regularize(labels=None):
+#     batch_size = labels.shape[0]
+#     ret = np.ones([batch_size])

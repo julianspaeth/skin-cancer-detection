@@ -6,7 +6,7 @@ import numpy as np
 import tensorflow as tf
 from PIL import Image
 from tensorflow.contrib.slim.python.slim.nets import inception_v3
-
+from roc import roc_functions
 from neural_network.image_tools.preprocess import preprocess
 
 
@@ -112,13 +112,22 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
             other = 0
 
             str_debug = ""
+            eval_list_test = []
+            eval_list_pred = []
+
             if result_set[0] == 1 and result_set[1] == 0:
                 str_debug += "benign_"
                 if result_set[0] == label_set[0] and result_set[1] == label_set[1]:
                     str_debug += "true"
+
+                    eval_list_test.append(0)
+                    eval_list_pred.append(0)
                     true_negatives += 1
                 elif result_set[0] != label_set[0] or result_set[1] != label_set[1]:
                     str_debug += "false"
+
+                    eval_list_test.append(0)
+                    eval_list_pred.append(1)
 
                     false_negatives += 1
             elif result_set[0] == 0 and result_set[1] == 1:
@@ -126,10 +135,15 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
 
                 if result_set[0] == label_set[0] and result_set[1] == label_set[1]:
                     str_debug += "true"
-
+                    eval_list_test.append(1)
+                    eval_list_pred.append(1)
                     true_positives += 1
                 elif result_set[0] != label_set[0] or result_set[1] != label_set[1]:
                     str_debug += "false"
+
+                    eval_list_test.append(1)
+                    eval_list_pred.append(0)
+
                     false_positives += 1
             else:
                 str_debug = "other"
@@ -156,9 +170,11 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
             os.makedirs(eval_path)
 
         print(eval_path)
+
+        roc_functions.plotROC(pred_labels=eval_list_pred, test_labels=eval_list_test, save_path=eval_path)
         with open(eval_path + '/eval.log', 'w') as f:
-            eval_string = "TP: " + str(true_positives) + "\n TN: " + str(true_negatives) + "\n FP: " + \
-                          str(false_positives) + "\n FN: " + str(false_negatives) \
-                          + "\n Acc: " + str(acc) + "\n other: " + str(other)
+            eval_string = "TP: " + str(true_positives) + "\nTN: " + str(true_negatives) + "\nFP: " + \
+                          str(false_positives) + "\nFN: " + str(false_negatives) \
+                          + "\nAcc: " + str(acc) + "\nother: " + str(other)
             f.writelines(eval_string)
             print(eval_string)
