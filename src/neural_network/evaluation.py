@@ -163,7 +163,13 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
             #     other = other + 1
             if i % 100 == 0:
                 print("Progress: \t{}%\t{}/{}".format(round(i / int_image_files * 100, 2), i, int_image_files))
-                roc_functions.plotROC(pred_labels=eval_list_pred, test_labels=eval_list_test, save_path=eval_path + "roc_curve_" + str(i) + ".png")
+
+            if i % 1000 == 0:
+                try:
+                    roc_functions.plotROC(pred_labels=eval_list_pred, test_labels=eval_list_test,
+                                          save_path=eval_path + "roc_curve_" + str(i) + ".png")
+                except:
+                    pass
 
         acc = (true_positives + true_negatives) / int_image_files
 
