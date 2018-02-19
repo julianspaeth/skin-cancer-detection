@@ -87,14 +87,19 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
             result_set = np.zeros([2])
 
             if result[0][0] > result[0][1]:
+                print("first larger")
                 result_set[0] = 1
                 result_set[1] = 0
 
             elif result[0][0] < result[0][1]:
+
+                print("second larger")
+
                 result_set[0] = 0
                 result_set[1] = 1
 
             else:
+                print("equal")
                 result_set[0] = 0
                 result_set[1] = 0
 
@@ -102,15 +107,25 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
 
             other = 0
 
+            str_debug = ""
             if result_set[0] == 1 and result_set[0] == 0:
+                str_debug += "benign_"
                 if result_set[0] == label_set[0] and result_set[1] == label_set[1]:
+                    str_debug += "true"
                     true_negatives += 1
                 elif result_set[0] != label_set[0] or result_set[1] != label_set[1]:
+                    str_debug += "false"
+
                     false_negatives += 1
             elif result_set[0] == 0 and result_set[0] == 1:
+                str_debug += "malignant_"
+
                 if result_set[0] == label_set[0] and result_set[1] == label_set[1]:
+                    str_debug += "true"
+
                     true_positives += 1
                 elif result_set[0] != label_set[0] or result_set[1] != label_set[1]:
+                    str_debug += "false"
                     false_positives += 1
             else:
                 other = other + 1
