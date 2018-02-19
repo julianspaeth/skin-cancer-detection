@@ -102,15 +102,15 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
 
             other = 0
 
-            if result_set == [1, 0]:
-                if result_set == label_set:
+            if result_set[0] == 1 and result_set[0] == 0:
+                if result_set[0] == label_set[0] and result_set[1] == label_set[1]:
                     true_negatives += 1
-                elif result_set != label_set:
+                elif result_set[0] != label_set[0] or result_set[1] != label_set[1]:
                     false_negatives += 1
-            elif result_set == [0, 1]:
-                if result_set == label_set:
+            elif result_set[0] == 0 and result_set[0] == 1:
+                if result_set[0] == label_set[0] and result_set[1] == label_set[1]:
                     true_positives += 1
-                elif result_set != label_set:
+                elif result_set[0] != label_set[0] or result_set[1] != label_set[1]:
                     false_positives += 1
             else:
                 other = other + 1
