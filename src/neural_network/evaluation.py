@@ -61,7 +61,7 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
     x_preprocessed = preprocess(x)
 
     net, endpoints = inception_v3.inception_v3(inputs=x_preprocessed, num_classes=2, is_training=True,
-                                               dropout_keep_prob=0.8, reuse=True)
+                                               dropout_keep_prob=0.8)
 
     list_fns_img = glob.glob(os.path.expanduser(img_path))
     int_image_files = len(list_fns_img)
@@ -111,7 +111,10 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
 
         acc = (true_positives + true_negatives) / int_image_files
 
-        os.makedirs(eval_path)
+
+        if not os.path.exists(eval_path):
+            os.makedirs(eval_path)
+
         print(eval_path)
         with open(eval_path + 'eval.log', 'w') as f:
             eval_string = "TP: " + str(true_positives) + "\n TN: " + str(true_negatives) + "\n FP: " + \
