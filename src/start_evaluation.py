@@ -37,9 +37,9 @@ def main(FLAGS):
     print(snapshots)
     for snap in snapshots:
         # evaluate
-
+        verbose = FLAGS.v
         evaluate(img_path=img_path, snapshot_folder=snap,
-                 eval_path=os.path.join(snap, 'evaluation'))
+                 eval_path=os.path.join(snap, 'evaluation'), verbose=verbose)
 
 
 if __name__ == "__main__":
@@ -48,6 +48,7 @@ parser.add_argument("--cuda_device", default="0", help="gpu device name, only us
 parser.add_argument("--dpath", default="cluster", help="datapath identifier to use")
 parser.add_argument("--set", default="test", help="dataset to use")
 parser.add_argument("--all", default=False, type=bool, help="if set all snapshots are evaluated again")
+parser.add_argument("--v", default=False, type=bool, help="verbose output")
 
 FLAGS = parser.parse_args()
 main(FLAGS)
