@@ -128,7 +128,9 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
                     str_debug += "false"
                     false_positives += 1
             else:
+                str_debug = "other"
                 other = other + 1
+            print(str_debug)
 
             # if ((result_set == label_set) and (result_set == set([1, 0]))):
             #     true_negatives += 1
