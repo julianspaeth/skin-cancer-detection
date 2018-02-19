@@ -103,7 +103,7 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
                 result_set[0] = 0
                 result_set[1] = 0
 
-            label_set = set(label[0])
+            label_set = label[0]
             print(label_set)
             other = 0
 
