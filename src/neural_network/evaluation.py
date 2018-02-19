@@ -53,13 +53,15 @@ def dataloader_gen(list_fns_img, batch_size=1):
 
 
 def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
+    tf.reset_default_graph()
+
     x = tf.placeholder(dtype=tf.float32, shape=[1, 542, 718, 3], name='input')
     y = tf.placeholder(dtype=tf.float32, shape=[1, 2], name='label')
 
     x_preprocessed = preprocess(x)
 
     net, endpoints = inception_v3.inception_v3(inputs=x_preprocessed, num_classes=2, is_training=True,
-                                               dropout_keep_prob=0.8)
+                                               dropout_keep_prob=0.8, reuse=True)
 
     list_fns_img = glob.glob(os.path.expanduser(img_path))
     int_image_files = len(list_fns_img)
@@ -70,6 +72,9 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
 
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
+
+        print("Evaluating: " + snapshot_folder + '/model')
+
 
         restorer.restore(sess=sess, save_path=snapshot_folder + '/model')
 
@@ -102,10 +107,12 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None):
                 false_positives += 1
 
             if i % 100 == 0:
-                print("Progress: \t{}%\t{}/{}".format(round(i / int_image_files, 2), i, int_image_files))
+                print("Progress: \t{}%\t{}/{}".format(round(i / int_image_files, 2) * 100, i, int_image_files))
 
         acc = (true_positives + true_negatives) / int_image_files
 
+        os.makedirs(eval_path)
+        print(eval_path)
         with open(eval_path + 'eval.log', 'w') as f:
             eval_string = "TP: " + str(true_positives) + "\n TN: " + str(true_negatives) + "\n FP: " + \
                           str(false_positives) + "\n FN: " + str(false_negatives) \
