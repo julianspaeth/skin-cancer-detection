@@ -187,7 +187,7 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
         print(eval_path)
 
         try:
-            if true_positives > 0 and true_negatives > 0 and false_positives > 0 and false_negatives > 0
+            if true_positives > 0 and true_negatives > 0 and false_positives > 0 and false_negatives > 0:
                 print(eval_list_test)
                 print(eval_list_pred)
             print(eval_path + "/roc_curve_" + str(i) + ".png")
