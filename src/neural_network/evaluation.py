@@ -1,6 +1,8 @@
 import glob
 import json
 import os
+import sys
+import logging
 
 import numpy as np
 import tensorflow as tf
@@ -192,7 +194,9 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
             roc_functions.plotROC(pred_labels=eval_list_pred, test_labels=eval_list_test,
                                   save_path=eval_path + "/roc_curve_" + str(i) + ".png")
         except:
-            print("Exception 2")
+            logging.exception("Something awful happened!")
+            print(sys.exc_info()[0])
+            raise
 
         with open(eval_path + '/eval.log', 'w') as f:
             eval_string = "TP: " + str(true_positives) + "\nTN: " + str(true_negatives) + "\nFP: " + \
