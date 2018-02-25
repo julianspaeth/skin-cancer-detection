@@ -183,6 +183,7 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
         if not os.path.exists(eval_path):
             os.makedirs(eval_path)
 
+        eval_path = eval_path.replace("neural_network/", "")
         print(eval_path)
 
         try:
