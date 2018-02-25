@@ -79,6 +79,9 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
         true_negatives = 0
         false_negatives = 0
 
+        eval_list_test = []
+        eval_list_pred = []
+
         for i in range(int_image_files):
             img_input, label_input = gen.__next__()
             feed_dict = {x: img_input, y: label_input}
@@ -112,8 +115,6 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
             other = 0
 
             str_debug = ""
-            eval_list_test = []
-            eval_list_pred = []
 
             if result_set[0] == 1 and result_set[1] == 0:
                 str_debug += "benign_"
@@ -164,16 +165,16 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
             if i % 100 == 0:
                 print("Progress: \t{}%\t{}/{}".format(round(i / int_image_files * 100, 2), i, int_image_files))
 
-            if i % 1000 == 0:
-                try:
-                    print("1000")
-                    print(eval_list_pred)
-                    print(eval_list_test)
-                    print(eval_path + "/roc_curve_" + str(i) + ".png")
-                    roc_functions.plotROC(pred_labels=eval_list_pred, test_labels=eval_list_test,
-                                          save_path=eval_path + "/roc_curve_" + str(i) + ".png")
-                except:
-                    print("Exception 1")
+            # if i % 1000 == 0:
+            #     try:
+            #         print("1000")
+            #         print(eval_list_pred)
+            #         print(eval_list_test)
+            #         print(eval_path + "/roc_curve_" + str(i) + ".png")
+            #         roc_functions.plotROC(pred_labels=eval_list_pred, test_labels=eval_list_test,
+            #                               save_path=eval_path + "/roc_curve_" + str(i) + ".png")
+            #     except:
+            #         print("Exception 1")
 
         acc = (true_positives + true_negatives) / int_image_files
 
@@ -183,6 +184,8 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
         print(eval_path)
 
         try:
+            print(len(eval_list_test))
+            print(len(eval_list_pred))
             roc_functions.plotROC(pred_labels=eval_list_pred, test_labels=eval_list_test,
                                   save_path=eval_path + "/roc_curve_" + str(i) + ".png")
         except:
