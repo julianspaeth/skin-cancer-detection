@@ -166,10 +166,11 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
 
             if i % 1000 == 0:
                 try:
+                    print("1000")
                     roc_functions.plotROC(pred_labels=eval_list_pred, test_labels=eval_list_test,
                                           save_path=eval_path + "roc_curve_" + str(i) + ".png")
                 except:
-                    pass
+                    print("Exception 1")
 
         acc = (true_positives + true_negatives) / int_image_files
 
@@ -182,7 +183,7 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
             roc_functions.plotROC(pred_labels=eval_list_pred, test_labels=eval_list_test,
                                   save_path=eval_path + "roc_curve_" + str(i) + ".png")
         except:
-            pass
+            print("Exception 2")
 
         with open(eval_path + '/eval.log', 'w') as f:
             eval_string = "TP: " + str(true_positives) + "\nTN: " + str(true_negatives) + "\nFP: " + \
