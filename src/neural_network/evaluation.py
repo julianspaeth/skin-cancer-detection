@@ -191,7 +191,7 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
             print(len(eval_list_pred))
             print(eval_path + "/roc_curve_" + str(i) + ".png")
             roc_functions.plotROC(pred_labels=eval_list_pred, test_labels=eval_list_test,
-                                  save_path= str(eval_path) + "/roc_curve_" + str(i) + ".png")
+                                  save_path= None)
         except ValueError:
             print("ROC AUC score is not defined in that case")
         except:

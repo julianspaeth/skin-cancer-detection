@@ -22,7 +22,7 @@ def plotROC(pred_labels, test_labels, save_path = None):
     if not save_path:
         plt.show()
     else:
-        plt.savefig(save_path )
+        plt.savefig(save_path)
 
 
 def getANNResults(pred_labels):
@@ -54,9 +54,13 @@ def getAUC(pred_labels, test_labels):
 
 
 if __name__ == '__main__':
-    test = [1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0]
-    pred = [1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0]
+    test = [0, 0, 1]
+    pred = [1, 0, 1]
+    pred.append(1)
+    test.append(1)
+
 
     print("ANN predicted %s maligne and %s benigne. AUC = %s" % (
     getANNResults(pred)[0], getANNResults(pred)[1], getAUC(pred, test)))
-    plotROC(pred, test)
+    print(pred)
+    plotROC(test, pred, save_path="../roc_curve_" + str(1) + ".png")
