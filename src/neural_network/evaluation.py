@@ -171,7 +171,7 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
                     print(eval_list_test)
                     print(eval_path + "roc_curve_" + str(i) + ".png")
                     roc_functions.plotROC(pred_labels=eval_list_pred, test_labels=eval_list_test,
-                                          save_path=eval_path + "roc_curve_" + str(i) + ".png")
+                                          save_path=eval_path + "/roc_curve_" + str(i) + ".png")
                 except:
                     print("Exception 1")
 
@@ -184,7 +184,7 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
 
         try:
             roc_functions.plotROC(pred_labels=eval_list_pred, test_labels=eval_list_test,
-                                  save_path=eval_path + "roc_curve_" + str(i) + ".png")
+                                  save_path=eval_path + "/roc_curve_" + str(i) + ".png")
         except:
             print("Exception 2")
 
