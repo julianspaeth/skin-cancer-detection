@@ -187,10 +187,12 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
         print(eval_path)
 
         try:
-            print(len(eval_list_test))
-            print(len(eval_list_pred))
+            if true_positives > 0 and true_negatives > 0 and false_positives > 0 and false_negatives > 0
+                print(eval_list_test)
+                print(eval_list_pred)
             print(eval_path + "/roc_curve_" + str(i) + ".png")
-            roc_functions.plotROC(pred_labels=eval_list_pred, test_labels=eval_list_test)
+            #roc_functions.plotROC(pred_labels=eval_list_pred, test_labels=eval_list_test,
+            #                      save_path=eval_path + "/roc_curve_" + str(i) + ".png")
         except ValueError:
             print("ROC AUC score is not defined in that case")
         except:
@@ -201,6 +203,7 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
         with open(eval_path + '/eval.log', 'w') as f:
             eval_string = "TP: " + str(true_positives) + "\nTN: " + str(true_negatives) + "\nFP: " + \
                           str(false_positives) + "\nFN: " + str(false_negatives) \
-                          + "\nAcc: " + str(acc) + "\nother: " + str(other)
+                          + "\nAcc: " + str(acc) + "\nother: " + str(other) + "\npred: " + eval_list_pred + "\nlabel: " + eval_list_test
             f.writelines(eval_string)
+
             print(eval_string)
