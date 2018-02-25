@@ -183,17 +183,15 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
         if not os.path.exists(eval_path):
             os.makedirs(eval_path)
 
-        eval_path2 = eval_path.replace("neural_network/", "")
-        print(eval_path2)
+
+        print(eval_path)
 
         try:
             print(len(eval_list_test))
             print(len(eval_list_pred))
-            print(eval_list_test)
-            print(eval_list_pred)
-            print(eval_path2 + "/roc_curve_" + str(i) + ".png")
+            print(eval_path + "/roc_curve_" + str(i) + ".png")
             roc_functions.plotROC(pred_labels=eval_list_pred, test_labels=eval_list_test,
-                                  save_path=eval_path2 + "/roc_curve_" + str(i) + ".png")
+                                  save_path=eval_path + "/roc_curve_" + str(i) + ".png")
         except ValueError:
             print("ROC AUC score is not defined in that case")
         except:
