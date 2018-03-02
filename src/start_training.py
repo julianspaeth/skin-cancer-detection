@@ -21,9 +21,10 @@ def main(FLAGS):
     elif dpath == 'julian':
         img_path = '/Users/spaethju//Desktop/Images/*_resized.jpg'
     elif dpath == 'jonas':
-        img_path = 'D:/Data/Documents/AutomaticSaveToDisc/Datasets/ISIC-Archive-Downloader-master/Data/train/Images/*_resized.jpg'
+        img_path = 'D:/Data/Documents/AutomaticSaveToDisc/Datasets/ISIC-Archive-Downloader-master/Data/train/' \
+                   'Images/*_resized.jpg'
 
-    str_list_log.append("Datase Image Path: {}".format(img_path))
+    str_list_log.append("Dataset Image Path: {}".format(img_path))
 
     lossid = FLAGS.lossid
     if lossid == 'l1':
