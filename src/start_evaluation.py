@@ -19,7 +19,9 @@ def main(FLAGS):
     elif dpath == 'julian':
         img_path = '/Users/spaethju//Desktop/Images/*_resized.jpg'
     elif dpath == 'jonas':
-        img_path = 'D:/Data/Documents/AutomaticSaveToDisc/Datasets/ISIC-Archive-Downloader-master/Data/Images/*_resized.jpg'
+        data_set = FLAGS.set
+
+        img_path = 'D:/Data/Documents/AutomaticSaveToDisc/Datasets/ISIC-Archive-Downloader-master/Data/' + data_set + '/Images/*_resized.jpg'
 
     str_list_log.append("Datase Image Path: {}".format(img_path))
 

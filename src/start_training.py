@@ -2,7 +2,7 @@ import argparse
 import os
 import datetime
 
-import neural_network.training.losses as losses
+import neural_network.losses.losses as losses
 from neural_network.train_network import train
 
 
@@ -21,7 +21,7 @@ def main(FLAGS):
     elif dpath == 'julian':
         img_path = '/Users/spaethju//Desktop/Images/*_resized.jpg'
     elif dpath == 'jonas':
-        img_path = 'D:/Data/Documents/AutomaticSaveToDisc/Datasets/ISIC-Archive-Downloader-master/Data/Images/*_resized.jpg'
+        img_path = 'D:/Data/Documents/AutomaticSaveToDisc/Datasets/ISIC-Archive-Downloader-master/Data/train/Images/*_resized.jpg'
 
     str_list_log.append("Datase Image Path: {}".format(img_path))
 

@@ -67,7 +67,7 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
 
     gen = dataloader_gen(list_fns_img=list_fns_img)
 
-    restorer = tf.train.Saver()  # load correct weights
+    restorer = tf.train.Saver()
 
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
@@ -122,67 +122,43 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
                 str_debug += "benign_"
                 if result_set[0] == label_set[0] and result_set[1] == label_set[1]:
                     str_debug += "true"
+                    true_negatives += 1
 
                     eval_list_test.append(0)
                     eval_list_pred.append(0)
-                    true_negatives += 1
                 elif result_set[0] != label_set[0] or result_set[1] != label_set[1]:
                     str_debug += "false"
+                    false_negatives += 1
 
                     eval_list_test.append(0)
                     eval_list_pred.append(1)
-
-                    false_negatives += 1
             elif result_set[0] == 0 and result_set[1] == 1:
                 str_debug += "malignant_"
-
                 if result_set[0] == label_set[0] and result_set[1] == label_set[1]:
                     str_debug += "true"
+                    true_positives += 1
+
                     eval_list_test.append(1)
                     eval_list_pred.append(1)
-                    true_positives += 1
                 elif result_set[0] != label_set[0] or result_set[1] != label_set[1]:
                     str_debug += "false"
+                    false_positives += 1
 
                     eval_list_test.append(1)
                     eval_list_pred.append(0)
-
-                    false_positives += 1
             else:
                 str_debug = "other"
                 other = other + 1
             if verbose:
                 print(str_debug)
 
-            # if ((result_set == label_set) and (result_set == set([1, 0]))):
-            #     true_negatives += 1
-            # elif ((result_set == label_set) and (result_set == set([0, 1]))):
-            #     true_positives += 1
-            # elif ((result_set != label_set) and (result_set == set([1, 0]))):
-            #     false_negatives += 1
-            # elif ((result_set != label_set) and (result_set == set([0, 1]))):
-            #     false_positives += 1
-            # else:
-            #     other = other + 1
             if i % 100 == 0:
                 print("Progress: \t{}%\t{}/{}".format(round(i / int_image_files * 100, 2), i, int_image_files))
-
-            # if i % 1000 == 0:
-            #     try:
-            #         print("1000")
-            #         print(eval_list_pred)
-            #         print(eval_list_test)
-            #         print(eval_path + "/roc_curve_" + str(i) + ".png")
-            #         roc_functions.plotROC(pred_labels=eval_list_pred, test_labels=eval_list_test,
-            #                               save_path=eval_path + "/roc_curve_" + str(i) + ".png")
-            #     except:
-            #         print("Exception 1")
 
         acc = (true_positives + true_negatives) / int_image_files
 
         if not os.path.exists(eval_path):
             os.makedirs(eval_path)
-
 
         print(eval_path)
 
@@ -191,7 +167,7 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
                 print(eval_list_test)
                 print(eval_list_pred)
             print(eval_path + "/roc_curve_" + str(i) + ".png")
-            #roc_functions.plotROC(pred_labels=eval_list_pred, test_labels=eval_list_test,
+            # roc_functions.plotROC(pred_labels=eval_list_pred, test_labels=eval_list_test,
             #                      save_path=eval_path + "/roc_curve_" + str(i) + ".png")
         except ValueError:
             print("ROC AUC score is not defined in that case")
@@ -203,7 +179,8 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
         with open(eval_path + '/eval.log', 'w') as f:
             eval_string = "TP: " + str(true_positives) + "\nTN: " + str(true_negatives) + "\nFP: " + \
                           str(false_positives) + "\nFN: " + str(false_negatives) \
-                          + "\nAcc: " + str(acc) + "\nother: " + str(other) + "\npred: " + str(eval_list_pred) + "\nlabel: " + str(eval_list_test)
+                          + "\nAcc: " + str(acc) + "\nother: " + str(other) + "\npred: " + str(
+                eval_list_pred) + "\nlabel: " + str(eval_list_test)
             f.writelines(eval_string)
 
             print(eval_string)
