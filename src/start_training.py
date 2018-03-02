@@ -64,7 +64,7 @@ def main(FLAGS):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--cuda_device", default="0", help="gpu device name, only used in dpath=cluster mode")
-    parser.add_argument("--dpath", default="cluster", help="datapath identifier to use")
+    parser.add_argument("--dpath", default="cluster", help="data path identifier to use")
     parser.add_argument("--lossid", default="l1", help="loss function identifier to use")
     parser.add_argument("--lr", default=1e-3, type=float, help="learning rate")
     parser.add_argument("--bs", default=6, type=int, help="batch size")
