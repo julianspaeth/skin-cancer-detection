@@ -11,28 +11,56 @@ from tensorflow.contrib.slim.python.slim.nets import inception_v3
 
 from neural_network.image_tools.augmentations import augment
 from neural_network.image_tools.preprocess import preprocess
+from neural_network.training_utils.progress_bar import printProgressBar
 
 
-def dataloader_gen(img_path=None, batch_size=2):
+def dataloader_gen(img_path=None, batch_size=2, dist_prob=0.5):
     os_path_img = os.path.expanduser(img_path)
     list_fns_img = glob.glob(os_path_img)
-    shuffle(list_fns_img)
 
-    print(len(list_fns_img))
+    int_total_imgs = len(list_fns_img)
+    print("Amount of training images: {}".format(int_total_imgs))
+    print("Preparing Data:")
+    printProgressBar(0, total=int_total_imgs, prefix='Progress:', suffix='Complete', length=50)
+
+    dict_img_fn_to_benign = {}
+    dict_img_fn_to_malign = {}
+    for i, fn in enumerate(list_fns_img):
+        path_img_cleaned = fn.replace("\\", "/")
+
+        fn_name = "_".join(path_img_cleaned.split('/')[-1].split("_")[0: 2])
+        json_single_img_path = "/".join(path_img_cleaned.split('/')[0: -2]) + "/Descriptions/" + fn_name
+
+        # JSON
+        json_file = json.load(open(json_single_img_path))
+
+        # search for the lesion class
+        clinical_class = json_file["meta"]["clinical"]["benign_malignant"]
+        if clinical_class == "benign":
+            dict_img_fn_to_benign[path_img_cleaned] = clinical_class
+        else:
+            dict_img_fn_to_malign[path_img_cleaned] = clinical_class
+        printProgressBar(i, total=int_total_imgs, prefix='Progress:', suffix='Complete', length=50)
+
+    print("\nBenign images: {}".format(len(dict_img_fn_to_benign.keys())))
+    print("Malignant images: {}".format(len(dict_img_fn_to_malign.keys())))
+
+    mali_gen = img_class_helper_gen(dict_img_fn_to_malign)
+    beni_gen = img_class_helper_gen(dict_img_fn_to_benign)
 
     i = 0
-
     while (True):
         res = []
         lesion_classes = np.zeros([batch_size, 2])
         for j in range(batch_size):
-            single_img_path = list_fns_img[i % len(list_fns_img)].replace("\\", "/")
 
-            fn_name = "_".join(single_img_path.split('/')[-1].split("_")[0: 2])
-            json_single_img_path = "/".join(single_img_path.split('/')[0: -2]) + "/Descriptions/" + fn_name
+            if np.random.random_sample() >= dist_prob:
+                img_fn, clinical_class = beni_gen.__next__()
+            else:
+                img_fn, clinical_class = mali_gen.__next__()
 
             # IMAGE
-            image = Image.open(single_img_path)
+            image = Image.open(img_fn)
             np_image = np.asarray(image)
 
             if np_image.shape[0] > np_image.shape[1]:
@@ -40,21 +68,22 @@ def dataloader_gen(img_path=None, batch_size=2):
 
             res.append(np_image)
 
-            # JSON
-            json_file = json.load(open(json_single_img_path))
-
-            # search for the lesion class
-            clinical_class = json_file["meta"]["clinical"]["benign_malignant"]
-
             if clinical_class == "benign":
                 lesion_classes[j, 0] = 1
 
             elif clinical_class == "malignant":
                 lesion_classes[j, 1] = 1
-
             i = i + 1
 
         yield res, lesion_classes
+
+
+def img_class_helper_gen(dict_fn_class):
+    list_fns = list(dict_fn_class.keys())
+    while (True):
+        shuffle(list_fns)
+        for fn in list_fns:
+            yield fn, dict_fn_class[fn]
 
 
 def train(img_path, loss_func, learning_rate, batch_size, snapshot_folder, save_intervals):
@@ -62,7 +91,7 @@ def train(img_path, loss_func, learning_rate, batch_size, snapshot_folder, save_
     y = tf.placeholder(dtype=tf.float32, shape=[batch_size, 2], name='label')
 
     x_preprocessed = preprocess(x)
-    x_augmented  = augment(x_preprocessed, random=True, rotation=True, vertical_flip=True)
+    x_augmented = augment(x_preprocessed, random=True, rotation=True, vertical_flip=True)
     net, endpoints = inception_v3.inception_v3(inputs=x_augmented, num_classes=2, is_training=True,
                                                dropout_keep_prob=0.8)
 
