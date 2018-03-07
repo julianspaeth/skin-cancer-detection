@@ -44,7 +44,7 @@ def main(FLAGS):
 
     str_list_log.append("Intervals to log network [console print , snapshot save]: {}".format(save_intervals))
     batchsize = FLAGS.bs
-    str_list_log.append("Batchsize: {}".format(img_path))
+    str_list_log.append("Batchsize: {}".format(batchsize))
     learning_rate = FLAGS.lr
     str_list_log.append("Learning Rate: {}".format(learning_rate))
 
