@@ -179,8 +179,8 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
         with open(eval_path + '/eval.log', 'w') as f:
             eval_string = "TP: " + str(true_positives) + "\nTN: " + str(true_negatives) + "\nFP: " + \
                           str(false_positives) + "\nFN: " + str(false_negatives) \
-                          + "\nAcc: " + str(acc) + "\nother: " + str(other) + "\npred: " + str(
-                eval_list_pred) + "\nlabel: " + str(eval_list_test)
+                          + "\nAcc: " + str(acc) + "\nother: " + str(other) + "\npred = " + str(
+                eval_list_pred) + "\nlabel = " + str(eval_list_test)
             f.writelines(eval_string)
 
             print(eval_string)
