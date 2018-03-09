@@ -91,7 +91,7 @@ def train(img_path, loss_func, learning_rate, batch_size, snapshot_folder, save_
     y = tf.placeholder(dtype=tf.float32, shape=[batch_size, 2], name='label')
 
     x_preprocessed = preprocess(x)
-    x_augmented = augment(x_preprocessed, random=True, rotation=True, vertical_flip=True)
+    x_augmented = augment(x_preprocessed, random=True, percentage=20, rotation=True, vertical_flip=True)
     net, endpoints = inception_v3.inception_v3(inputs=x_augmented, num_classes=2, is_training=True,
                                                dropout_keep_prob=0.8)
 
