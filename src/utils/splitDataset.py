@@ -3,7 +3,7 @@ import argparse
 import glob
 import os
 
-# splits a dataset to training (60%), test (20%) and validation (20%)
+# splits a dataset to training (50%), test (25%) and validation (25%)
 
 def main(args):
 
