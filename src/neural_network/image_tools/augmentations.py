@@ -15,18 +15,18 @@ def random_rotation(images, random, percentage):
     """
 
     if random:
-        if rd(1,100) <= percentage:
+        if rd(1, 100) >= percentage:
             return images
-    else:
-        number_of_images = images.shape[0]
-        rotated_images = []
-        for i in range(number_of_images):
-            image = images[i, :, :, :]
-            number_of_rotations = randint(0, 3)
-            rotated_image = tf.image.rot90(image, number_of_rotations)
-            rotated_images.append(rotated_image)
-        images = tf.stack(rotated_images)
-        return images
+
+    number_of_images = images.shape[0]
+    rotated_images = []
+    for i in range(number_of_images):
+        image = images[i, :, :, :]
+        number_of_rotations = randint(0, 3)
+        rotated_image = tf.image.rot90(image, number_of_rotations)
+        rotated_images.append(rotated_image)
+    images = tf.stack(rotated_images)
+    return images
 
 
 def random_vertical_flip(images, random, percentage):
@@ -37,17 +37,17 @@ def random_vertical_flip(images, random, percentage):
     """
 
     if random:
-        if rd(1, 100) <= percentage:
+        if rd(1, 100) >= percentage:
             return images
-    else:
-        number_of_images = images.shape[0]
-        flipped_vertically_images = []
-        for i in range(number_of_images):
-            image = images[i, :, :, :]
-            flipped_vertically_image = tf.image.random_flip_up_down(image)
-            flipped_vertically_images.append(flipped_vertically_image)
-        images = tf.stack(flipped_vertically_images)
-        return images
+
+    number_of_images = images.shape[0]
+    flipped_vertically_images = []
+    for i in range(number_of_images):
+        image = images[i, :, :, :]
+        flipped_vertically_image = tf.image.random_flip_up_down(image)
+        flipped_vertically_images.append(flipped_vertically_image)
+    images = tf.stack(flipped_vertically_images)
+    return images
 
 
 def random_horizontal_flip(images, random, percentage):
@@ -58,17 +58,17 @@ def random_horizontal_flip(images, random, percentage):
     """
 
     if random:
-        if rd(1, 100) <= percentage:
+        if rd(1, 100) >= percentage:
             return images
-    else:
-        number_of_images = images.shape[0]
-        flipped_horizontally_images = []
-        for i in range(number_of_images):
-            image = images[i, :, :, :]
-            flipped_horizontally_image = tf.image.random_flip_left_right(image)
-            flipped_horizontally_images.append(flipped_horizontally_image)
-        images = tf.stack(flipped_horizontally_images)
-        return images
+
+    number_of_images = images.shape[0]
+    flipped_horizontally_images = []
+    for i in range(number_of_images):
+        image = images[i, :, :, :]
+        flipped_horizontally_image = tf.image.random_flip_left_right(image)
+        flipped_horizontally_images.append(flipped_horizontally_image)
+    images = tf.stack(flipped_horizontally_images)
+    return images
 
 
 def random_brightness(images, max_delta, random, percentage):
@@ -80,17 +80,17 @@ def random_brightness(images, max_delta, random, percentage):
     """
 
     if random:
-        if rd(1, 100) <= percentage:
+        if rd(1, 100) >= percentage:
             return images
-    else:
-        number_of_images = images.shape[0]
-        brightness_images = []
-        for i in range(number_of_images):
-            image = images[i, :, :, :]
-            brightness_image = tf.image.random_brightness(image, max_delta)
-            brightness_images.append(brightness_image)
-        images = tf.stack(brightness_images)
-        return images
+
+    number_of_images = images.shape[0]
+    brightness_images = []
+    for i in range(number_of_images):
+        image = images[i, :, :, :]
+        brightness_image = tf.image.random_brightness(image, max_delta)
+        brightness_images.append(brightness_image)
+    images = tf.stack(brightness_images)
+    return images
 
 
 def random_contrast(images, max_delta, random, percentage):
@@ -102,17 +102,17 @@ def random_contrast(images, max_delta, random, percentage):
     """
 
     if random:
-        if rd(1, 100) <= percentage:
+        if rd(1, 100) >= percentage:
             return images
-    else:
-        number_of_images = images.shape[0]
-        contrast_images = []
-        for i in range(number_of_images):
-            image = images[i, :, :, :]
-            contrast_image = tf.image.random_contrast(image, -max_delta, max_delta)
-            contrast_images.append(contrast_image)
-        images = tf.stack(contrast_images)
-        return images
+
+    number_of_images = images.shape[0]
+    contrast_images = []
+    for i in range(number_of_images):
+        image = images[i, :, :, :]
+        contrast_image = tf.image.random_contrast(image, -max_delta, max_delta)
+        contrast_images.append(contrast_image)
+    images = tf.stack(contrast_images)
+    return images
 
 
 def random_hue(images, max_delta, random, percentage):
@@ -124,17 +124,17 @@ def random_hue(images, max_delta, random, percentage):
     """
 
     if random:
-        if rd(1, 100) <= percentage:
+        if rd(1, 100) >= percentage:
             return images
-    else:
-        number_of_images = images.shape[0]
-        hue_images = []
-        for i in range(number_of_images):
-            image = images[i, :, :, :]
-            hue_image = tf.image.random_hue(image, -max_delta, max_delta)
-            hue_images.append(hue_image)
-        images = tf.stack(hue_images)
-        return images
+
+    number_of_images = images.shape[0]
+    hue_images = []
+    for i in range(number_of_images):
+        image = images[i, :, :, :]
+        hue_image = tf.image.random_hue(image, -max_delta, max_delta)
+        hue_images.append(hue_image)
+    images = tf.stack(hue_images)
+    return images
 
 
 def random_saturation(images, max_delta, random, percentage):
@@ -146,17 +146,17 @@ def random_saturation(images, max_delta, random, percentage):
     """
 
     if random:
-        if rd(1, 100) <= percentage:
+        if rd(1, 100) >= percentage:
             return images
-    else:
-        number_of_images = images.shape[0]
-        saturation_images = []
-        for i in range(number_of_images):
-            image = images[i, :, :, :]
-            saturation_image = tf.image.random_saturation(image, -max_delta, max_delta)
-            saturation_images.append(saturation_image)
-        images = tf.stack(saturation_images)
-        return images
+
+    number_of_images = images.shape[0]
+    saturation_images = []
+    for i in range(number_of_images):
+        image = images[i, :, :, :]
+        saturation_image = tf.image.random_saturation(image, -max_delta, max_delta)
+        saturation_images.append(saturation_image)
+    images = tf.stack(saturation_images)
+    return images
 
 
 def augment(images,
