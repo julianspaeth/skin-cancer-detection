@@ -12,13 +12,13 @@ dataset_local__output_path = "/nfs/wsi/MIVC/proj1/einig/SkinCancerData/60_20_20"
 # dataset_path = '../datasets/60-20-20/training.dataset'
 # dataset_path = '../datasets/80-10-10/training.dataset'
 
-prefix = '/val'
-dataset_path = '../datasets/60-20-20/validation.dataset'
+# prefix = '/val'
+# dataset_path = '../datasets/60-20-20/validation.dataset'
 # dataset_path = '../datasets/80-10-10/validation.dataset'
 # dataset_path = '../datasets/validation.dataset'
 
-# prefix = '/test'
-# dataset_path = '../datasets/60-20-20/test.dataset'
+prefix = '/test'
+dataset_path = '../datasets/60-20-20/test.dataset'
 # dataset_path = '../datasets/80-10-10/test.dataset'
 # dataset_path = '../datasets/test.dataset'
 
