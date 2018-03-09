@@ -15,6 +15,7 @@ def main(FLAGS):
         os.environ["CUDA_VISIBLE_DEVICES"] = FLAGS.cuda_device
         str_list_log.append("Cuda visible device name: {}".format(FLAGS.cuda_device))
         data_set = FLAGS.set
+        str_list_log.append("Dataset: " + data_set)
         img_path = '/nfs/wsi/MIVC/proj1/einig/SkinCancerData/' + data_set + '/Images/*_resized.jpg'
     elif dpath == 'florence':
         pass
