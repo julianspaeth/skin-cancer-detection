@@ -14,8 +14,8 @@ def main(FLAGS):
     if dpath == 'cluster':
         os.environ["CUDA_VISIBLE_DEVICES"] = FLAGS.cuda_device
         str_list_log.append("Cuda visible device name: {}".format(FLAGS.cuda_device))
-
-        img_path = '/data/scratch/einig/SkinCancerData/train/Images/*_resized.jpg'
+        data_set = FLAGS.set
+        img_path = '/nfs/wsi/MIVC/proj1/einig/SkinCancerData/' + data_set + '/Images/*_resized.jpg'
     elif dpath == 'florence':
         pass
     elif dpath == 'julian':
@@ -67,6 +67,7 @@ if __name__ == "__main__":
     parser.add_argument("--dpath", default="cluster", help="data path identifier to use")
     parser.add_argument("--lossid", default="l1", help="loss function identifier to use")
     parser.add_argument("--lr", default=1e-3, type=float, help="learning rate")
+    parser.add_argument("--set", default="train", help="dataset to use")
     parser.add_argument("--bs", default=6, type=int, help="batch size")
 
     FLAGS = parser.parse_args()
