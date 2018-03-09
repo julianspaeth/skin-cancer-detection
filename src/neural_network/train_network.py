@@ -95,10 +95,10 @@ def train(img_path, loss_func, learning_rate, batch_size, snapshot_folder, save_
     # Flip and rotate augmentations with to 20 %
     x_augmented = augment(x_preprocessed, random=True, percentage=20, rotation=True, vertical_flip=True, horizontal_flip=True)
     # Other augmentations just 5 %
-    x_augmented = augment(x_preprocessed, random=True, percentage=5, brightness=True, contrast=True, hue=True, saturation=True)
+    x_augmented_rare = augment(x_augmented, random=True, percentage=5, brightness=True, contrast=True, hue=True, saturation=True)
     ## End Preprocessing and Augmentation --------------------------------
 
-    net, endpoints = inception_v3.inception_v3(inputs=x_augmented, num_classes=2, is_training=True,
+    net, endpoints = inception_v3.inception_v3(inputs=x_augmented_rare, num_classes=2, is_training=True,
                                                dropout_keep_prob=0.8)
 
     gen = dataloader_gen(img_path=img_path, batch_size=batch_size)
