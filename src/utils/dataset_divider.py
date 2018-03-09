@@ -5,8 +5,8 @@ import shutil
 # dataset_local_path = "/data/scratch/einig/SkinCancerData"
 # dataset_local_path = "D:\Data\Documents\AutomaticSaveToDisc\Datasets\ISIC-Archive-Downloader-master\Data"
 dataset_local_path = "/nfs/wsi/MIVC/proj1/einig/SkinCancerData/all_images"
-dataset_local__output_path = "/nfs/wsi/MIVC/proj1/einig/SkinCancerData/60_20_20"
-# dataset_local__output_path = "/nfs/wsi/MIVC/proj1/einig/SkinCancerData/80_10_10"
+# dataset_local__output_path = "/nfs/wsi/MIVC/proj1/einig/SkinCancerData/60_20_20"
+dataset_local__output_path = "/nfs/wsi/MIVC/proj1/einig/SkinCancerData/80_10_10"
 
 # prefix = '/train'
 # dataset_path = '../datasets/60-20-20/training.dataset'
@@ -18,8 +18,8 @@ dataset_local__output_path = "/nfs/wsi/MIVC/proj1/einig/SkinCancerData/60_20_20"
 # dataset_path = '../datasets/validation.dataset'
 
 prefix = '/test'
-dataset_path = '../datasets/60-20-20/test.dataset'
-# dataset_path = '../datasets/80-10-10/test.dataset'
+# dataset_path = '../datasets/60-20-20/test.dataset'
+dataset_path = '../datasets/80-10-10/test.dataset'
 # dataset_path = '../datasets/test.dataset'
 
 if not os.path.exists(dataset_local_path + prefix):
