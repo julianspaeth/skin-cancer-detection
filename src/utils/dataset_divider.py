@@ -8,13 +8,13 @@ dataset_local_path = "/nfs/wsi/MIVC/proj1/einig/SkinCancerData/all_images"
 # dataset_local__output_path = "/nfs/wsi/MIVC/proj1/einig/SkinCancerData/60_20_20"
 dataset_local__output_path = "/nfs/wsi/MIVC/proj1/einig/SkinCancerData/80_10_10"
 
-prefix = '/train'
+# prefix = '/train'
 # dataset_path = '../datasets/60-20-20/training.dataset'
-dataset_path = '../datasets/80-10-10/training.dataset'
+# dataset_path = '../datasets/80-10-10/training.dataset'
 
-# prefix = '/val'
+prefix = '/val'
 # dataset_path = '../datasets/60-20-20/validation.dataset'
-# dataset_path = '../datasets/80-10-10/validation.dataset'
+dataset_path = '../datasets/80-10-10/validation.dataset'
 # dataset_path = '../datasets/validation.dataset'
 
 # prefix = '/test'
