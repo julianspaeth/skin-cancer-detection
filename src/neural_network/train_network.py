@@ -90,8 +90,14 @@ def train(img_path, loss_func, learning_rate, batch_size, snapshot_folder, save_
     x = tf.placeholder(dtype=tf.float32, shape=[batch_size, 542, 718, 3], name='input')
     y = tf.placeholder(dtype=tf.float32, shape=[batch_size, 2], name='label')
 
+    ## Start Preprocessing and Augmentation --------------------------------
     x_preprocessed = preprocess(x)
-    x_augmented = augment(x_preprocessed, random=True, percentage=20, rotation=True, vertical_flip=True)
+    # Flip and rotate augmentations with to 20 %
+    x_augmented = augment(x_preprocessed, random=True, percentage=20, rotation=True, vertical_flip=True, horizontal_flip=True)
+    # Other augmentations just 5 %
+    x_augmented = augment(x_preprocessed, random=True, percentage=5, brightness=True, contrast=True, hue=True, saturation=True)
+    ## End Preprocessing and Augmentation --------------------------------
+
     net, endpoints = inception_v3.inception_v3(inputs=x_augmented, num_classes=2, is_training=True,
                                                dropout_keep_prob=0.8)
 
