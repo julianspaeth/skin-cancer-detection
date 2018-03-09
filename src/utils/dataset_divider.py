@@ -2,15 +2,23 @@ import os
 
 import shutil
 
-dataset_local_path = "/data/scratch/einig/SkinCancerData"
+# dataset_local_path = "/data/scratch/einig/SkinCancerData"
 # dataset_local_path = "D:\Data\Documents\AutomaticSaveToDisc\Datasets\ISIC-Archive-Downloader-master\Data"
+dataset_local_path = "/nfs/wsi/MIVC/proj1/einig/SkinCancerData/all_images"
 
 
 prefix = '/train'
-dataset_path = '../datasets/training.dataset'
+dataset_path = '../datasets/60-20-20/training.dataset'
+# dataset_path = '../datasets/80-10-10/training.dataset'
+
 # prefix = '/val'
+# dataset_path = '../datasets/60-20-20/validation.dataset'
+# dataset_path = '../datasets/80-10-10/validation.dataset'
 # dataset_path = '../datasets/validation.dataset'
+
 # prefix = '/test'
+# dataset_path = '../datasets/60-20-20/test.dataset'
+# dataset_path = '../datasets/80-10-10/test.dataset'
 # dataset_path = '../datasets/test.dataset'
 
 if not os.path.exists(dataset_local_path + prefix):
@@ -28,7 +36,7 @@ with open(os.path.expanduser(dataset_path)) as f:
         dest_path = dataset_local_path + prefix + "/Images/" + line.strip() + "_resized.jpg"
 
         try:
-            shutil.move(src=src_path, dst=dest_path)
+            shutil.copy(src=src_path, dst=dest_path)
         except:
             print("following file was not found: {}".format(src_path) )
 
@@ -36,7 +44,7 @@ with open(os.path.expanduser(dataset_path)) as f:
         dest_path = dataset_local_path + prefix + "/Descriptions/" + line.strip()
 
         try:
-            shutil.move(src=src_path, dst=dest_path)
+            shutil.copy(src=src_path, dst=dest_path)
         except:
             print("following file was not found: {}".format(src_path) )
 
