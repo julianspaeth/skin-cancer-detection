@@ -19,7 +19,7 @@ def sm_cross_loss(logits, labels):
     return tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels)
 
 
-def _regularize(labels, pos_multiplier=1.5, neg_multiplier=0.5):
+def _regularize(labels, pos_multiplier=3, neg_multiplier=0.3):
     tf_positive_label = tf.constant([0, 1], dtype=tf.float32)
     tf_mask = tf.equal(tf_positive_label, labels)
     tf_mask = tf.reduce_all(tf_mask, axis=1)
