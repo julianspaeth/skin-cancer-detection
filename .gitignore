@@ -280,5 +280,5 @@ TSWLatexianTemp*
 # own files
 *.pyc
 **/__pycache__/*
-**/snapshots/*
+*.events.*
 *.ckpt
