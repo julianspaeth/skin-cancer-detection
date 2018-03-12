@@ -1,0 +1,9 @@
+Machine Identifier: cluster
+Cuda visible device name: 0
+Datase Image Path: /data/scratch/einig/SkinCancerData/train/Images/*_resized.jpg
+Loss ID: l2
+Loss function name: l2_loss
+Intervals to log network [console print , snapshot save]: [500, 7000]
+Batchsize: /data/scratch/einig/SkinCancerData/train/Images/*_resized.jpg
+Learning Rate: 0.001
+Snapshotfolder: ./neural_network/snapshots/2018-02-08_11-47-02/
