@@ -16,6 +16,7 @@ def main(FLAGS):
         type = FLAGS.type
         str_list_log.append("Type: {}".format(type))
         img_path = '/nfs/wsi/MIVC/proj1/einig/SkinCancerData/' + type + "/" + data_set + '/Images/*_resized.jpg'
+        print(img_path)
     elif dpath == 'florence':
         pass
     elif dpath == 'julian':
@@ -27,6 +28,7 @@ def main(FLAGS):
     str_list_log.append("Datase Image Path: {}".format(img_path))
 
     snapshot_path = "./neural_network/snapshots/" + type + "/"
+    print(snapshot_path)
 
     eval_all = FLAGS.all
     if eval_all:
