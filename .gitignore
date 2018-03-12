@@ -282,3 +282,5 @@ TSWLatexianTemp*
 **/__pycache__/*
 *.events.*
 *.ckpt
+
+/disp_augmentations/
