@@ -128,7 +128,7 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
                     eval_list_pred.append(0)
                 elif result_set[0] != label_set[0] or result_set[1] != label_set[1]:
                     str_debug += "false"
-                    false_negatives += 1
+                    false_positives += 1
 
                     eval_list_test.append(0)
                     eval_list_pred.append(1)
@@ -142,7 +142,7 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
                     eval_list_pred.append(1)
                 elif result_set[0] != label_set[0] or result_set[1] != label_set[1]:
                     str_debug += "false"
-                    false_positives += 1
+                    false_negatives += 1
 
                     eval_list_test.append(1)
                     eval_list_pred.append(0)
