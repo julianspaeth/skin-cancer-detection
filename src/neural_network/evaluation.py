@@ -90,8 +90,8 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
 
             result_set = np.zeros([2])
 
-            eval_list_pred_score_mal.append(result[0][0])
-            eval_list_pred_score_ben.append(result[0][1])
+            eval_list_pred_score_mal.append(result[0][1])
+            eval_list_pred_score_ben.append(result[0][0])
             if result[0][0] > result[0][1]:
                 if verbose:
                     print("first larger")
