@@ -1,14 +1,11 @@
 import glob
 import json
 import os
-import sys
-import logging
 
 import numpy as np
 import tensorflow as tf
 from PIL import Image
 from tensorflow.contrib.slim.python.slim.nets import inception_v3
-from roc import roc_functions
 from neural_network.image_tools.preprocess import preprocess
 
 
@@ -82,7 +79,9 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
         false_negatives = 0
 
         eval_list_test = []
-        eval_list_pred = []
+        eval_list_pred_label = []
+        eval_list_pred_score_mal = []
+        eval_list_pred_score_ben = []
 
         for i in range(int_image_files):
             img_input, label_input = gen.__next__()
@@ -91,6 +90,8 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
 
             result_set = np.zeros([2])
 
+            eval_list_pred_score_mal.append(result[0][0])
+            eval_list_pred_score_ben.append(result[0][1])
             if result[0][0] > result[0][1]:
                 if verbose:
                     print("first larger")
@@ -125,13 +126,13 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
                     true_negatives += 1
 
                     eval_list_test.append(0)
-                    eval_list_pred.append(0)
+                    eval_list_pred_label.append(0)
                 elif result_set[0] != label_set[0] or result_set[1] != label_set[1]:
                     str_debug += "false"
                     false_positives += 1
 
                     eval_list_test.append(0)
-                    eval_list_pred.append(1)
+                    eval_list_pred_label.append(1)
             elif result_set[0] == 0 and result_set[1] == 1:
                 str_debug += "malignant_"
                 if result_set[0] == label_set[0] and result_set[1] == label_set[1]:
@@ -139,13 +140,13 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
                     true_positives += 1
 
                     eval_list_test.append(1)
-                    eval_list_pred.append(1)
+                    eval_list_pred_label.append(1)
                 elif result_set[0] != label_set[0] or result_set[1] != label_set[1]:
                     str_debug += "false"
                     false_negatives += 1
 
                     eval_list_test.append(1)
-                    eval_list_pred.append(0)
+                    eval_list_pred_label.append(0)
             else:
                 str_debug = "other"
                 other = other + 1
@@ -162,25 +163,11 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
 
         print(eval_path)
 
-        try:
-            if true_positives > 0 and true_negatives > 0 and false_positives > 0 and false_negatives > 0:
-                print(eval_list_test)
-                print(eval_list_pred)
-            print(eval_path + "/roc_curve_" + str(i) + "auc75.png")
-            # roc_functions.plotROC(pred_labels=eval_list_pred, test_labels=eval_list_test,
-            #                      save_path=eval_path + "/roc_curve_" + str(i) + "auc75.png")
-        except ValueError:
-            print("ROC AUC score is not defined in that case")
-        except:
-            logging.exception("Something awful happened!")
-            print(sys.exc_info()[0])
-            raise
-
         with open(eval_path + '/eval.log', 'w') as f:
             eval_string = "TP: " + str(true_positives) + "\nTN: " + str(true_negatives) + "\nFP: " + \
                           str(false_positives) + "\nFN: " + str(false_negatives) \
-                          + "\nAcc: " + str(acc) + "\nother: " + str(other) + "\npred = " + str(
-                eval_list_pred) + "\nlabel = " + str(eval_list_test)
+                          + "\nAcc: " + str(acc) + "\nother: " + str(other) + "\npred_label = " + str(
+                eval_list_pred_label) + "\nlabel = " + str(eval_list_test) + "\npred_score_mal = " + str(eval_list_pred_score_mal) + "\npred_score_ben = " + str(eval_list_pred_score_ben)
             f.writelines(eval_string)
 
             print(eval_string)

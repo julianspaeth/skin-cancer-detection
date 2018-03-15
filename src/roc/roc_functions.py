@@ -83,6 +83,11 @@ if __name__ == '__main__':
     #print("ACC = %s" % (accuracy_score(label, pred)))
     #print("MCC = %s" % (metrics.matthews_corrcoef(label, pred)))
     #plotROC(label, pred)
+    label = [1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0]
+    pred = [1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0]
+
+    plotROC(label, pred)
+
     print("test")
 
 
