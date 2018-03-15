@@ -282,5 +282,6 @@ TSWLatexianTemp*
 **/__pycache__/*
 *.events.*
 *.ckpt
-
+*.pdf
+#	deleted:    .projet
 /disp_augmentations/
