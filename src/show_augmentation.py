@@ -20,13 +20,17 @@ if not os.path.exists(os.path.expanduser(log_folder)):
 img = Image.open(os.path.expanduser(path=img_path))
 np_img = np.asarray(img, dtype = np.uint8)
 np_img = np.expand_dims(np_img, axis=0)
-x_prep = tf.placeholder(dtype=tf.float32, shape=[1, 542, 718, 3], name='input')
-x = x_prep
-# x_prep = 1
+x = tf.placeholder(dtype=tf.float32, shape=[1, 542, 718, 3], name='input')
+x_prep = preprocess(x)
+# x_prep = preprocess(x_prep)
+
 sess = tf.Session()
 for i in range(10):
     np_x_prep = sess.run(x_prep, {x: np_img})
     Image.fromarray(np.squeeze(np_x_prep).astype(dtype=np.uint8)).save(os.path.join(log_folder, "preprocessed_"+str(i)+".png"))
+
+    # disable imagenet normalization
+    x_prep = x
 
     augmentation_brightness = random_brightness(x_prep, 50, random=False, percentage=100)
     np_aug_bright = sess.run(augmentation_brightness, {x: np_img})
