@@ -48,6 +48,13 @@ def dataloader_gen(list_fns_img, batch_size=1):
         yield res, lesion_classes
 
 
+def calc_final_score(tf_single_scores):
+    tf_score = tf.constant(1.0) - tf_single_scores[0] - tf_single_scores[1]
+    tf_score = tf.constant(1.0) + tf_score
+    tf_score = tf.constant(0.5) * tf_score
+    return tf_score
+
+
 def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False):
     tf.reset_default_graph()
 
@@ -63,6 +70,8 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
     int_image_files = len(list_fns_img)
 
     gen = dataloader_gen(list_fns_img=list_fns_img)
+
+    tf_score = calc_final_score(endpoints["Predictions"])
 
     restorer = tf.train.Saver()
 
@@ -82,11 +91,14 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
         eval_list_pred_label = []
         eval_list_pred_score_mal = []
         eval_list_pred_score_ben = []
+        allscores = []
 
         for i in range(int_image_files):
             img_input, label_input = gen.__next__()
             feed_dict = {x: img_input, y: label_input}
-            result, label = sess.run([net, y], feed_dict=feed_dict)
+            result, label, score = sess.run([endpoints["Predictions"], y, tf_score], feed_dict=feed_dict)
+
+            allscores.append(score)
 
             result_set = np.zeros([2])
 
@@ -167,7 +179,9 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
             eval_string = "TP: " + str(true_positives) + "\nTN: " + str(true_negatives) + "\nFP: " + \
                           str(false_positives) + "\nFN: " + str(false_negatives) \
                           + "\nAcc: " + str(acc) + "\nother: " + str(other) + "\npred_label = " + str(
-                eval_list_pred_label) + "\nlabel = " + str(eval_list_test) + "\npred_score_mal = " + str(eval_list_pred_score_mal) + "\npred_score_ben = " + str(eval_list_pred_score_ben)
+                eval_list_pred_label) + "\nlabel = " + str(eval_list_test) + "\npred_score_mal = " + str(
+                eval_list_pred_score_mal) + "\npred_score_ben = " + str(eval_list_pred_score_ben) + "\nscores = " + str(
+                allscores)
             f.writelines(eval_string)
 
             print(eval_string)
