@@ -49,7 +49,9 @@ def dataloader_gen(list_fns_img, batch_size=1):
 
 
 def calc_final_score(tf_single_scores):
-    tf_score = tf.constant(1.0) - tf_single_scores[0] - tf_single_scores[1]
+    tf_single_scores_unstacked = tf.unstack(tf_single_scores, axis=-1)
+
+    tf_score = tf.constant(1.0) - tf_single_scores_unstacked[0] - tf_single_scores_unstacked[1]
     tf_score = tf.constant(1.0) + tf_score
     tf_score = tf.constant(0.5) * tf_score
     return tf_score
