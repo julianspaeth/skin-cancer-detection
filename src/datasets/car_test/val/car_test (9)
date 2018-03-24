@@ -1,0 +1,50 @@
+{
+  "name": "ISIC_0000007",
+  "_id": "5436e3acbae478396759f0dd",
+  "updated": "2015-02-23T02:49:26.957000+00:00",
+  "created": "2014-10-09T19:36:12.563000+00:00",
+  "_modelType": "image",
+  "meta": {
+    "unstructured": {
+      "localization": "Back",
+      "id1": "8",
+      "diagnosis": "dysplastic nevus",
+      "site": "bar"
+    },
+    "acquisition": {
+      "pixelsX": 1022,
+      "image_type": "dermoscopic",
+      "pixelsY": 767
+    },
+    "clinical": {
+      "diagnosis_confirm_type": null,
+      "melanocytic": true,
+      "age_approx": 25,
+      "sex": "female",
+      "benign_malignant": "malignant",
+      "diagnosis": "nevus"
+    }
+  },
+  "notes": {
+    "reviewed": {
+      "accepted": true,
+      "userId": "5436c6e7bae4780a676c8f93",
+      "time": "2014-11-10T02:39:56.492000+00:00"
+    },
+    "tags": [
+      "ISBI 2016: Training",
+      "ISBI 2017: Training"
+    ]
+  },
+  "creator": {
+    "name": "User 6VSN",
+    "_id": "5450e996bae47865794e4d0d"
+  },
+  "dataset": {
+    "name": "ISIC_UDA-1_1",
+    "_id": "54b6e869bae4785ee2be8652",
+    "description": "Moles and melanomas.\nBiopsy-confirmed melanocytic lesions. Both malignant and benign lesions are included.",
+    "license": "CC-0",
+    "updated": "2014-11-10T02:39:56.492000+00:00"
+  }
+}
