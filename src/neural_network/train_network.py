@@ -107,7 +107,7 @@ def train(img_path, loss_func, learning_rate, batch_size, snapshot_folder, save_
                            'InceptionV3/Logits/Conv2d_1c_1x1/weights']
     variables_to_restore = slim.get_variables_to_restore(exclude=exclude_set_restore)
 
-    loss = tf.reduce_mean(loss_func(logits=net, labels=y))
+    loss = tf.reduce_mean(loss_func(logits=endpoints["Predictions"], labels=y))
     optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss=loss)
 
     restorer = tf.train.Saver(variables_to_restore)
