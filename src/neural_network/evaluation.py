@@ -100,7 +100,7 @@ def evaluate(img_path=None, snapshot_folder=None, eval_path=None, verbose=False)
             feed_dict = {x: img_input, y: label_input}
             result, label, score = sess.run([endpoints["Predictions"], y, tf_score], feed_dict=feed_dict)
 
-            allscores.append(score)
+            allscores.append(score[0])
 
             result_set = np.zeros([2])
 
