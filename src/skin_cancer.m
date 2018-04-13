@@ -324,8 +324,51 @@ occurences_pro = [occurences_neg_pro, occurences_pos_pro];
 
 %%
 
+
+%%
+
 figure(2)
+hold on
+
+new_occurences_pos = occurences_pos/sum(occurences_pos); 
+new_occurences_neg = occurences_neg/sum(occurences_neg); 
+
+x = 0:0.01:1;
+bar(x,new_occurences_pos, 'r', 'FaceAlpha',.5); 
+
+bar(x,new_occurences_neg, 'b', 'FaceAlpha',.5); 
+%bar(occurences_pos, 'r'); 
+occurences = [occurences_neg/10, occurences_pos]; 
+%bar(occurences, 'r', 'b'); 
+ 
+plot([0.35, 0.35], [0, 1], 'g');
+hold off; 
+%axis([0,1,0,1])
+legend(["malign", "benign", "threshold"]);
+xlabel("Score");
+%xticks(0:0.01:1);
+ylabel("Frequency");
+
+occurences_neg_pro = occurences_neg./sum(occurences_neg)*100; 
+occurences_pos_pro = occurences_pos./sum(occurences_pos)*100; 
+
+occurences_pro = [occurences_neg_pro, occurences_pos_pro]; 
+
+%%
+
+
+
+figure(3)
 scatter(label, scores); 
 hold on; 
 plot([0, 1],[0.3, 0.3]); 
 hold off; 
+
+%%
+
+figure(4)
+pie_data = [0.2, 7.8, 92.0];
+pie(pie_data); 
+colormap([0 0 1; 1 0 0; 0 1 0]);
+
+%%
