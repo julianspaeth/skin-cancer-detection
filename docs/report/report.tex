@@ -31,7 +31,7 @@
     
 \section{Einleitung}
 
-Hautkrebs gilt als eine der häufigsten Krebserkrankungen der Welt. Jährlich erkranken etwa 18.000 Menschen in Deutschland an dieser Krankheit, wobei Hautkrebs allgemein etwa für ein Prozent der Krebstodesfälle verantwortlich ist \citet{hautkrebs}. Findet eine Erkennung der malignen Hautläsionen frühzeitig statt, so ist es in den meisten Fällen möglich einen tödlichen Verlauf der Krankheit zu verhindern. Daher sind frühzeitige Erkennungssysteme sehr wichtig für die Bekämpfung von Hautkrebs.\\
+Hautkrebs gilt als eine der häufigsten Krebserkrankungen der Welt. Jährlich erkranken etwa 18.000 Menschen in Deutschland an dieser Krankheit, wobei Hautkrebs allgemein etwa für ein Prozent der Krebstodesfälle verantwortlich ist \citep{hautkrebs}. Findet eine Erkennung der malignen Hautläsionen frühzeitig statt, so ist es in den meisten Fällen möglich einen tödlichen Verlauf der Krankheit zu verhindern. Daher sind frühzeitige Erkennungssysteme sehr wichtig für die Bekämpfung von Hautkrebs.\\
 \noindent Eine Ergänzung zum regelmäßigen Arztbesuch und dem damit verbundenem Hautscreening, können daher neuronale Netze bieten, die aufgrund von medizinischen Datenbanken lernen können, eine maligne von einer benignen Hautläsion zu unterscheiden. Die genaue Implementierung und das Training solcher neuronalen Netzen werden wir im Folgenden genauer erklären. 
 
 \section{Problemstellung und Zielsetzung}
@@ -40,6 +40,8 @@ Im Rahmen des Machine Learning Praktikums beschäftigen wir uns mit der folgende
 Unser Ziel war es eine möglichst hohe Genauigkeit zu erreichen und vor allem die Anzahl der falsch Negativen möglichst gering zu halten. Denn im Zweifel soll der Klassifikator eine Läsion als maligne klassifizieren, auch wenn sie eigentlich benigne ist, anstatt eine maligne Läsion, die tödlich verlaufen könnte, zu verharmlosen und als benigne zu klassifizieren. Im Folgenden werden wir genauer auf die Methodik eingehen, die hinter unserem Klassifikator steckt und welche Ergebnisse dieser auf unbekannte Bilder von Hautläsionen liefert. 
 
 \section{Methoden und Tools}
+
+Zur Erstellung des Klassifikators nutzten wir, wie \citet{esteva2017dermatologist} auch das öffentlich zur Verfügung stehende GoogleNet Inception v3, welches ein convolutional neural network ist und aus zahlreichen verschiedenen Schichten und Neuronen besteht \citep{szegedy2016rethinking} . Dieses neuronale Netz wurde auf den Bildern des ImageNet vortrainiert \citep{russakovsky2015imagenet} und eignet sich daher gut für unser Klassifizierungsproblem.  
 
 \begin{itemize}
 	\item Python, Tensorflow, Scikit Learn, NumPy
