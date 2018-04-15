@@ -41,7 +41,14 @@ Unser Ziel war es eine möglichst hohe Genauigkeit zu erreichen und vor allem di
 
 \section{Methoden und Tools}
 
-Zur Erstellung des Klassifikators nutzten wir, wie \citet{esteva2017dermatologist} auch das öffentlich zur Verfügung stehende GoogleNet Inception v3, welches ein convolutional neural network ist und aus zahlreichen verschiedenen Schichten und Neuronen besteht \citep{szegedy2016rethinking} . Dieses neuronale Netz wurde auf den Bildern des ImageNet vortrainiert \citep{russakovsky2015imagenet} und eignet sich daher gut für unser Klassifizierungsproblem.  
+Zur Erstellung des Klassifikators nutzten wir, wie \citet{esteva2017dermatologist} auch das öffentlich zur Verfügung stehende GoogleNet Inception v3, welches ein convolutional neural network ist und aus zahlreichen verschiedenen Schichten und Neuronen besteht \citep{szegedy2016rethinking} . Dieses neuronale Netz wurde auf den Bildern des ImageNet vortrainiert \citep{russakovsky2015imagenet} und eignet sich daher gut für unser Klassifizierungsproblem. Das Training und die damit verbundene Vorverarbeitung programmierten wir mittels Python, in Kombination mit Tensorflow, Scikit Learn und NumPy. 
+
+Als Datensatz nutzten wir die ISIC-Datenbank, welche aus insgesamt 13.768 Bildern von sowohl malignen als auch benignen Hautläsionen besteht und außerdem der einzige frei erhätliche Hautläsions-Datensatz war. Leider stellte sich heraus, dass die Bilder dieser Datenbank sehr unausgeglichen waren: der Anteil der malignen Läsionen war viel geringer als der Anteil der benignen Läsionen. Dieses Problem lösten wir durch eine spezielle Art der Randomisierung, welche später noch genauer erläutert wird. Ein weiteres Problem, das die Bilder des ISIC-Datensatzes brachten, war die Tatsache, dass sie verschieden groß waren. Für das richtige Trainieren des Netzes, mussten wir sie daher vorverarbeiten und wir entschieden uns dazu, alle auf die kleinste verfügbare Größe runterzuskalieren. Zusätzlich verkleinerten wir den Ausschnitt des Bildes, indem wir das maximale zentrale Quadrat auswählten und auf 299x299 px runterskalierten. Somit hatten wir eine homogene Menge an Bildern, die wir zu Trainingszwecken in das neuronale Netz füttern konnten. 
+
+*** HIER DANN AUGMENTIERUNGSMETHODEN *** 
+
+
+
 
 \begin{itemize}
 	\item Python, Tensorflow, Scikit Learn, NumPy
