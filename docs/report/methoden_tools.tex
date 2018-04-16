@@ -1,0 +1,44 @@
+\section{Methoden und Tools}
+
+Zur Erstellung des Klassifikators nutzten wir, wie \citet{esteva2017dermatologist} auch das öffentlich zur Verfügung stehende GoogleNet Inception v3, welches ein convolutional neural network ist und aus zahlreichen verschiedenen Schichten und Neuronen besteht \citep{szegedy2016rethinking} . Dieses neuronale Netz wurde auf den Bildern des ImageNet vortrainiert \citep{russakovsky2015imagenet} und eignet sich daher gut für unser Klassifizierungsproblem. Das Training und die damit verbundene Vorverarbeitung programmierten wir mittels Python, in Kombination mit Tensorflow, Scikit Learn und NumPy. 
+
+Als Datensatz nutzten wir die ISIC-Datenbank, welche aus insgesamt 13.768 Bildern von sowohl malignen als auch benignen Hautläsionen besteht und außerdem der einzige frei erhätliche Hautläsions-Datensatz war. Leider stellte sich heraus, dass die Bilder dieser Datenbank sehr unausgeglichen waren: der Anteil der malignen Läsionen war viel geringer als der Anteil der benignen Läsionen. Dieses Problem lösten wir durch eine spezielle Art der Randomisierung, welche später noch genauer erläutert wird. Ein weiteres Problem, das die Bilder des ISIC-Datensatzes brachten, war die Tatsache, dass sie verschieden groß waren. Für das richtige Trainieren des Netzes, mussten wir sie daher vorverarbeiten und wir entschieden uns dazu, alle auf die kleinste verfügbare Größe runterzuskalieren. Zusätzlich verkleinerten wir den Ausschnitt des Bildes, indem wir das maximale zentrale Quadrat auswählten und auf 299x299 px runterskalierten. Somit hatten wir eine homogene Menge an Bildern, die wir zu Trainingszwecken in das neuronale Netz füttern konnten. 
+
+*** HIER DANN AUGMENTIERUNGSMETHODEN *** 
+
+
+
+
+\begin{itemize}
+	\item Python, Tensorflow, Scikit Learn, NumPy
+	\item Skalierung der Bilder
+	\item Augmentierungsmethoden
+	\item Trainingsparameter (Anzahl Durchläufe, Lernrate, Loss-Funktionen)
+	\item Evaluationsmethoden: Berechnung des Scores, etc.
+	\item Aufteilung des Datensatzes in Training, Test, Validierung
+	\item genaue Erklärung des Shufflings, da Datensatz nicht ausbalanciert
+\end{itemize}
+
+\subsection{Analysemethoden}
+
+Für die Bewertung und Optimierung unseres Klassifizierers wurden verschiedene Methoden angewandt. Die Genauigkeit konnte mit unserem Datensatz nur unter großer Skepsis betrachtet werden. Sie berechnet sich durch die Anzahl der richtig vorhergesagten Beispiele geteilt durch die Anzahl aller Beispiele:
+	\[\text{Accuracy} = \frac{TP+TN}{TP+TN+FP+FN}\]
+Da der in diesem Projekt verwendete Datensatz deutlich mehr negative als positive Beispiele enthält, können unter dieser Berechnung sehr hohe Genauigkeiten auftreten, obwohl eventuell kein positives Beispiel richtig berechnet wurde. Eine weitaus bessere Analyse ist hierbei möglich indem die richtig-positiv und richtig-negativen Beispiele getrennt angeschaut werden. Die Sensitivität, auch richtig-positiv Rate oder Recall genannt entspricht in unserem Fall den Anteil an tatsächlich malignen Hautläsionen, bei denen die Hautläsion auch als maligne erkannt wurde: 
+\[\text{Sensitivität} = \frac{TP}{TP+FN}\]
+Die Spezifität, auch richtig-negativ Rate genannt, entspricht dem Anteil an tatsächlich benignen Hautläsionen, die auch als benigne erkannt wurden:
+\[\text{Spezifität} = \frac{TN}{TN+FP}\]
+Die getrennte Betrachtung beider Werte erlaubt es uns direkt zu sehen ob maligne oder benigne Beispiele besser erkannt werden und dementsprechend zu optimieren.
+
+Zusätzlich zogen wir außerdem noch den \textit{Matthews correlation coefficient} in Betracht. Dieser wird als Qualitätsmaßstab in binären maschinellen Lernmethoden verwendet, im Speziellen wenn der Datensatz sehr unausgeglichen ist. 
+
+\[\text{MCC} = \frac{TP*TN - FP*FN}{\sqrt{(TP+FP)*(TP+FN)*(TN+FP)*(TN+FN)}}\]
+
+Im Gegensatz zu den anderen hier verwendeten Methoden liefert der MCC Werte zwischen $-1$ und $1$. Liefert ein Klassifizierer einen MCC von $0$ so ist er nicht besser als der Zufall. Ein MCC von $1$ hingegen steht für eine komplette Übereinstimmung, ein MCC von $-1$ für die komplette Misklassifizierung.
+
+Schließlich verwendeten wir noch den F1- und F2-Score als Qualitätsmaßstäbe. Der F1-Score ist das harmonische Mittel zwischen dem Recall und der Precision, der F2-Score gewichtet den Recall stärker und setzt somit den Schwerpunkt mehr auf die falsch negativen Stichproben, also die malignen Hautläsionen, die als benigne erkannt wurden:
+	\[\text{Precision} = \frac{TP}{TP+FP}\]
+    \[\text{Recall/Sensitivität} = \frac{TP}{TP+FN}\]
+	\[\text{F1-Score} = 2*\frac{\text{precision}*\text{recall}}	{\text{precision}+\text{recall}}\]
+   	\[\text{F2-Score} = 5*\frac{\text{precision}*\text{recall}}	{4*\text{precision}+\text{recall}}\]
+    
+Wir entschieden uns bewusst für eine größere Anzahl von Qualitätsmaßstäben. Da ein Parameter allein nie die Komplexität des Klassifizierers komplett beschreiben kann, sollen die verschiedenen Qualitätsmaßstäbe bei der Evaluierung und der Entscheidung für den für uns geeignetsten Klassifizierer als Gesamtheit betrachtet und verwendet werden. Dies ermöglicht es uns die Klassifizierung gezielt in die von uns gewünschte Richtung zu lenken um zum Beispiel Falsch-Negative Vorhersagen zu minimieren.

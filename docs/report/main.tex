@@ -1,0 +1,41 @@
+\documentclass[a4paper, doc]{apa6}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{calc}
+\usepackage{natbib}
+\usepackage{lipsum}
+\usepackage{todonotes}
+
+
+
+\title{Projektbericht: Skin Cancer Detection}
+\shorttitle{Skin Cancer Detection}
+\author{Florence Lopez, Jonas Einig, Julian Späth }
+\affiliation{Department of Computer Science, University of Tübingen}
+
+
+\begin{document}
+
+\maketitle
+\begin{abstract}
+In der Medizin unterscheidet man bei Hautverletzungen oder Hautveränderungen zwischen benignen und malignen Läsionen. Die malignen Läsionen gelten dabei als die bösartigen Hautveränderungen, die auf Hautkrebs hindeuten. Wir entwickelten daher auf der Grundlage einer anderen Arbeit einen Klassifikator, der aus einem Datensatz von Hautläsionen zwischen Benignen und Malignen unterscheidet. Durch diesen Klassifikator soll es zukünftig einfacher sein, bösartige Hautläsionen schneller zu erkennen, um diese effizient zu behandeln. Daher arbeiteten wir zusätzlich noch an einer mobilen Anwendung, welche es Nutzern ermöglicht, ihre Haut vorerst ohne eine ärztliche Analyse nach malignen und benignen Hautläsionen zu untersuchen. Natürlich kann eine solche Anwendung aber keinen Mediziner ersetzen, sondern lediglich als zusätzliche Unterstützung dienen. 
+\end{abstract}
+    
+\input{einleitung}
+\input{problemstellung_zielsetzung}
+\input{methoden_tools}
+\input{ergebnisse}
+\input{aussicht}
+
+\bibliography{mylit}
+\bibliographystyle{apalike}
+
+\end{document}
