@@ -6,14 +6,61 @@ Als Datensatz nutzten wir die ISIC-Datenbank, welche aus insgesamt 13.768 Bilder
 
 Während des Trainings wurden die Bilder zufälig augmentiert. Durch eine Augmentierung wird der Datensatz künstlich vergrößert um mehr diverse Trainingsbeispiele für das neuronale Netz zu erhalten. Dazu wendet man eine klassenerhaltende Transformation auf das Bild an. In inserem Ansatz verwenden wir verschiedene Augmentierungen, die jeweils zufällig auf ein Bild angewendet wurden. Wir verwendeten die folgenden Transformationen:
 
+\begin{figure}[t!]
+	\centering
+	\begin{subfigure}{0.24\linewidth}
+		\includegraphics[width=\textwidth]{./pics/augmentations/original.jpg}
+		\caption{Original}
+		\label{subfig:aug_original}
+	\end{subfigure}
+	\begin{subfigure}{0.24\linewidth}
+		\includegraphics[width=\textwidth]{./pics/augmentations/brightness.png}
+		\caption{Helligkeit}
+		\label{subfig:aug_bright}
+	\end{subfigure}
+	\begin{subfigure}{0.24\linewidth}
+		\includegraphics[width=\textwidth]{./pics/augmentations/contrast.png}
+		\caption{Kontrast}
+		\label{subfig:aug_contrast}
+	\end{subfigure}
+	\begin{subfigure}{0.24\linewidth}
+		\includegraphics[width=\textwidth]{./pics/augmentations/hue.png}
+		\caption{Hue}
+		\label{subfig:aug_hue}
+	\end{subfigure}
+	\begin{subfigure}{0.24\linewidth}
+		\includegraphics[width=\textwidth]{./pics/augmentations/rotation.png}
+		\caption{Rotation}
+		\label{subfig:aug_rot}
+	\end{subfigure}
+	\begin{subfigure}{0.24\linewidth}
+		\includegraphics[width=\textwidth]{./pics/augmentations/vertical_flip.png}
+		\caption{Vertikale Spiegelung}
+		\label{subfig:aug_v_flip}
+	\end{subfigure}
+	\begin{subfigure}{0.24\linewidth}
+		\includegraphics[width=\textwidth]{./pics/augmentations/horizontal_flip.png}
+		\caption{Horizontale Spiegelung}
+		\label{subfig:aug_h_flip}
+	\end{subfigure}
+	\begin{subfigure}{0.24\linewidth}
+		\includegraphics[width=\textwidth]{./pics/augmentations/img_norm.png}
+		\caption{Transformiert zu Imagenet Mean}
+		 \todo{schöner schreiben}
+		\label{subfig:aug_h_flip}
+	\end{subfigure}
+	\caption{Augmentierungsmethoden angewendet auf das orginale Bild (Abbildung \ref{subfig:aug_original})}
+\end{figure}
+
+
 \begin{enumerate}
     \item \textbf{Rotation:} Bei dieser Transformation werden die Bilder je um 0$^{\circ}$, 90$^{\circ}$, 180$^{\circ}$ oder 270$^{\circ}$ gedreht. Diese Augmentierung soll das Netz invariant gegenüber Rotation machen. Dies ist wichtig, da die Orientierung der aufgenommenen Bilder willkürlich ist.
     \item \textbf{Vertikales Spiegeln:} Hier werden die Bilder vertikal gespiegelt. Hierbei wird die Charakteristik der Läsion nicht verändert, jedoch werden so weitere Trainingsbilder erzeugt. 
     \item \textbf{Horizontales Spiegeln:} Hier werden die Bilder horizontal gespiegelt. Hierbei wird die Charakteristik der Läsion nicht verändert, jedoch werden so weitere Trainingsbilder erzeugt.
-    \item Inhalt...
-    \item Inhalt...
-    \item Inhalt...
-    \item Inhalt...
+    \item \textbf{Helligkeit:} Die Helligkeit der Bilder wird hier um einen zufälligen \todo{welche range} Wert erhöht oder erniedrigt. So soll dem Netz eine gewisse Invarianz gegenüber verschiedenen Lichtbedingungen an trainiert werden.
+    \item \textbf{Kontrast:} Analog zur Helligkeitsaugmentierung wird hier der Kontrast um einen zufälligen Wert erhöht oder erniedrigt. Auch dies soll das Netz invariant gegenüber wechselnden Lichtverhältnissen machen und zudem die Trainings-Menge vergrößern.
+    \item \textbf{Hue:} Hier wird der Hue-Wert der Bilder zufällig geändert \todo{schöner schreiben!}. 
+    \item \textbf{Sättigung:} Die Sättignung der Bilder wird zufällig höher oder niedriger gewählt. Auch dies soll gegen abweichende Lichtverhältnisse helfen und die Trianings-Menge vergrößern.
 \end{enumerate}
 
 
