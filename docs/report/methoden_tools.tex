@@ -1,11 +1,20 @@
 \section{Methoden und Tools}
 
-Zur Erstellung des Klassifikators nutzten wir, wie \citet{esteva2017dermatologist} auch das öffentlich zur Verfügung stehende GoogleNet Inception v3, welches ein convolutional neural network ist und aus zahlreichen verschiedenen Schichten und Neuronen besteht \citep{szegedy2016rethinking} . Dieses neuronale Netz wurde auf den Bildern des ImageNet vortrainiert \citep{russakovsky2015imagenet} und eignet sich daher gut für unser Klassifizierungsproblem. Das Training und die damit verbundene Vorverarbeitung programmierten wir mittels Python, in Kombination mit Tensorflow, Scikit Learn und NumPy. 
+Zur Erstellung des Klassifikators nutzten wir, wie \citet{esteva2017dermatologist} auch das öffentlich zur Verfügung stehende GoogleNet Inception v3, welches ein convolutional neural network ist und aus zahlreichen verschiedenen Schichten und Neuronen besteht \citep{szegedy2016rethinking} . Dieses neuronale Netz wurde auf den Bildern des ImageNet vortrainiert \citep{russakovsky2015imagenet} und eignet sich daher gut für unser Klassifizierungsproblem. \todo{Woher kommen die gewichte?} Das Training und die damit verbundene Vorverarbeitung programmierten wir mittels Python, in Kombination mit Tensorflow, Scikit Learn und NumPy. 
 
-Als Datensatz nutzten wir die ISIC-Datenbank, welche aus insgesamt 13.768 Bildern von sowohl malignen als auch benignen Hautläsionen besteht und außerdem der einzige frei erhätliche Hautläsions-Datensatz war. Leider stellte sich heraus, dass die Bilder dieser Datenbank sehr unausgeglichen waren: der Anteil der malignen Läsionen war viel geringer als der Anteil der benignen Läsionen. Dieses Problem lösten wir durch eine spezielle Art der Randomisierung, welche später noch genauer erläutert wird. Ein weiteres Problem, das die Bilder des ISIC-Datensatzes brachten, war die Tatsache, dass sie verschieden groß waren. Für das richtige Trainieren des Netzes, mussten wir sie daher vorverarbeiten und wir entschieden uns dazu, alle auf die kleinste verfügbare Größe runterzuskalieren. Zusätzlich verkleinerten wir den Ausschnitt des Bildes, indem wir das maximale zentrale Quadrat auswählten und auf 299x299 px runterskalierten. Somit hatten wir eine homogene Menge an Bildern, die wir zu Trainingszwecken in das neuronale Netz füttern konnten. 
+Als Datensatz nutzten wir die ISIC-Datenbank, welche aus insgesamt 13.768 Bildern von sowohl malignen als auch benignen Hautläsionen besteht und außerdem der einzige frei erhältliche Hautläsions-Datensatz war. Leider stellte sich heraus, dass die Bilder dieser Datenbank sehr unausgeglichen waren: der Anteil der malignen Läsionen war viel geringer als der Anteil der benignen Läsionen. Dieses Problem lösten wir durch eine spezielle Art der Randomisierung, welche später noch genauer erläutert wird. Ein weiteres Problem des ISIC-Datensatzes, war die variable Größe der einzelnen Bilder. Für ein problemloses Trainieren des Netzes, haben wir die Bilder daher vorverarbeitet. Dazu skalierten wir sie auf die kleinste verfügbare Größe. Für ads Training des Netzes verwendeten wir, analog zu \citep{esteva2017dermatologist}, das maximale zentrale Quadrat des Bildes und skalierten es auf 299x299 Pixel herunter. Somit hatten wir eine homogene Menge an Bildern, die wir nun in eine Trainings-, eine Validierungs- und eine Test-Menge unterteilten.
 
-*** HIER DANN AUGMENTIERUNGSMETHODEN *** 
+Während des Trainings wurden die Bilder zufälig augmentiert. Durch eine Augmentierung wird der Datensatz künstlich vergrößert um mehr diverse Trainingsbeispiele für das neuronale Netz zu erhalten. Dazu wendet man eine klassenerhaltende Transformation auf das Bild an. In inserem Ansatz verwenden wir verschiedene Augmentierungen, die jeweils zufällig auf ein Bild angewendet wurden. Wir verwendeten die folgenden Transformationen:
 
+\begin{enumerate}
+    \item \textbf{Rotation:} Bei dieser Transformation werden die Bilder je um 0$^{\circ}$, 90$^{\circ}$, 180$^{\circ}$ oder 270$^{\circ}$ gedreht. Diese Augmentierung soll das Netz invariant gegenüber Rotation machen. Dies ist wichtig, da die Orientierung der aufgenommenen Bilder willkürlich ist.
+    \item \textbf{Vertikales Spiegeln:} Hier werden die Bilder vertikal gespiegelt. Hierbei wird die Charakteristik der Läsion nicht verändert, jedoch werden so weitere Trainingsbilder erzeugt. 
+    \item \textbf{Horizontales Spiegeln:} Hier werden die Bilder horizontal gespiegelt. Hierbei wird die Charakteristik der Läsion nicht verändert, jedoch werden so weitere Trainingsbilder erzeugt.
+    \item Inhalt...
+    \item Inhalt...
+    \item Inhalt...
+    \item Inhalt...
+\end{enumerate}
 
 
 
