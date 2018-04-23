@@ -1,16 +1,17 @@
 \section{Methoden und Tools}
 
-Zur Erstellung des Klassifikators nutzten wir, wie \citet{esteva2017dermatologist} auch das öffentlich zur Verfügung stehende GoogleNet Inception v3, welches ein convolutional neural network ist und aus zahlreichen verschiedenen Schichten und Neuronen besteht \citep{szegedy2016rethinking} . Dieses neuronale Netz wurde auf den Bildern des ImageNet vortrainiert \citep{russakovsky2015imagenet} und eignet sich daher gut für unser Klassifizierungsproblem. \todo{Woher kommen die gewichte?} Das Training und die damit verbundene Vorverarbeitung programmierten wir mittels Python, in Kombination mit Tensorflow, Scikit Learn und NumPy. 
+Zur Erstellung des Klassifikators nutzten wir, wie \citet{esteva2017dermatologist} auch das öffentlich zur Verfügung stehende GoogleNet Inception v3, welches ein convolutional neural network ist und aus zahlreichen verschiedenen Schichten und Neuronen besteht \citep{szegedy2016rethinking} . Dieses neuronale Netz wurde auf den Bildern des ImageNet vortrainiert \citep{russakovsky2015imagenet}. Die von uns genutzten Gewichte stammen aus der Tensorflow (\cite{tensorflow2015-whitepaper}) Bibliethek ``slim''.
+Ein solches vorheriges Training auf ImageNet, etabliert einige grundlegende Strukturen im Neuronalen Netz. Es werden Merkmalsdetektoren gelernt, die anschließend in dem Training der eigentlichen Aufgabe verfeinert werden.  Das Training und die damit verbundene Vorverarbeitung programmierten wir mittels Python, in Kombination mit Tensorflow (\cite{tensorflow2015-whitepaper}), Scikit Learn (\cite{scikit-learn}) und NumPy. 
 
 Als Datensatz nutzten wir die ISIC-Datenbank, welche aus insgesamt 13.768 Bildern von sowohl malignen als auch benignen Hautläsionen besteht. Von den Datensätzen, die von \citep{esteva2017dermatologist} genutzt wurden, ist dieser der Einzige, welcher frei verfügbar ist. Die Bilder dieses Datensatzes sind durch eine pathologische Untersuchung gelabelt worden. Somit sind die vorhandenen Daten relativ zuverlässig.
 
-Es stellte sich heraus, dass die Bilder dieser Datenbank sehr unausgeglichen waren: der Anteil der malignen Läsionen war viel geringer als der Anteil der benignen Läsionen. Dieses Problem lösten wir durch eine spezielle Art der Randomisierung. Während des Trainings trennten wir die Menge der Trainingsbilder in die Klassen maligne und benigne auf. Anschließend haben wir die Minibatches, welche in das Netz gegeben wurden, aus Bildern dieser beiden Klassen zufällig befüllt. Dabei war die Wahrscheinlichkeit, dass ein Bild aus der Klasse der malignen Bilder stammt $p=0.5$. Somit wurde dieser unausgeglichene Datensatz ausbalanciert.
+Es stellte sich heraus, dass die Verteilung der Bilder dieser Datenbank in die verschiedenen Klassen sehr unausgeglichen waren: der Anteil der malignen Läsionen war viel geringer als der Anteil der benignen Läsionen. Dieses Problem lösten wir durch eine spezielle Art der Randomisierung. Während des Trainings trennten wir die Menge der Trainingsbilder in die Klassen maligne und benigne auf. Anschließend haben wir die Minibatches, welche in das Netz gegeben wurden, aus Bildern dieser beiden Klassen zufällig befüllt. Dabei war die Wahrscheinlichkeit, dass ein Bild aus der Klasse der malignen Bilder stammt $p=0.5$. Somit wurde dieser unausgeglichene Datensatz ausbalanciert.
 
-Ein weiteres Problem des ISIC-Datensatzes, war die variable Größe der einzelnen Bilder. Für ein problemloses Trainieren des Netzes, haben wir die Bilder daher vorverarbeitet. Dazu skalierten wir sie auf die kleinste verfügbare Größe. Für ads Training des Netzes verwendeten wir, analog zu \citep{esteva2017dermatologist}, das maximale zentrale Quadrat des Bildes und skalierten es auf 299x299 Pixel herunter. Somit hatten wir eine homogene Menge an Bildern, die wir nun in eine Trainings-, eine Validierungs- und eine Test-Menge unterteilten.
+Ein weiteres Problem des ISIC-Datensatzes, war die variable Größe der einzelnen Bilder. Für ein problemloses Trainieren des Netzes, haben wir die Bilder daher vorverarbeitet. Dazu skalierten wir sie auf die kleinste verfügbare Größe. Für ads Training des Netzes verwendeten wir, analog zu \citep{esteva2017dermatologist}, das maximale zentrale Quadrat des Bildes und skalierten es auf $299 px\times 299 px$ herunter. Somit hatten wir eine homogene Menge an Bildern, die wir nun in eine Trainings-, eine Validierungs- und eine Test-Menge unterteilten.
 
 Während des Trainings wurden die Bilder zufällig augmentiert. Durch eine Augmentierung wird der Datensatz künstlich vergrößert um mehr diverse Trainingsbeispiele für das neuronale Netz zu erhalten. Dazu wendet man eine klassenerhaltende Transformation auf das Bild an. In unserem Ansatz verwenden wir verschiedene Augmentierungen, die jeweils zufällig auf ein Bild angewendet wurden. Wir verwendeten die folgenden Transformationen:
 
-\begin{figure}[t!]
+\begin{figure}[t]
 	\centering
 	\begin{subfigure}{0.24\linewidth}
 		\includegraphics[width=\textwidth]{./pics/augmentations/original.jpg}
@@ -18,66 +19,75 @@ Während des Trainings wurden die Bilder zufällig augmentiert. Durch eine Augme
 		\label{subfig:aug_original}
 	\end{subfigure}
 	\begin{subfigure}{0.24\linewidth}
-		\includegraphics[width=\textwidth]{./pics/augmentations/brightness.png}
-		\caption{Helligkeit}
-		\label{subfig:aug_bright}
-	\end{subfigure}
-	\begin{subfigure}{0.24\linewidth}
-		\includegraphics[width=\textwidth]{./pics/augmentations/contrast.png}
-		\caption{Kontrast}
-		\label{subfig:aug_contrast}
-	\end{subfigure}
-	\begin{subfigure}{0.24\linewidth}
-		\includegraphics[width=\textwidth]{./pics/augmentations/hue.png}
-		\caption{Hue}
-		\label{subfig:aug_hue}
-	\end{subfigure}
-	\begin{subfigure}{0.24\linewidth}
 		\includegraphics[width=\textwidth]{./pics/augmentations/rotation.png}
 		\caption{Rotation}
 		\label{subfig:aug_rot}
+	\end{subfigure}
+	\begin{subfigure}{0.24\linewidth}
+		\includegraphics[width=\textwidth]{./pics/augmentations/brightness.png}
+		\caption{Helligkeit}
+		\label{subfig:aug_bright}
 	\end{subfigure}
 	\begin{subfigure}{0.24\linewidth}
 		\includegraphics[width=\textwidth]{./pics/augmentations/vertical_flip.png}
 		\caption{Vertikale Spiegelung}
 		\label{subfig:aug_v_flip}
 	\end{subfigure}
-	\begin{subfigure}{0.24\linewidth}
+	\begin{subfigure}[t]{0.24\linewidth}
 		\includegraphics[width=\textwidth]{./pics/augmentations/horizontal_flip.png}
 		\caption{Horizontale Spiegelung}
 		\label{subfig:aug_h_flip}
 	\end{subfigure}
-	\begin{subfigure}{0.24\linewidth}
-		\includegraphics[width=\textwidth]{./pics/augmentations/img_norm.png}
-		\caption{Transformiert zu Imagenet Mean}
-		 \todo{schöner schreiben}
-		\label{subfig:aug_h_flip}
+	\begin{subfigure}[t]{0.24\linewidth}
+		\includegraphics[width=\textwidth]{./pics/augmentations/contrast.png}
+		\caption{Kontrast}
+		\label{subfig:aug_contrast}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.24\linewidth}
+		\includegraphics[width=\textwidth]{./pics/augmentations/hue.png}
+		\caption{Hue}
+		\label{subfig:aug_hue}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.24\linewidth}
+		\includegraphics[width=\textwidth]{./pics/augmentations/saturation.png}
+		\caption{Sättigung}
+		\label{subfig:aug_sat}
 	\end{subfigure}
 	\caption{Augmentierungsmethoden angewendet auf das orginale Bild (Abbildung \ref{subfig:aug_original})}
 \end{figure}
 
 
 \begin{enumerate}
-    \item \textbf{Rotation:} Bei dieser Transformation werden die Bilder je um 0$^{\circ}$, 90$^{\circ}$, 180$^{\circ}$ oder 270$^{\circ}$ gedreht. Diese Augmentierung soll das Netz invariant gegenüber Rotation machen. Dies ist wichtig, da die Orientierung der aufgenommenen Bilder willkürlich ist.
-    \item \textbf{Vertikales Spiegeln:} Hier werden die Bilder vertikal gespiegelt. Hierbei wird die Charakteristik der Läsion nicht verändert, jedoch werden so weitere Trainingsbilder erzeugt. 
-    \item \textbf{Horizontales Spiegeln:} Hier werden die Bilder horizontal gespiegelt. Hierbei wird die Charakteristik der Läsion nicht verändert, jedoch werden so weitere Trainingsbilder erzeugt.
-    \item \textbf{Helligkeit:} Die Helligkeit der Bilder wird hier um einen zufälligen \todo{welche range} Wert erhöht oder erniedrigt. So soll dem Netz eine gewisse Invarianz gegenüber verschiedenen Lichtbedingungen an trainiert werden.
-    \item \textbf{Kontrast:} Analog zur Helligkeitsaugmentierung wird hier der Kontrast um einen zufälligen Wert erhöht oder erniedrigt. Auch dies soll das Netz invariant gegenüber wechselnden Lichtverhältnissen machen und zudem die Trainings-Menge vergrößern.
-    \item \textbf{Hue:} Hier wird der Hue-Wert der Bilder zufällig geändert \todo{schöner schreiben!}. 
-    \item \textbf{Sättigung:} Die Sättignung der Bilder wird zufällig höher oder niedriger gewählt. Auch dies soll gegen abweichende Lichtverhältnisse helfen und die Trianings-Menge vergrößern.
+    \item \textbf{Rotation} (Abbildung \ref{subfig:aug_rot}): Bei dieser Transformation werden die Bilder je um 0$^{\circ}$, 90$^{\circ}$, 180$^{\circ}$ oder 270$^{\circ}$ gedreht. Diese Augmentierung soll das Netz invariant gegenüber Rotation machen. Dies ist wichtig, da die Orientierung der aufgenommenen Bilder willkürlich ist.
+    
+    \item \textbf{Helligkeit} (Abbildung \ref{subfig:aug_bright}):  Die Helligkeit der Bilder wird hier um einen zufälligen Wert erhöht oder erniedrigt. So soll dem Netz eine gewisse Invarianz gegenüber verschiedenen Lichtbedingungen an trainiert werden.
+    
+    \item \textbf{Vertikales Spiegeln} (Abbildung \ref{subfig:aug_v_flip}): Hier werden die Bilder vertikal gespiegelt. Hierbei wird die Charakteristik der Läsion nicht verändert, jedoch werden so weitere Trainingsbilder erzeugt. 
+    
+    \item \textbf{Horizontales Spiegeln} (Abbildung \ref{subfig:aug_h_flip}):  Hier werden die Bilder horizontal gespiegelt. Hierbei wird die Charakteristik der Läsion nicht verändert, jedoch werden so weitere Trainingsbilder erzeugt.
+    
+    \item \textbf{Kontrast} (Abbildung \ref{subfig:aug_contrast}):  Analog zur Helligkeitsaugmentierung wird hier der Kontrast um einen zufälligen Wert erhöht oder erniedrigt. Auch dies soll das Netz invariant gegenüber wechselnden Lichtverhältnissen machen und zudem die Trainings-Menge vergrößern.
+    
+    \item \textbf{Hue} (Abbildung \ref{subfig:aug_hue}):  Hier wird der Hue-Wert der Bilder zufällig geändert \todo{schöner schreiben!}. 
+    
+    \item \textbf{Sättigung} (Abbildung \ref{subfig:aug_sat}):  Die Sättignung der Bilder wird zufällig höher oder niedriger gewählt. Auch dies soll gegen abweichende Lichtverhältnisse helfen und die Trianings-Menge vergrößern.
 \end{enumerate}
 
+\subsection{Training}
 
 
+
+\color{red}
 \begin{itemize}
-	\item Python, Tensorflow, Scikit Learn, NumPy
-	\item Skalierung der Bilder
-	\item Augmentierungsmethoden
+	\item[\checkmark] Python, Tensorflow, Scikit Learn, NumPy
+	\item[\checkmark] Skalierung der Bilder
+	\item[\checkmark] Augmentierungsmethoden
 	\item Trainingsparameter (Anzahl Durchläufe, Lernrate, Loss-Funktionen)
-	\item Evaluationsmethoden: Berechnung des Scores, etc.
+	\item[\checkmark] Evaluationsmethoden: Berechnung des Scores, etc.
 	\item Aufteilung des Datensatzes in Training, Test, Validierung
-	\item genaue Erklärung des Shufflings, da Datensatz nicht ausbalanciert
+	\item[\checkmark] genaue Erklärung des Shufflings, da Datensatz nicht ausbalanciert
 \end{itemize}
+\color{black}
 
 \subsection{Analysemethoden}
 
