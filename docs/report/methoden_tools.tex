@@ -3,7 +3,7 @@
 Zur Erstellung des Klassifikators nutzten wir, wie \citet{esteva2017dermatologist} auch das öffentlich zur Verfügung stehende GoogleNet Inception v3, welches ein convolutional neural network ist und aus zahlreichen verschiedenen Schichten und Neuronen besteht \citep{szegedy2016rethinking} . Dieses neuronale Netz wurde auf den Bildern des ImageNet vortrainiert \citep{russakovsky2015imagenet}. Die von uns genutzten Gewichte stammen aus der Tensorflow (\cite{tensorflow2015-whitepaper}) Bibliethek ``slim''.
 Ein solches vorheriges Training auf ImageNet, etabliert einige grundlegende Strukturen im Neuronalen Netz. Es werden Merkmalsdetektoren gelernt, die anschließend in dem Training der eigentlichen Aufgabe verfeinert werden.  Das Training und die damit verbundene Vorverarbeitung programmierten wir mittels Python, in Kombination mit Tensorflow (\cite{tensorflow2015-whitepaper}), Scikit Learn (\cite{scikit-learn}) und NumPy. 
 
-Als Datensatz nutzten wir die ISIC-Datenbank, welche aus insgesamt 13.768 Bildern von sowohl malignen als auch benignen Hautläsionen besteht. Von den Datensätzen, die von \citep{esteva2017dermatologist} genutzt wurden, ist dieser der Einzige, welcher frei verfügbar ist. Die Bilder dieses Datensatzes sind durch eine pathologische Untersuchung gelabelt worden. Somit sind die vorhandenen Daten relativ zuverlässig.
+Als Datensatz nutzten wir die ISIC-Datenbank (\cite{ISIC}), welche aus insgesamt 13.768 Bildern von sowohl malignen als auch benignen Hautläsionen besteht. Von den Datensätzen, die von \citep{esteva2017dermatologist} genutzt wurden, ist dieser der Einzige, welcher frei verfügbar ist. Die Bilder dieses Datensatzes sind durch eine pathologische Untersuchung gelabelt worden. Somit sind die vorhandenen Daten relativ zuverlässig. Wir trennten den Datensatz und drei Mengen, die Trainingsmenge, die Validierungsmenge und die Testmenge zufällig auf. Dabei Beträgt der Anteil der Trainingsmenge 60\% und die Anteile der Validierungs-, sowie der Testmenge jeweils 20\% aller Bilder.
 
 Es stellte sich heraus, dass die Verteilung der Bilder dieser Datenbank in die verschiedenen Klassen sehr unausgeglichen waren: der Anteil der malignen Läsionen war viel geringer als der Anteil der benignen Läsionen. Dieses Problem lösten wir durch eine spezielle Art der Randomisierung. Während des Trainings trennten wir die Menge der Trainingsbilder in die Klassen maligne und benigne auf. Anschließend haben wir die Minibatches, welche in das Netz gegeben wurden, aus Bildern dieser beiden Klassen zufällig befüllt. Dabei war die Wahrscheinlichkeit, dass ein Bild aus der Klasse der malignen Bilder stammt $p=0.5$. Somit wurde dieser unausgeglichene Datensatz ausbalanciert.
 
@@ -75,16 +75,43 @@ Während des Trainings wurden die Bilder zufällig augmentiert. Durch eine Augme
 
 \subsection{Training}
 
+	Das Training des GoogLeNet Inception v3 (\cite{inception}) implementierten wir in Tensorflow (\cite{tensorflow2015-whitepaper}). Dem Netz wurden Minibatches von jeweils sechs Bildern gezeigt. Nach einem Forward-Pass berechneten wir einen Loss. Auf diesem Loss trainierten wir das neuronale Netz mit dem Adam-Optimizer und einer Lernrate $\eta=0.000001$. Im Folgenden beschreiben wir die getesteten Loss-Funktionen.
+	
+\subsubsection{L1-Loss}
 
+	Dieser Loss berechnet die absolute Abweichung der Prediktion von den wahren Labels:
+	\begin{align*}
+		L = \sum_{i = 0}^C \mid lab_i - x_i\mid
+	\end{align*}
+	Dabei ist $C$ die Anzahl der Klassen, $lab$ die wahren Label und $x$ die Prediktion des neuronalen Netzes.
+	
+	Das Ziel eines Trainings mit diesem Loss ist es, möglichst viele Nullen in dem Ergebnis-Vektor zu erhalten, da der L1-Loss spärliche (sparse) Lösungen begünstigt.
+
+\subsubsection{L2-Loss}
+	Dieser Loss berechnet die quadratische Abweichung der Prediktion von den wahren Labels:
+	\begin{align*}
+	L = \sum_{i = 0}^C ( lab_i - x_i)^2
+	\end{align*}
+	Dabei ist $C$ die Anzahl der Klassen, $lab$ die wahren Label und $x$ die Prediktion des neuronalen Netzes.
+	
+	Das Ziel eines Trainings mit diesem Loss ist es, große Fehler stark zu bestrafen und die Abweichungen von den wahren Labeln so klein wie möglich, jedoch nicht zwingend $=0$, zu halten.
+	
+\subsubsection{Softmax-Kreuzentropie-Loss}
+	Dieser Loss nutzt das Maß der Kreuzentropie um den Loss zu berechnen. Dabei wird zunächst die Softmax-Funktion auf die Prediktion und die Label angewendet und anschließend die Kreuzentropie der beiden Verteilungen berechnet.
+	
+	Dieser Loss wird dazu benutzt, um Verteilungen aneinander anzupassen. In unserem Ansatz verwenden wir jedoch einen Vektor der Länge zwei als Klassenlabel. Bei solch einer kleinen Anzahl an Werten, erwarteten wir, dass diese Loss-Funktion vergleichsweise schlecht abschneidet.
+		
+Um die oben angesprochene Unausgeglichenheit der Klassen in unserem Datensatz weiter zu balancieren, und um eine bessere Performanz für maligne Läsionen zu erreichen, nutzten wir bei dem L1-, wie auch bei dem L2-Loss zusätzlich einen Gewichtsterm. Dieser gewichtete die Abweichungen abhängig von der Zielklasse. Dabei wurden die Werte mit $lab=$ maligne mit $3$ und die Werte mit $lab=$ benigne mit $0.5$ multipliziert. 
+	  
 
 \color{red}
 \begin{itemize}
 	\item[\checkmark] Python, Tensorflow, Scikit Learn, NumPy
 	\item[\checkmark] Skalierung der Bilder
 	\item[\checkmark] Augmentierungsmethoden
-	\item Trainingsparameter (Anzahl Durchläufe, Lernrate, Loss-Funktionen)
+	\item[\checkmark] Trainingsparameter (Anzahl Durchläufe, Lernrate, Loss-Funktionen)
 	\item[\checkmark] Evaluationsmethoden: Berechnung des Scores, etc.
-	\item Aufteilung des Datensatzes in Training, Test, Validierung
+	\item[\checkmark] Aufteilung des Datensatzes in Training, Test, Validierung
 	\item[\checkmark] genaue Erklärung des Shufflings, da Datensatz nicht ausbalanciert
 \end{itemize}
 \color{black}
