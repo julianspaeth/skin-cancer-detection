@@ -49,12 +49,12 @@ def main(FLAGS):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-parser.add_argument("--cuda_device", default="0", help="gpu device name, only used in dpath=cluster mode")
-parser.add_argument("--dpath", default="cluster", help="datapath identifier to use")
-parser.add_argument("--type", default="50-25-25", help="50-25-25 or 60-20-20 or 80-10-10")
-parser.add_argument("--set", default="val", help="dataset to use: train, test or val")
-parser.add_argument("--all", default=False, type=bool, help="if set all snapshots are evaluated again")
-parser.add_argument("--v", default=False, type=bool, help="verbose output")
+    parser.add_argument("--cuda_device", default="0", help="gpu device name, only used in dpath=cluster mode")
+    parser.add_argument("--dpath", default="cluster", help="datapath identifier to use")
+    parser.add_argument("--type", default="50-25-25", help="50-25-25 or 60-20-20 or 80-10-10")
+    parser.add_argument("--set", default="val", help="dataset to use: train, test or val")
+    parser.add_argument("--all", default=False, type=bool, help="if set all snapshots are evaluated again")
+    parser.add_argument("--v", default=False, type=bool, help="verbose output")
 
-FLAGS = parser.parse_args()
-main(FLAGS)
+    FLAGS = parser.parse_args()
+    main(FLAGS)

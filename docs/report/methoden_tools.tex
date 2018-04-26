@@ -139,3 +139,8 @@ Schließlich verwendeten wir noch den F1- und F2-Score als Qualitätsmaßstäbe.
    	\[\text{F2-Score} = 5*\frac{\text{precision}*\text{recall}}	{4*\text{precision}+\text{recall}}\]
     
 Wir entschieden uns bewusst für eine größere Anzahl von Qualitätsmaßstäben. Da ein Parameter allein nie die Komplexität des Klassifizierers komplett beschreiben kann, sollen die verschiedenen Qualitätsmaßstäbe bei der Evaluierung und der Entscheidung für den für uns geeignetsten Klassifizierer als Gesamtheit betrachtet und verwendet werden. Dies ermöglicht es uns die Klassifizierung gezielt in die von uns gewünschte Richtung zu lenken um zum Beispiel Falsch-Negative Vorhersagen zu minimieren.
+
+\subsection{Framework}
+
+Um sowohl das Training als auch die Evaluation auf verschiedenen Systemen durchzuführen und Parameteränderungen leicht per Konsole zu testen, haben wir ein Framework entwickelt. Über dieses Framework kann man Trainingsdurchläufe starten und später automatisiert evaluieren. Dabei lassen sich die Trainingsparameter (Batchsize, Loss-Funktion, Lernrate, Datenset), sowie platformspezifische Einstellungen, wie der Speicherort der Daten und den Bezeichner der gewünschten Grafikkarte anpassen. Startet man das Python-Skript ``start\_training.py'' mit den entsprechenden Parametern wird automatisch ein neuronales Netz geladen und trainiert, sowie die Log-Dateien und die Gewichte entsprechend gespeichert.Für die Evaluation kann man analog die Systemparameter einstellen, sowie das Datenset auf dem das Netzwerk evaluiert werden soll (Validierungs-Datensatz oder Test-Datensatz)
+
