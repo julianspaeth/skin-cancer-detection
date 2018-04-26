@@ -105,18 +105,6 @@ Während des Trainings wurden die Bilder zufällig augmentiert. Durch eine Augme
 Um die oben angesprochene Unausgeglichenheit der Klassen in unserem Datensatz weiter zu balancieren, und um eine bessere Performanz für maligne Läsionen zu erreichen, nutzten wir bei dem L1-, wie auch bei dem L2-Loss zusätzlich einen Gewichtsterm. Dieser gewichtete die Abweichungen abhängig von der Zielklasse. Dabei wurden die Werte mit $lab=$ maligne mit $3$ und die Werte mit $lab=$ benigne mit $0.5$ multipliziert. 
 	  
 
-\color{red}
-\begin{itemize}
-	\item[\checkmark] Python, Tensorflow, Scikit Learn, NumPy
-	\item[\checkmark] Skalierung der Bilder
-	\item[\checkmark] Augmentierungsmethoden
-	\item[\checkmark] Trainingsparameter (Anzahl Durchläufe, Lernrate, Loss-Funktionen)
-	\item[\checkmark] Evaluationsmethoden: Berechnung des Scores, etc.
-	\item[\checkmark] Aufteilung des Datensatzes in Training, Test, Validierung
-	\item[\checkmark] genaue Erklärung des Shufflings, da Datensatz nicht ausbalanciert
-\end{itemize}
-\color{black}
-
 \subsection{Analysemethoden}
 
 Für die Bewertung und Optimierung unseres Klassifizierers wurden verschiedene Methoden angewandt. Die Genauigkeit konnte mit unserem Datensatz nur unter großer Skepsis betrachtet werden. Sie berechnet sich durch die Anzahl der richtig vorhergesagten Beispiele geteilt durch die Anzahl aller Beispiele:
