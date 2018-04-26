@@ -341,10 +341,11 @@ bar(x,new_occurences_neg, 'b', 'FaceAlpha',.5);
 occurences = [occurences_neg/10, occurences_pos]; 
 %bar(occurences, 'r', 'b'); 
  
-plot([0.35, 0.35], [0, 1], 'g');
+plot([0.35, 0.35], [0, 0.4], 'g');
 hold off; 
-%axis([0,1,0,1])
-legend(["malign", "benign", "threshold"]);
+axis([0,1,0,0.4])
+lgd = legend(["malign", "benign", "threshold"]);
+lgd.FontSize = 16;
 xlabel("Score");
 %xticks(0:0.01:1);
 ylabel("Frequency");
