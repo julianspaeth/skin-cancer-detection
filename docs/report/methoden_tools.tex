@@ -45,7 +45,7 @@ Während des Trainings wurden die Bilder zufällig augmentiert. Durch eine Augme
 	\end{subfigure}
 	\begin{subfigure}[t]{0.24\linewidth}
 		\includegraphics[width=\textwidth]{./pics/augmentations/hue.png}
-		\caption{Hue}
+		\caption{Farbwert (Hue)}
 		\label{subfig:aug_hue}
 	\end{subfigure}
 	\begin{subfigure}[t]{0.24\linewidth}
@@ -68,14 +68,15 @@ Während des Trainings wurden die Bilder zufällig augmentiert. Durch eine Augme
     
     \item \textbf{Kontrast} (Abbildung \ref{subfig:aug_contrast}):  Analog zur Helligkeitsaugmentierung wird hier der Kontrast um einen zufälligen Wert erhöht oder erniedrigt. Auch dies soll das Netz invariant gegenüber wechselnden Lichtverhältnissen machen und zudem die Trainings-Menge vergrößern.
     
-    \item \textbf{Hue} (Abbildung \ref{subfig:aug_hue}):  Hier wird der Hue-Wert der Bilder zufällig geändert \todo{schöner schreiben!}. 
+    \item \textbf{Farbwert (Hue)} (Abbildung \ref{subfig:aug_hue}):  Hier wird der Farbwert der Bilder zufällig geändert. Hiermit wird versucht, die Unterscheidung der Klassen robuster gegenüber Farbänderungen in den Bildern zu machen.
+    \todo{erwähnen, dass bei Hautärzten haupsächlich die Form und nicht die Farbe der Laisionen eine Rolle spielt} 
     
     \item \textbf{Sättigung} (Abbildung \ref{subfig:aug_sat}):  Die Sättignung der Bilder wird zufällig höher oder niedriger gewählt. Auch dies soll gegen abweichende Lichtverhältnisse helfen und die Trianings-Menge vergrößern.
 \end{enumerate}
 
 \subsection{Training}
 
-	Das Training des GoogLeNet Inception v3 (\cite{inception}) implementierten wir in Tensorflow (\cite{tensorflow2015-whitepaper}). Dem Netz wurden Minibatches von jeweils sechs Bildern gezeigt. Nach einem Forward-Pass berechneten wir einen Loss. Auf diesem Loss trainierten wir das neuronale Netz mit dem Adam-Optimizer und einer Lernrate $\eta=0.000001$. Im Folgenden beschreiben wir die getesteten Loss-Funktionen.
+	Das Training des GoogLeNet Inception v3 (\cite{inception}) implementierten wir in Tensorflow (\cite{tensorflow2015-whitepaper}). Dem Netz wurden Minibatches von jeweils sechs Bildern gezeigt. Von den augmentierten und zugeschnittenen Bilder wurden vor dem Forward-Pass der Mittelvert der Bilder des ImageNet  Datensatzes (\cite{russakovsky2015imagenet}) abgezogen. Dies ist ein gängiger Vorgang um die Verteilung der RGB-Werte and die Verteilung der RGB-Werte des ImageNet Datensatzes an zu passen. Nach einem Forward-Pass berechneten wir einen Loss. Auf diesem Loss trainierten wir das neuronale Netz mit dem Adam-Optimizer und einer Lernrate $\eta=0.000001$. Im Folgenden beschreiben wir die getesteten Loss-Funktionen.
 	
 \subsubsection{L1-Loss}
 
