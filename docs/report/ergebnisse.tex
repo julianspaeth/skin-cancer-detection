@@ -92,7 +92,7 @@ Durch diese nun sensitivere Klassifizierung erhielten wir schließlich die Werte
  \label{tab:final_scores}
  \end{table}
 
-Unser bester Klassifikator 2018-03-10\_19-16-32 wurde also mit einer Batchsize von sechs sowie einer Lernrate von $e^{-6}$ trainiert. Als Loss-Funktion verwendeten wir das L2-Loss. Als Entscheidungsschranke nahmen wir wie oben beschrieben $0.35$, was bedeutet alle Beispiele die einen Score von über $0.35$ erhalten werden als maligne Hautläsion eingestuft. Schließlich testeten unseren finalen Prädiktor noch auf unserem Testdatensatz. Dieser Datensatz wurde bis an diese stelle isoliert behandelt und keine der enthaltenen Daten waren dem Klassfikator bekannt um zu testen, ob dieser auch Generalisierbar ist und nicht nur die Trainingsdaten auswendig gelernt hat. Da wir anhand des Validierungs-Datensatzes die Trainingsparameter angepasst haben, wurde dieser Test-Datensatz jetzt am Schluss noch einmal verwendet um die endgültige Performance zu testen. Tabelle~~\ref{tab:test_scores} zeigt die Qulitätsmaßstäbe wie sie auf dem finalen Testdatensatz berechnet wurden.
+Unser bester Klassifikator 2018-03-10\_19-16-32 wurde mit einer Batchsize von sechs sowie einer Lernrate von $e^{-0.6}$ trainiert. Als Loss-Funktion verwendeten wir das L2-Loss. Als Entscheidungsschranke nahmen wir, wie oben beschrieben, $0.35$. Dies bedeutet, dass alle Beispiele die einen Score von über $0.35$ erhalten als maligne Hautläsion eingestuft werden. Schließlich testeten wir unseren finalen Prädiktor noch auf unserem Testdatensatz. Dieser Datensatz wurde bis an diese stelle isoliert aufbewahrt und keine der enthaltenen Daten waren dem Klassfikator bekannt. Dies war nötig um zu testen, ob dieser auch Generalisierbar ist, dass heißt nicht nur die Trainingsdaten auswendig gelernt hat sondern auch auf nie gesehene Daten gut performt. Da wir anhand des Validierungs-Datensatzes schon die Trainingsparameter angepasst haben, wurde dieser Test-Datensatz jetzt am Schluss noch einmal verwendet um die endgültige Performance zu testen. Tabelle~\ref{tab:test_scores} zeigt die Qulitätsmaßstäbe wie sie auf dem finalen Testdatensatz berechnet wurden.
 
 \begin{table}[htb!]
 \begin{center}
@@ -100,7 +100,7 @@ Unser bester Klassifikator 2018-03-10\_19-16-32 wurde also mit einer Batchsize v
 	\toprule
  	TP & FN & TN & FP & MCC & F2 & Acc & Sens & Spez\\
 	\midrule
-    $142$&	$91$ &	$2406$ &	$114$ &	$0.54$ 	&$0.60$	&$0.93$	&$0.61$&	$0.95$ \\
+    $149$&	$60$ &	$2285$ &	$114$ &	$0.48$ 	&$0.60$	&$0.88$	&$0.71$&	$0.9$ \\
  \bottomrule
  \end{tabular}
  \end{center}
@@ -108,7 +108,7 @@ Unser bester Klassifikator 2018-03-10\_19-16-32 wurde also mit einer Batchsize v
  \label{tab:final_scores}
  \end{table}
 
+ Wie zu erwarten sind die Ergebnisse ähnlich aber etwas schlechter als auf dem Validierungsdatensatz, auf dem wir gezielt auf gute Werte hingearbeitet haben. Letzten Endes erkennt unser Prädiktor $90\%$ der benignen Hautläsionen richtig und $71\%$ der malignen Hautläsionen. Der F2-Score ist mit $0.6$ auch etwas gesunken, was an den häufigeren falsch-negativen Beispielen liegt.
 
+ Zusammenfassend kann man sagen, dass diese Werte auf jeden Fall in einem guten Bereich liegen. Die drei von zehn falsch negativen Vorhersagen sind zwar nicht erwünscht, aber auch durch den unausgeglichenen Datensatz zu Begründen. Mit mehr malignen Beispielen in unseren Trainingsdten wären womöglich noch bessere Vorhersagen möglich. Nichts desto trotz erhielten wir nach unzähligen Trainings einen Prädiktor, der mit Vorsicht zur häuslichen Vorsorge verwendet werden kann.
 
-\todo{Parameter für besten Trainingsdurchlauf}
-\todo{Anwendung auf Test und finaler Klassifikator}
