@@ -1,14 +1,4 @@
 \section{Ergebnisse}
-\color{red}
-\begin{itemize}
-	\item besten Trainingsdurchlauf genau beschreiben $\rightarrow$ Lernrate, Loss, ...
-	\item Evaluierungswerte aus diesem Durchlauf nennen und beschreiben bzw. erklären
-	\item viele Bildchen :-) 
-	\item Bilder aus Tensorboard
-	\item Matlab-Plots und Tabellen 
-    \item Threshold, Table, Plots von bestem durchgang
-\end{itemize}
-\color{black}
 
 Um einen guten Klassfizierer zu bekommen waren einige Trainingsdurchläufe notwendig. Zum testen der Klassifizierer wurden diese auf einen Validierungs-Datensatz angewandt. Die ersten Klassifizierer haben dabei nur minimal bessere Ergebnisse als der Zufall geliefert. Durch verschiedene Anpassungen, die in Kapitel~\ref{training} näher erläutert wurden, konnten schließlich besser Ergebnisse erreicht werden. Einige ausgewählte Ergebnisse werden in Abbildung~\ref{fig:roc} als ROC-Kurve dargestellt. Jede Kurve steht für einen ausgewählten Klassifizierer und die entsprechende Anwendung auf den Validierungs-Datensatz. Wie man gut erkennen kann verlaufen zwei der Kurven nahe der Diagonalen. Diese zwei Klassifikatoren (2018-03-12\_22-04-38 und 2018-03-12\_22-17-46) liefern somit keine guten Ergebnisse und sind nur etwas besser als hätten wir eine zufällige Entscheidung gefällt. Gute Klassifikatoren verlaufen in der ROC-Kurve links oben und sind in diesem Fall 2018-03-10\_19-16-32, 2018-03-09\_21-34-4 und 2018-04-13\_20-38-20. Die anderen Klassifikatoren können auf den ersten Blick als in Ordnung eingestuft werden.
 
