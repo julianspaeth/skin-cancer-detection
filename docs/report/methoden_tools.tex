@@ -1,15 +1,15 @@
 \section{Methoden und Tools}
 
-Zur Erstellung des Klassifikators nutzten wir, wie \citet{esteva2017dermatologist}, auch das öffentlich zur Verfügung stehende GoogleNet Inception v3, welches ein \textit{convolutional neural network} ist und aus zahlreichen verschiedenen Schichten und Neuronen besteht \citep{szegedy2016rethinking}. Dieses neuronale Netz wurde auf den Bildern des \textit{ImageNet} vortrainiert \citep{russakovsky2015imagenet}. Die von uns genutzten Gewichte stammen aus der Tensorflow (\cite{tensorflow2015-whitepaper}) Bibliothek ``slim''.
+Zur Erstellung des Klassifikators nutzten wir, wie \citet{esteva2017dermatologist} auch, das öffentlich zur Verfügung stehende GoogleNet Inception v3, welches ein \textit{convolutional neural network} ist und aus zahlreichen verschiedenen Schichten und Neuronen besteht \citep{szegedy2016rethinking}. Dieses neuronale Netz wurde auf den Bildern des \textit{ImageNet} vortrainiert \citep{russakovsky2015imagenet}. Die von uns genutzten Gewichte stammen aus der Tensorflow (\cite{tensorflow2015-whitepaper}) Bibliothek ``slim''.
 Ein solches vorheriges Training auf ImageNet etabliert einige grundlegende Strukturen im neuronalen Netz. Es werden Merkmalsdetektoren gelernt, die anschließend in dem Training der eigentlichen Aufgabe verfeinert werden.  Das Training und die damit verbundene Vorverarbeitung implementierten wir mittels \textit{Python}, in Kombination mit \textit{Tensorflow} (\cite{tensorflow2015-whitepaper}), \textit{Scikit-Learn} (\cite{scikit-learn}) und \textit{NumPy}. Für die Evaluierung wurde außerdem noch Matlab verwendet.
 
-Als Datensatz nutzten wir die ISIC-Datenbank (\cite{ISIC}), welche aus insgesamt 13.768 Bildern von sowohl malignen als auch benignen Hautläsionen besteht. Von den Datensätzen, die von \citet{esteva2017dermatologist} genutzt wurden, ist dieser der Einzige, welcher frei verfügbar ist. Die Bilder dieses Datensatzes sind durch eine pathologische Untersuchung gelabelt worden. Somit sind die vorhandenen Daten relativ zuverlässig. Wir teilten den Datensatz drei Teildatensätze auf: einen Trainingsdatensatz, einen Validierungsdatensatz sowie einen Testdatensatz. Dabei beträgt der Anteil der Trainingsdaten $60\%$ und die Anteile der Validierungs- sowie der Testdaten jeweils $20\%$ aller Bilder. Diese wurden zufällig den Datensätzen zugeordnet.
+Als Datensatz nutzten wir die ISIC-Datenbank (\cite{ISIC}), welche aus insgesamt 13.768 Bildern von sowohl malignen als auch benignen Hautläsionen besteht. Von den Datensätzen, die von \citet{esteva2017dermatologist} genutzt wurden, ist dieser der Einzige, welcher frei verfügbar ist. Die Bilder dieses Datensatzes sind durch eine pathologische Untersuchung gelabelt worden. Somit sind die vorhandenen Daten relativ zuverlässig. Wir teilten den Datensatz in drei Teildatensätze auf: einen Trainingsdatensatz, einen Validierungsdatensatz sowie einen Testdatensatz. Dabei beträgt der Anteil der Trainingsdaten $60\%$ und die Anteile der Validierungs- sowie der Testdaten jeweils $20\%$ aller Bilder. Diese wurden zufällig den Datensätzen zugeordnet.
 
 Es stellte sich heraus, dass die Verteilung der Bilder dieses Datensatzes auf die verschiedenen Klassen (maligne/benigne) sehr unausgeglichen ist. Der Anteil der malignen Läsionen ist viel geringer als der Anteil der benignen Läsionen. Dieses Problem gingen wir durch eine spezielle Art der Randomisierung an. Während des Trainings trennten wir die Menge der Trainingsbilder in die Klassen \textit{maligne} und \textit{benigne} auf. Anschließend haben wir kleine Gruppen von Bildern, welche in das Netz gegeben wurden, aus Bildern dieser beiden Klassen zufällig befüllt. Dabei war die Wahrscheinlichkeit, dass ein Bild aus der Klasse der malignen Bilder stammt $p=0.5$. Somit wurde dieser unausgeglichene Datensatz ausbalanciert.
 
 Ein weiteres Problem des ISIC-Datensatzes war die variable Größe der einzelnen Bilder. Für ein problemloses Trainieren des Netzes haben wir die Bilder daher vorverarbeitet. Dazu wurden die Bilder auf die kleinste verfügbare Größe skaliert. Für das Training des Netzes verwendeten wir, analog zu \citet{esteva2017dermatologist}, das maximale zentrale Quadrat des Bildes und skalierten es auf $299$px$\times 299$px herunter. Somit hatten wir eine homogene Menge an Bildern, die wir nun in einen Trainings-, Validierungs- und einen Testdatensatz unterteilten.
 
-Während des Trainings wurden die Bilder zufällig augmentiert. Durch eine Augmentierung wird der Datensatz künstlich vergrößert um mehr diverse Trainingsbeispiele für das neuronale Netz zu erhalten. Dazu wendet man eine klassenerhaltende Transformation auf das Bild an. In unserem Ansatz setzen wir viele verschiedene Augmentierungen, die jeweils zufällig auf ein Bild angewendet wurden, ein. Abbildung~\ref{fig:aug} zeigt diese Augmentierungen anhand einer Beispielläsion.
+Während des Trainings wurden die Bilder zufällig augmentiert. Durch eine Augmentierung wird der Datensatz künstlich vergrößert, um mehr diverse Trainingsbeispiele für das neuronale Netz zu erhalten. Dazu wendet man eine klassenerhaltende Transformation auf das Bild an. In unserem Ansatz setzen wir viele verschiedene Augmentierungen ein, die jeweils zufällig auf ein Bild angewendet wurden. Abbildung~\ref{fig:aug} zeigt diese Augmentierungen anhand einer Beispielläsion.
 
 \begin{figure}[t]
 	\centering
@@ -77,7 +77,7 @@ Während des Trainings wurden die Bilder zufällig augmentiert. Durch eine Augme
 \subsection{Training}
 \label{training}
 
-	Das Training des GoogLeNet Inception v3 (\cite{inception}) implementierten wir in Tensorflow (\cite{tensorflow2015-whitepaper}). Dem Netz wurden Gruppen von jeweils sechs Bildern gezeigt. Von den augmentierten und zugeschnittenen Bildern wurde vor dem Inferenz-Schritt der Mittelwert der Bilder des ImageNet Datensatzes (\cite{russakovsky2015imagenet}) abgezogen. Dies ist ein gängiger Vorgang, um die Verteilung der RGB-Werte und die Verteilung der RGB-Werte des ImageNet Datensatzes anzupassen. Nach einem Forward-Pass berechneten wir einen Loss. Auf diesem Loss trainierten wir das neuronale Netz mit dem \textit{Adam-Optimizer}. Im Folgenden Abschnitt werden die getesteten Loss-Funktionen näher erläutert.
+	Das Training des GoogLeNet Inception v3 (\cite{inception}) implementierten wir in Tensorflow (\cite{tensorflow2015-whitepaper}). Dem Netz wurden Gruppen von jeweils sechs Bildern gezeigt. Von den augmentierten und zugeschnittenen Bildern wurde vor dem Inferenz-Schritt der Mittelwert der Bilder des ImageNet Datensatzes (\cite{russakovsky2015imagenet}) abgezogen. Dies ist ein gängiger Vorgang, um die Verteilung der RGB-Werte des ImageNet Datensatzes anzupassen. Nach einem Forward-Pass berechneten wir einen Loss. Auf diesem Loss trainierten wir das neuronale Netz mit dem \textit{Adam-Optimizer}. Im folgenden Abschnitt werden die getesteten Loss-Funktionen näher erläutert.
 	
 \subsubsection{L1-Loss}
 
@@ -85,7 +85,7 @@ Während des Trainings wurden die Bilder zufällig augmentiert. Durch eine Augme
 	\begin{align*}
 		L = \sum_{i = 0}^C \mid lab_i - x_i\mid
 	\end{align*}
-	Dabei ist $C$ die Anzahl der Klassen, $lab$ die wahren Label und $x$ die Vorhersage des neuronalen Netzes.
+	Dabei ist $C$ die Anzahl der Klassen, $lab$ die wahren Labels und $x$ die Vorhersage des neuronalen Netzes.
 	
 	Das Ziel eines Trainings mit diesem Loss ist es, möglichst viele Nullen in dem Ergebnis-Vektor zu erhalten, da der L1-Loss spärliche (sparse) Lösungen begünstigt.
 
@@ -94,12 +94,12 @@ Während des Trainings wurden die Bilder zufällig augmentiert. Durch eine Augme
 	\begin{align*}
 	L = \sum_{i = 0}^C ( lab_i - x_i)^2
 	\end{align*}
-	Dabei ist $C$ die Anzahl der Klassen, $lab$ die wahren Label und $x$ die Vorhersage des neuronalen Netzes.
+	Dabei ist $C$ die Anzahl der Klassen, $lab$ die wahren Labels und $x$ die Vorhersage des neuronalen Netzes.
 	
 	Das Ziel eines Trainings mit diesem Loss ist es, große Fehler stark zu bestrafen und die Abweichungen von den wahren Labels so klein wie möglich, jedoch nicht zwingend $=0$, zu halten.
 	
 \subsubsection{Softmax-Kreuzentropie-Loss}
-	Dieser Loss nutzt das Maß der Kreuzentropie, um den Loss zu berechnen. Dabei wird zunächst die Softmax-Funktion auf die Vorhersage und die Label angewendet und anschließend die Kreuzentropie der beiden Verteilungen berechnet.
+	Dieser Loss nutzt das Maß der Kreuzentropie, um den Loss zu berechnen. Dabei wird zunächst die Softmax-Funktion auf die Vorhersage und die Labels angewendet und anschließend die Kreuzentropie der beiden Verteilungen berechnet.
 	
 	Dieser Loss wird dazu benutzt, um Verteilungen einander anzupassen. In unserem Ansatz verwendeten wir jedoch einen Vektor der Länge zwei als Klassenlabel. Bei solch einer kleinen Anzahl an Werten erwarteten wir, dass diese Loss-Funktion vergleichsweise schlecht abschneidet.
 \\
@@ -112,8 +112,8 @@ Um die oben angesprochene Unausgeglichenheit der Klassen in unserem Datensatz we
 
 Für die Bewertung und Optimierung unseres Klassifizierers wurden verschiedene Methoden angewandt. Die Genauigkeit konnte mit unserem Datensatz nur unter großer Skepsis betrachtet werden. Sie berechnet sich durch die Anzahl der richtig vorhergesagten Stichproben dividiert durch die Anzahl aller Stichproben:
 	\[\text{Accuracy} = \frac{TP+TN}{TP+TN+FP+FN}\]
-Da der in diesem Projekt verwendete Datensatz deutlich mehr negative als positive Beispiele enthält, können unter dieser Berechnung sehr hohe Genauigkeiten auftreten, obwohl eventuell kein positives Beispiel richtig berechnet wurde.
-Eine weitaus bessere Analyse ist möglich, indem die richtig positiven und richtig negativen Beispiele getrennt betrachtet werden. Die Sensitivität, auch richtig-positiv-Rate oder auch Recall genannt, entspricht in unserem Fall dem Anteil an tatsächlich malignen Hautläsionen, bei denen diese auch als maligne erkannt wurde:
+Da der in diesem Projekt verwendete Datensatz deutlich mehr negative als positive Beispiele enthält, können unter dieser Berechnung sehr hohe Genauigkeiten auftreten, obwohl eventuell kein positives Beispiel richtig vorhergesagt wurde.
+Eine weitaus bessere Analyse ist möglich, indem die richtig positiven und richtig negativen Beispiele getrennt betrachtet werden. Die Sensitivität, auch richtig-positiv-Rate oder auch Recall genannt, entspricht in unserem Fall dem Anteil an tatsächlich malignen Hautläsionen, bei denen diese auch als maligne erkannt wurden:
 \[\text{Sensitivität} = \frac{TP}{TP+FN}\]
 Die Spezifität, auch richtig-negativ-Rate genannt, entspricht dem Anteil an tatsächlich benignen Hautläsionen, die auch als benigne erkannt wurden:
 \[\text{Spezifität} = \frac{TN}{TN+FP}\]
@@ -123,7 +123,7 @@ Zusätzlich zogen wir noch den \textit{Matthews correlation coefficient} in Betr
 
 \[\text{MCC} = \frac{TP*TN - FP*FN}{\sqrt{(TP+FP)*(TP+FN)*(TN+FP)*(TN+FN)}}\]
 
-Im Gegensatz zu den anderen hier verwendeten Methoden, liefert der MCC Werte zwischen $-1$ und $1$. Ein MCC von $0$ ist somit nicht besser als eine Zufallsvorhersage. Ein MCC von $1$ hingegen steht für eine komplette Übereinstimmung, während $-1$ für die komplette Missklassifizierung steht.
+Im Gegensatz zu den anderen hier verwendeten Methoden, liefert der MCC Werte zwischen $-1$ und $1$. Ein MCC von $0$ ist somit nicht besser als eine Zufallsvorhersage. Ein MCC von $1$ hingegen steht für eine komplette Übereinstimmung, während $-1$ für die komplette Misklassifizierung steht.
 
 Außerdem verwendeten wir noch den F2-Score als Qualitätsmaßstab. Der F1-Score ist das harmonische Mittel zwischen dem Recall und der Precision, der F2-Score dagegen gewichtet den Recall stärker und setzt somit den Schwerpunkt mehr auf die falsch negativen Stichproben, also die malignen Hautläsionen, die als benigne erkannt wurden:
 	\[\text{Precision} = \frac{TP}{TP+FP}\]
@@ -131,7 +131,7 @@ Außerdem verwendeten wir noch den F2-Score als Qualitätsmaßstab. Der F1-Score
 	\[\text{F1-Score} = 2*\frac{\text{precision}*\text{recall}}	{\text{precision}+\text{recall}}\]
    	\[\text{F2-Score} = 5*\frac{\text{precision}*\text{recall}}	{4*\text{precision}+\text{recall}}\]
     
-Schließlich entschieden wir uns noch dazu, die Receiver-Operating-Characteristics-Kurve (ROC) und die dazugehörige \textit{area under the curve (AUC)} zu verwenden. Diese Methode stellt visuell die Abhängigkeit der Sensitivität von der falsch-positiv-Rate dar. Eine ROC-Kurve nahe der Diagonalen deutet auf eine Zufallsvorhersage hin und hat eine AUC von $0.5$. Eine gute ROC-Kurve liegt deshalb oberhalb der Diagonalen und steigt senkrecht an bevor die falsch-positiv-Rate erhöht wird. Eine AUC von $1$ steht somit für eine perfekte Klassifizierung, eine AUC von $0$ für komplette Missklassifizierung. In diesem Falle könnten die Labels einfach umgedreht werden. Ziel ist es also eine ROC-Kurve weit entfernt von der Diagonalen zu erhalten.
+Schließlich entschieden wir uns noch dazu, die \textit{Receiver-Operating-Characteristics-Kurve (ROC)} und die dazugehörige \textit{area under the curve (AUC)} zu verwenden. Diese Methode stellt visuell die Abhängigkeit der Sensitivität von der falsch-positiv-Rate dar. Eine ROC-Kurve nahe der Diagonalen deutet auf eine Zufallsvorhersage hin und hat eine AUC von $0.5$. Eine gute ROC-Kurve liegt deshalb oberhalb der Diagonalen und steigt senkrecht an bevor die falsch-positiv-Rate erhöht wird. Eine AUC von $1$ steht somit für eine perfekte Klassifizierung, eine AUC von $0$ für komplette Misklassifizierung. In diesem Falle könnten die Labels einfach umgedreht werden. Ziel ist es also eine ROC-Kurve weit entfernt von der Diagonalen zu erhalten.
     
 Wir entschieden uns bewusst für eine größere Anzahl von Qualitätsmaßstäben. Da ein Parameter für sich nie die Komplexität des Klassifizierers komplett beschreiben kann, sollen die verschiedenen Qualitätsmaßstäbe bei der Evaluierung und der Entscheidung für den für uns geeignetsten Klassifizierer als Gesamtheit betrachtet und verwendet werden. Dies ermöglicht es uns, die Klassifizierung gezielt in die von uns gewünschte Richtung zu lenken, um beispielsweise falsch negative Vorhersagen zu minimieren.
 
