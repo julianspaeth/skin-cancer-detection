@@ -5,7 +5,7 @@ Ein solches vorheriges Training auf ImageNet etabliert einige grundlegende Struk
 
 Als Datensatz nutzten wir die ISIC-Datenbank (\cite{ISIC}), welche aus insgesamt 13.768 Bildern von sowohl malignen als auch benignen Hautläsionen besteht. Von den Datensätzen, die von \citet{esteva2017dermatologist} genutzt wurden, ist dieser der Einzige, welcher frei verfügbar ist. Die Bilder dieses Datensatzes sind durch eine pathologische Untersuchung gelabelt worden. Somit sind die vorhandenen Daten relativ zuverlässig. Wir teilten den Datensatz drei Teildatensätze auf: einen Trainingsdatensatz, einen Validierungsdatensatz sowie einen Testdatensatz. Dabei beträgt der Anteil der Trainingsdaten $60\%$ und die Anteile der Validierungs- sowie der Testdaten jeweils $20\%$ aller Bilder. Diese wurden zufällig den Datensätzen zugeordnet.
 
-Es stellte sich heraus, dass die Verteilung der Bilder dieses Datensatzes auf die verschiedenen Klassen (maligne/benigne) sehr unausgeglichen ist. Der Anteil der malignen Läsionen ist viel geringer als der Anteil der benignen Läsionen. Dieses Problem gingen wir durch eine spezielle Art der Randomisierung an. Während des Trainings trennten wir die Menge der Trainingsbilder in die Klassen \textit{maligne} und \textit{benigne} auf. Anschließend haben wir die Minibatches\todo{Puh das ist schon ein krasses Wort in nem deutschen report :D}, welche in das Netz gegeben wurden, aus Bildern dieser beiden Klassen zufällig befüllt. Dabei war die Wahrscheinlichkeit, dass ein Bild aus der Klasse der malignen Bilder stammt $p=0.5$. Somit wurde dieser unausgeglichene Datensatz ausbalanciert.
+Es stellte sich heraus, dass die Verteilung der Bilder dieses Datensatzes auf die verschiedenen Klassen (maligne/benigne) sehr unausgeglichen ist. Der Anteil der malignen Läsionen ist viel geringer als der Anteil der benignen Läsionen. Dieses Problem gingen wir durch eine spezielle Art der Randomisierung an. Während des Trainings trennten wir die Menge der Trainingsbilder in die Klassen \textit{maligne} und \textit{benigne} auf. Anschließend haben wir kleine Gruppen von Bildern, welche in das Netz gegeben wurden, aus Bildern dieser beiden Klassen zufällig befüllt. Dabei war die Wahrscheinlichkeit, dass ein Bild aus der Klasse der malignen Bilder stammt $p=0.5$. Somit wurde dieser unausgeglichene Datensatz ausbalanciert.
 
 Ein weiteres Problem des ISIC-Datensatzes war die variable Größe der einzelnen Bilder. Für ein problemloses Trainieren des Netzes haben wir die Bilder daher vorverarbeitet. Dazu wurden die Bilder auf die kleinste verfügbare Größe skaliert. Für das Training des Netzes verwendeten wir, analog zu \citet{esteva2017dermatologist}, das maximale zentrale Quadrat des Bildes und skalierten es auf $299$px$\times 299$px herunter. Somit hatten wir eine homogene Menge an Bildern, die wir nun in einen Trainings-, Validierungs- und einen Testdatensatz unterteilten.
 
@@ -70,7 +70,6 @@ Während des Trainings wurden die Bilder zufällig augmentiert. Durch eine Augme
     \item \textbf{Kontrast} (Abbildung \ref{subfig:aug_contrast}):  Analog zur Helligkeit wird hier der Kontrast um einen zufälligen Wert erhöht oder erniedrigt. Auch dies soll das Netz invariant gegenüber wechselnden Lichtverhältnissen machen und zudem die Trainings-Menge vergrößern.
     
     \item \textbf{Farbwert (Hue)} (Abbildung \ref{subfig:aug_hue}):  Hier wird der Farbwert der Bilder zufällig verändert. Durch diese Methode soll die Unterscheidung der Klassen robuster gegenüber Farbänderungen in den Bildern gemacht werden.
-    \todo{erwähnen, dass bei Hautärzten hauptsächlich die Form und nicht die Farbe der Läsionen eine Rolle spielt} 
     
     \item \textbf{Sättigung} (Abbildung \ref{subfig:aug_sat}):  Die Sättigung der Bilder wird zufällig um einen gewissen Wert verändert. Auch dies soll gegen abweichende Lichtverhältnisse helfen und die Menge der Trainingsdaten vergrößern.
 \end{enumerate}
@@ -78,7 +77,7 @@ Während des Trainings wurden die Bilder zufällig augmentiert. Durch eine Augme
 \subsection{Training}
 \label{training}
 
-	Das Training des GoogLeNet Inception v3 (\cite{inception}) implementierten wir in Tensorflow (\cite{tensorflow2015-whitepaper}). Dem Netz wurden Minibatches \todo{minibatch...} von jeweils sechs Bildern gezeigt. Von den augmentierten und zugeschnittenen Bildern wurde vor dem Forward-Pass \todo{Kurz erklären} der Mittelwert der Bilder des ImageNet Datensatzes (\cite{russakovsky2015imagenet}) abgezogen. Dies ist ein gängiger Vorgang, um die Verteilung der RGB-Werte und die Verteilung der RGB-Werte des ImageNet Datensatzes anzupassen. Nach einem Forward-Pass berechneten wir einen Loss. Auf diesem Loss trainierten wir das neuronale Netz mit dem \textit{Adam-Optimizer} und einer Lernrate $\eta=0.000001$. Im Folgenden Abschnitt werden die getesteten Loss-Funktionen näher erläutert.
+	Das Training des GoogLeNet Inception v3 (\cite{inception}) implementierten wir in Tensorflow (\cite{tensorflow2015-whitepaper}). Dem Netz wurden Gruppen von jeweils sechs Bildern gezeigt. Von den augmentierten und zugeschnittenen Bildern wurde vor dem Inferenz-Schritt der Mittelwert der Bilder des ImageNet Datensatzes (\cite{russakovsky2015imagenet}) abgezogen. Dies ist ein gängiger Vorgang, um die Verteilung der RGB-Werte und die Verteilung der RGB-Werte des ImageNet Datensatzes anzupassen. Nach einem Forward-Pass berechneten wir einen Loss. Auf diesem Loss trainierten wir das neuronale Netz mit dem \textit{Adam-Optimizer}. Im Folgenden Abschnitt werden die getesteten Loss-Funktionen näher erläutert.
 	
 \subsubsection{L1-Loss}
 
@@ -103,7 +102,8 @@ Während des Trainings wurden die Bilder zufällig augmentiert. Durch eine Augme
 	Dieser Loss nutzt das Maß der Kreuzentropie, um den Loss zu berechnen. Dabei wird zunächst die Softmax-Funktion auf die Vorhersage und die Label angewendet und anschließend die Kreuzentropie der beiden Verteilungen berechnet.
 	
 	Dieser Loss wird dazu benutzt, um Verteilungen einander anzupassen. In unserem Ansatz verwendeten wir jedoch einen Vektor der Länge zwei als Klassenlabel. Bei solch einer kleinen Anzahl an Werten erwarteten wir, dass diese Loss-Funktion vergleichsweise schlecht abschneidet.
-		
+\\
+\\
 Um die oben angesprochene Unausgeglichenheit der Klassen in unserem Datensatz weiter zu balancieren und um eine bessere Performance für maligne Läsionen zu erreichen, nutzten wir bei dem L1-, wie auch bei dem L2-Loss zusätzlich einen Gewichtsterm. Dieser gewichtete die Abweichungen abhängig von der Zielklasse. Dabei wurden die Werte mit $lab=$ maligne mit $3$ und die Werte mit $lab=$ benigne mit $0.5$ multipliziert. 
 	  
 

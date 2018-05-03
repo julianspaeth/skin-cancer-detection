@@ -1,6 +1,34 @@
 \section{Ergebnisse}
 
-Um einen guten Klassfizierer zu bekommen, waren einige Trainingsdurchläufe notwendig. So kamen wir letzten Endes auf etwa 30 Trainingsdurchläufe, die jeweils einige Tage trainierten. Zur Parameteroptimierung für das Training wurden die trainierten Klassifizierer auf einen Validierungs-Datensatz angewandt, wobei die ersten Durchgänge dabei nur minimal bessere Ergebnisse als der Zufall geliefert haben. Durch verschiedene Anpassungen, die in Kapitel~\ref{training} näher erläutert wurden, konnten schließlich besser Ergebnisse erzielt werden. Einige ausgewählte Ergebnisse werden in Abbildung~\ref{fig:roc} als ROC-Kurve dargestellt. Jede Kurve steht für einen ausgewählten Klassifizierer und die entsprechende Anwendung auf den Validierungsdatensatz. Wie man gut erkennen kann, verlaufen zwei der Kurven nahe der Diagonalen. Die beiden Klassifikator (2018-03-12\_22-04-38 und 2018-03-12\_22-17-46) liefern somit keine guten Ergebnisse und sind nur etwas besser als eine zufällige Entscheidung. Gute Klassifikatoren verlaufen in der ROC-Kurve links oben und sind in diesem Fall 2018-03-10\_19-16-32, 2018-03-09\_21-34-4 und 2018-04-13\_20-38-20. Die anderen Klassifikatoren können auf den ersten Blick als in Ordnung eingestuft werden.
+Um einen guten Klassfizierer zu bekommen, waren einige Trainingsdurchläufe notwendig. So kamen wir letzten Endes auf etwa 30 Trainingsdurchläufe, die jeweils einige Tage trainierten. Zur Parameteroptimierung für das Training wurden die trainierten Klassifizierer auf einen Validierungs-Datensatz angewandt, wobei die ersten Durchgänge dabei nur minimal bessere Ergebnisse als der Zufall lieferten. Durch verschiedene Anpassungen, die in Kapitel~\ref{training} näher erläutert wurden, konnten schließlich besser Ergebnisse erzielt werden. 
+
+
+\begin{figure}[htb!]
+	\centering
+	\begin{subfigure}[t]{0.49\textwidth}
+		\includegraphics[width=\textwidth]{pics/losses/l1_loss.png}
+		\caption{L1-Loss}
+		\label{fig:losses_l1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.49\textwidth}
+		\includegraphics[width=\textwidth]{pics/losses/l2_loss.png}
+		\caption{L2-Loss}
+		\label{fig:losses_l2}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.49\textwidth}
+		\includegraphics[width=\textwidth]{pics/losses/ce_loss.png}
+		\caption{Softmax-Kreuzentropie-Loss}
+		\label{fig:losses_ce}
+	\end{subfigure}		
+	\caption{Konvergenzverhalten verschiedener Loss-Funktionen bei gleichen Trainingsparametern.}
+	\label{fig:losses}			
+\end{figure}
+
+Einen großen Einfluss auf das Training hatte die Wahl der Loss-Funktion. Aus diesem Grund haben wir die Funktionen anfangs mit Blick auf ihr Konvergenzverhalten bei unserer Klassifizierungsaufgabe untersucht. In Abbildung \ref{fig:losses} sind die in Kapitel \ref{training} besprochenen Loss-Funktionen über den Verlauf je eines Trainings gezeigt. Dabei fällt auf, dass der L1-Loss anfangs stark abfällt, jedoch nach ca. 100 000 Iterationen stagniert. Betrachtet man hingegen die Kurve des L2-Loss, ist ein kontinuierlicher Abfall des Losses über eine deutlich längere Zeit (bis ca. Iteration 600 000) erkennbar. Eine längere Trainingsphase verbessert die Performanz des Trainierten Netzes. Die Gewichte des Netzes können so besser trainiert werden. Im Vergleich dazu ändert sich der Softmax-Kreuzentropie-Loss kaum. Der Wert dieser Loss-Funktion ändert sich kaum. Dadurch ist für das Training unseres neuronalen Netzes ein nur wenig aussagekräftiger Gradient verfügbar. Somit scheint der L2-Loss die am besten geeignete Loss-Funktion für unsere Problemstellung zu sein. Dies zeigte sich auch bei der Evaluation der Netze.\\
+
+Unser erfolgreichstes Training (2018-03-10\_19-16-32) wurde mit einem L2-Loss und einer Lernrate von $\eta= 0.000001$ trainiert. Die Ergebnisse einiger ausgewählter Trainingsdurchläufe werden in Abbildung~\ref{fig:roc} als ROC-Kurve dargestellt. Jede Kurve steht für einen ausgewählten Klassifizierer und die entsprechende Anwendung auf den Validierungsdatensatz. Wie man gut erkennen kann, verlaufen zwei der Kurven nahe der Diagonalen. Die beiden Klassifikator (2018-03-12\_22-04-38 und 2018-03-12\_22-17-46) liefern somit keine guten Ergebnisse und sind nur etwas besser als eine zufällige Entscheidung. Gute Klassifikatoren verlaufen in der ROC-Kurve links oben und sind in diesem Fall 2018-03-10\_19-16-32, 2018-03-09\_21-34-4 und 2018-04-13\_20-38-20. Die anderen Klassifikatoren können auf den ersten Blick als in Ordnung eingestuft werden.
 
 \begin{figure}[htb!]
 	\begin{center}
@@ -29,7 +57,7 @@ Um die ROC-Kurve nicht nur optisch, sondern auf Grund von Fakten zu evaluieren, 
  \bottomrule
  \end{tabular}
  \end{center}
-  \caption{ROC-AUC Ergebnisse einiger trainierten Klassifikatoren}
+  \caption{ROC-AUC Ergebnisse einiger trainierten Klassifikatoren mit variierenden Parametern}
  \label{tab:auc}
  \end{table}
  
@@ -69,7 +97,7 @@ Abbildung~\ref{fig:verteilung} zeigt die Verteilung der Scores des Validierungsd
 \begin{figure}[htb!]
 	\begin{center}
 		\includegraphics[width=\textwidth]{pics/threshold/score_threshold.png}
-		\caption{Verteilung unserer Ergebnisse des Validierungs-Datensatzes. Maligne Beispiele werden in rot dargestellt, benigne in blau.}
+		\caption{Verteilung der Prediktionen für des Validierungs-Datensatzes. Beispiele mit dem Label maligne werden in rot und Beispiele mit dem Label benigne werden in blau dargestellt. Die grüne Linie stellt den gewählten Threshold dar. Alle Prediktionen links des Thresholds werden als benigne und alle Prediktionen rechts des Thresholds werden als maligne klassifiziert.}
 		\label{fig:verteilung}
     \end{center}
 \end{figure}
