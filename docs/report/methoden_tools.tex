@@ -110,7 +110,7 @@ Um die oben angesprochene Unausgeglichenheit der Klassen in unserem Datensatz we
 \subsection{Analysemethoden}
 \label{analysemethoden}
 
-Für die Bewertung und Optimierung unseres Klassifizierers wurden verschiedene Methoden angewandt. Die Genauigkeit konnte mit unserem Datensatz nur unter großer Skepsis betrachtet werden. Sie berechnet sich durch die Anzahl der richtig vorhergesagten Stichproben dividiert durch die Anzahl aller Stichproben:
+Für die Bewertung und Optimierung unseres Klassifikators wurden verschiedene Methoden angewandt. Die Genauigkeit konnte mit unserem Datensatz nur unter großer Skepsis betrachtet werden. Sie berechnet sich durch die Anzahl der richtig vorhergesagten Stichproben dividiert durch die Anzahl aller Stichproben:
 	\[\text{Accuracy} = \frac{TP+TN}{TP+TN+FP+FN}\]
 Da der in diesem Projekt verwendete Datensatz deutlich mehr negative als positive Beispiele enthält, können unter dieser Berechnung sehr hohe Genauigkeiten auftreten, obwohl eventuell kein positives Beispiel richtig vorhergesagt wurde.
 Eine weitaus bessere Analyse ist möglich, indem die richtig positiven und richtig negativen Beispiele getrennt betrachtet werden. Die Sensitivität, auch richtig-positiv-Rate oder auch Recall genannt, entspricht in unserem Fall dem Anteil an tatsächlich malignen Hautläsionen, bei denen diese auch als maligne erkannt wurden:
@@ -133,7 +133,7 @@ Außerdem verwendeten wir noch den F2-Score als Qualitätsmaßstab. Der F1-Score
     
 Schließlich entschieden wir uns noch dazu, die \textit{Receiver-Operating-Characteristics-Kurve (ROC)} und die dazugehörige \textit{area under the curve (AUC)} zu verwenden. Diese Methode stellt visuell die Abhängigkeit der Sensitivität von der falsch-positiv-Rate dar. Eine ROC-Kurve nahe der Diagonalen deutet auf eine Zufallsvorhersage hin und hat eine AUC von $0.5$. Eine gute ROC-Kurve liegt deshalb oberhalb der Diagonalen und steigt senkrecht an bevor die falsch-positiv-Rate erhöht wird. Eine AUC von $1$ steht somit für eine perfekte Klassifizierung, eine AUC von $0$ für komplette Misklassifizierung. In diesem Falle könnten die Labels einfach umgedreht werden. Ziel ist es also eine ROC-Kurve weit entfernt von der Diagonalen zu erhalten.
     
-Wir entschieden uns bewusst für eine größere Anzahl von Qualitätsmaßstäben. Da ein Parameter für sich nie die Komplexität des Klassifizierers komplett beschreiben kann, sollen die verschiedenen Qualitätsmaßstäbe bei der Evaluierung und der Entscheidung für den für uns geeignetsten Klassifizierer als Gesamtheit betrachtet und verwendet werden. Dies ermöglicht es uns, die Klassifizierung gezielt in die von uns gewünschte Richtung zu lenken, um beispielsweise falsch negative Vorhersagen zu minimieren.
+Wir entschieden uns bewusst für eine größere Anzahl von Qualitätsmaßstäben. Da ein Parameter für sich nie die Komplexität des Klassifikators komplett beschreiben kann, sollen die verschiedenen Qualitätsmaßstäbe bei der Evaluierung und der Entscheidung für den für uns geeignetsten Klassifikator als Gesamtheit betrachtet und verwendet werden. Dies ermöglicht es uns, die Klassifizierung gezielt in die von uns gewünschte Richtung zu lenken, um beispielsweise falsch negative Vorhersagen zu minimieren.
 
 \subsection{Framework}
 
