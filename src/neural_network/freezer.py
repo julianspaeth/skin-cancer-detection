@@ -1,5 +1,5 @@
 
-# https://gist.github.com/249505f540a5e53a48b0c1a869d370bf.git
+# with some inspiration from https://gist.github.com/249505f540a5e53a48b0c1a869d370bf.git
 
 import os, argparse
 
@@ -77,10 +77,12 @@ def freeze_graph(model_dir, output_node_names):
             output_node_names.split(",")  # The output node names are used to select the usefull nodes
         )
 
-        # Finally we serialize and dump the output graph to the filesystem
-        print("output path: {}".format(output_graph))
-        with tf.gfile.GFile(output_graph, "wb") as f:
-            f.write(output_graph_def.SerializeToString())
+        # output_graph ="./frozen.pb"
+        #
+        # # Finally we serialize and dump the output graph to the filesystem
+        # print("output path: {}".format(output_graph))
+        # with tf.gfile.GFile(output_graph, "wb") as f:
+        #     f.write(output_graph_def.SerializeToString())
         print("%d ops in the final graph." % len(output_graph_def.node))
 
         #optimizing graph
@@ -98,7 +100,7 @@ def freeze_graph(model_dir, output_node_names):
             tf.float32.as_datatype_enum)
 
         # Save the optimized graph
-        output_graph_opt_path = output_graph.split(".")[0] + "_opt" + "." +  output_graph.split(".")[-1]
+        output_graph_opt_path = "./frozen.pb"# output_graph.split(".")[0] + "_opt" + "." +  output_graph.split(".")[-1]
         with tf.gfile.FastGFile(output_graph_opt_path, "w") as f:
             f.write(output_graph_def_opt.SerializeToString())
 
